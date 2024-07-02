@@ -1,0 +1,57 @@
+.statusAI {
+    padding: 2px 5px;
+    border-radius: 3px;
+    background-color: #F8F9FC;
+    color: #155724;
+    width: fit-content !important;
+    height: 20px !important;
+    margin-left: auto !important;
+    margin-right: 20px !important;
+}
+
+    .statusAI.create {
+        background-color: #F8F9FC;
+        color: #363F72;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #D5D9EB;
+        border: 1px solid;
+    }
+
+    .statusAI.pendingcreate {
+        background-color: #FEF6EE;
+        color: #B93815;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #fecdca;
+        border: 1px solid;
+    }
+
+    .statusAI.pending {
+        background-color: #EFF8FF;
+        color: #175CD3;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #B2DDFF;
+        border: 1px solid;
+    }
+
+    .statusAI.evaluation {
+        background-color: #F4F3FF;
+        color: #5925DC;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #D9D6FE;
+        border: 1px solid;
+    }
+
+    .statusAI.success {
+        background-color: #ECFDF3;
+        color: #067647;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #ABEFC6;
+        border: 1px solid;
+    }
+
+    

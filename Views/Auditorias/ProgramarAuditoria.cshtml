@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "Programar Auditorías";
+    ViewBag.pTitle = "PROGRAMAR AUDITORÍA";
+    ViewBag.pageTitle = "Auditorías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h5 style="margin-bottom:20px">PROGRAMAR NUEVA AUDITORÍA</h5>
+                <div class="row" style="margin-bottom: 20px">
+                    <div class="form-group col-md-6">
+                        <label for="universoAuditable"><i style="color: red;">* </i>Universo Auditable</label>
+                        <select id="universoAuditable" name="universoAuditable" class="form-control" required>
+                            <option value="">Seleccionar...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="auditoriaProgramada"><i style="color: red;">* </i>Programada / No Programada</label>
+                        <select id="auditoriaProgramada" name="auditoriaProgramada" class="form-control" required onchange="mostrarSolicitadaPor()">
+                            <option value="">Seleccionar...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 20px; display:none;" id="solicPor">
+                    <div class="form-group col-md-12">
+                        <label for="solicitadaPor"><i style="color: red;">* </i>Auditoria Solicitada Por:</label>
+                        <input type="text" id="solicitadaPor" maxlength="250" name="solicitadaPor" placeholder="Escriba..." class="form-control">
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 20px">
+                    <div class="form-group col-md-6">
+                        <label for="fechaInicioVisita"><i style="color: red;">* </i>Fecha de Inicio Visita</label>
+                        <input type="date" id="fechaInicioVisita" name="fechaInicioVisita" class="form-control">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="fechaFinVisita"><i style="color: red;">* </i>Fecha de Finalización Visita</label>
+                        <input type="date" id="fechaFinVisita" name="fechaFinVisita" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 20px">
+                    <div class="form-group col-md-6">
+                        <label for="periodoInicioRevision"><i style="color: red;">* </i>Periodo Inicial de Revisión</label>
+                        <input type="date" id="periodoInicioRevision" name="periodoInicioRevision" class="form-control">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="periodoFinRevision"><i style="color: red;">* </i>Periodo Final de Revisión</label>
+                        <input type="date" id="periodoFinRevision" name="periodoFinRevision" class="form-control">
+                    </div>
+                </div>
+
+                <button type="button" onclick="GuardarAuditoriaIntegral()" class="btn btn-primary btn-block">Programar Auditoría</button>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+@section scripts {
+    <script src="~/Scripts/Helpers/Helpers.js"></script>
+    <script src="~/Scripts/Auditorias/ProgramarAuditoria.js"></script>
+}

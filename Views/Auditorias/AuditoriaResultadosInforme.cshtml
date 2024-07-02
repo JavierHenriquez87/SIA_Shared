@@ -1,0 +1,279 @@
+﻿@{
+    ViewBag.Title = "Resultados en Programa de Trabajo";
+    ViewBag.pTitle = "RESULTADOS EN PROGRAMA DE TRABAJO";
+    ViewBag.pageTitle = "Auditorías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var valor = "alto";
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloAuditoriaResultado.css" rel="stylesheet" type="text/css" />
+
+<div class="container">
+    <div class="form-container">
+        <h3>
+            INFORME PRELIMINAR AGE101-1-2024 AUDITORÍA INTEGRAL AGENCIA SAN MARCOS
+        </h3>
+
+        <div class="row">
+            <h5 style="width: 70%">
+                Borrador de los resultados de la auditoría
+            </h5>
+            <div class="status eraser" id="divStatus">
+                Borrador
+            </div>
+
+            <h5>
+                IP-AGE101-1-2024
+            </h5>
+
+            <h5>
+                Fecha de emisión: 25/05/2024
+            </h5>
+
+            <h5>
+                Fecha de recibido: 25/05/2024
+            </h5>
+        </div>
+
+        <div class="form-group" style="padding-top: 10px" id="divButtons">
+            <button type="button" onclick="RegresarInfome()" class="btn btn-primary">Regresar</button>
+            <button type="button" onclick="EnviarInforme()" class="btn btn-secondary btn-purple">Enviar Informe</button>
+            <button type="button" onclick="HabilitarSeguimiento()" class="btn btn-secondary btn-purple">Habilitar Seguimiento</button>
+            <button type="button" onclick="ConfirmarComentarios()" class="btn btn-secondary btn-green">Confirmar Comentarios</button>
+            <button type="button" onclick="Imprimir()" class="btn btn-secondary btn-purple">Imprimir</button>
+        </div>
+    </div>
+
+    <div class="form-container" style="padding: 40px">
+        <div class="image-container" style="text-align: center;">
+            <img src="~/assets/images/logoHDH-vertical1.jpg" alt="Logo">
+            <div class="text-overlay">
+                AGE101-1-2024
+            </div>
+        </div>
+
+        <h4 style="text-align: center; margin-top: 40px">
+            INFORME PRELIMINAR AUDITORÍA INTEGRAL AGENCIA SAN MARCOS
+        </h4>
+
+        <div style="font-size: 14px; margin-top: 30px" class="row">
+            <a style="font-weight: bold;">
+                ELVIN NOEL ORELLANA
+            </a>
+
+            <a>
+                Jefe de Agencia<br /><br />
+                CC.<br />
+                Coordinador de Zona I<br /><br />
+                Fundación Microfinanciera Hermandad de Honduras, OPDF<br />
+                San Marcos, Ocotepeque, 30 de junio 2024<br /><br />
+            </a>
+
+            <a style="font-weight: bold;">
+                MOTIVO DEL INFORME
+            </a>
+
+            <a>
+               Como Auditores Internos de la Fundación Microfinanciera Hermandad de Honduras y dando cumplimiento al Plan Anual de Trabajo de Auditoría Interna para el año 2024, nos permitimos presentar el informe correspondiente a la Auditoría Agencia Santa Barbara.
+            </a>
+            
+            <a style="font-weight: bold; text-align:center; padding-top: 20px">
+                INTRODUCCIÓN
+            </a>
+
+            <a style="font-weight: bold;">
+                1. Objetivo
+            </a>
+
+            <div style="white-space: pre-line;">
+                Emitir una opinión independiente sobre el cumplimiento razonable en la Agencia respecto a las disposiciones contenidas en las normativas emitidas por el ente regulador y los manuales y procesos establecidos dentro de la Institución relacionada al control y calidad de las operaciones.
+            
+            </div>
+
+            <a style="font-weight: bold;">
+                2. Alcance
+            </a>
+
+            <div style="white-space: pre-line;">
+                Nuestra revisión se realizó de conformidad con los manuales y políticas de la Fundación Micro Financiera HDH-OPDF haciendo su aplicación en todas las áreas de la Agencia que se encuentran en ejecución.
+
+                La Gerencia General es responsable de mantener los sistemas de control interno efectivos, la responsabilidad del Área de Auditoría Interna se limita a la revisión de los registros contenidos en los sistemas de la Fundación respecto a las operaciones efectuadas en su Oficina y la documentación de respaldo proporcionada por el personal y a la exposición de los resultados alcanzados basados en la revisión de dicha información.
+
+                De acuerdo a lo anterior, nuestro trabajo fue desarrollado basados en análisis sobre una muestra de las transacciones de 4 meses, por lo cual pueden existir desviaciones en el proceso auditado que no fueron identificadas por las técnicas de auditoría aplicadas en base a la NIA 530 Muestreo de Auditoría, esta norma permite al Auditor utilizar un enfoque de muestreo no estadístico, basado en las características del universo que se somete a prueba.
+
+                En tal sentido el alcance de la revisión corresponde al periodo comprendido entre el 01 de enero 2024 al 30 de abril del 2024, donde se verificó el cumplimiento con los manuales y políticas de la institución
+
+            </div>
+
+            <a style="font-weight: bold;">
+                3. Resultados Generales
+            </a>
+            
+            <div style="white-space: pre-line; margin:0 24px; width:95%">
+                Como resultado de nuestra Auditoría a continuación detallamos, en resumen, los Hallazgos identificadas: Bajo, Medio, Alto.
+
+            </div>
+
+            <table class="table" style="margin: 0px 30px 20px 30px; width:95%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Hallazgos</th>
+                        <th>Prioridad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td style="text-align:left">Depósitos bancarios en circulación por no identificar a que cliente corresponde.</td>
+                        <td class="highlight-alto">Alto</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td style="text-align:left">Documentación faltante en el expediente de cuenta de ahorro.</td>
+                        <td class="highlight-medio">Medio</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a style="font-weight: bold;">
+                4. Seguimientos a Informes Anteriores
+            </a>
+
+            <table class="table" style="margin:20px 30px; width:95%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Hallazgos</th>
+                        <th>Prioridad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td style="text-align:left">Depósitos bancarios en circulación por no identificar a que cliente corresponde.</td>
+                        <td class="highlight-alto">Alto</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td style="text-align:left">Documentación faltante en el expediente de cuenta de ahorro.</td>
+                        <td class="highlight-medio">Medio</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a style="font-weight: bold;">
+                5. Conclusión General
+            </a>
+
+            <div style="white-space: pre-line; margin:0 24px; width:95%">
+                is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+
+                It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+
+            </div>
+
+            <h4 class="title-green">
+                I. PROCEDIMIENTOS DE LA AUDITORÍA
+            </h4>
+
+            <a style="padding:100px"></a>
+
+            <h4 class="title-green">
+                II. RESULTADOS DE LA AUDITORÍA
+            </h4>
+
+            <a class="title-black">
+                1. INCUMPLIMIENTO EN LA CONSULTA A LA CENTRAL DE RIESGOS DEL CLIENTE PRESTATARIO.
+            </a>
+
+            <a style="margin:0 24px; width:95%;">
+                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search
+            </a>
+
+            <table class="table" style="margin:20px 30px; width:95%">
+                <thead>
+                    <tr>
+                        <th>Valor de Muestra</th>
+                        <th>Muestra con Hallazgos</th>
+                        <th>Desviación de Muestra</th>
+                        <th>Nivel de Riesgo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>191</td>
+                        <td>36</td>
+                        <td>18.8%</td>
+                        <td class="highlight-@valor">Alto</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin:0 24px; width:95%; white-space: pre-line;">
+                <span style="font-weight: bold;">Criterio</span>
+                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search
+
+                <span style="font-weight: bold;">Causas</span>
+                • It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
+
+                <span style="font-weight: bold;">Efectos</span>
+                • It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
+
+                <span style="font-weight: bold;">Proceso Asociado</span>
+                Proceso de Consulta en Central de Riesgo
+
+                <span style="font-weight: bold;">Acciones Requeridas</span>
+                • It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
+                <div @*style="display:none"*@>
+                    <span style="font-weight: bold;">Contestación</span>
+                    <textarea class="text-area" placeholder="Escribir..."> </textarea>
+
+                    <span style="font-weight: bold;">Documentos</span>
+                    <div class="upload-area">
+                        <i class='bx bx-info-circle font-size-24 upload-warning'></i>
+                        <p><span style="color: #186040;">Click para subir documento</span> o arrastre y suelte el archivo aquí</p><p><small>PDF (máx. 4MB)</small></p></div>
+                    <button type="button" onclick="AgregarComentarios()" class="btn btn-secondary btn-purple">Agregar Comentarios</button>
+                </div>
+                <span style="font-weight: bold;">Comentarios del Auditado</span>
+                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
+            </div>
+
+            <h4 class="title-green">
+                III. CONCLUSIONES
+            </h4>
+
+            <div style="margin:0 24px; width:95%; white-space: pre-line;">
+                • Contrary to popular belief, Lorem Ipsum is not simply random telt` It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old` Richard McClintock, a Latin professor at HampdenSydney College in Virginia, looked up one of the more obscure Latin words
+                • There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable` If you are going to use a passage of Lorem Ipsum
+            </div>
+
+            <h4 class="title-green">
+                IV. RECOMENDACIONES DE LA AUDITORÍA
+            </h4>
+
+            <div style="margin:0 24px; width:95%; white-space: pre-line;">
+                • Contrary to popular belief, Lorem Ipsum is not simply random telt` It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old` Richard McClintock, a Latin professor at HampdenSydney College in Virginia, looked up one of the more obscure Latin words
+                • There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable` If you are going to use a passage of Lorem Ipsum
+                • The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested` Sections 1`10`32 and 1`10`33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their elact original form, accompanied by English versions from the 1914 translation by H` Rackham`
+            </div>
+
+            <h4 class="title-green">
+                V. COMENTARIOS DEL AUDITADO
+            </h4>
+
+            <div style="margin:0 24px; width:95%; white-space: pre-line;">
+                • Contrary to popular belief, Lorem Ipsum is not simply random telt` It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old` Richard McClintock, a Latin professor at HampdenSydney College in Virginia, looked up one of the more obscure Latin words
+                • There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable` If you are going to use a passage of Lorem Ipsum
+                • The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested` Sections 1`10`32 and 1`10`33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their elact original form, accompanied by English versions from the 1914 translation by H` Rackham`
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/Helpers/Helpers.js"></script>
+    <script src="~/Scripts/Auditorias/AuditoriaResultados.js"></script>
+}

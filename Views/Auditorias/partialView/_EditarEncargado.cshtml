@@ -1,0 +1,26 @@
+﻿<div class="modal fade" id="editarEncargadoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-width: 800px;">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header" >
+                <h5 class="modal-title">EDITAR ENCARGADO DE LA AUDITORÍA</h5>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">X</button>
+            </div>
+            <input type="hidden" id="numAuditIntEdit" />
+            <input type="hidden" id="numAudiEspEdit" />
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="editarencargadoAuditoria">Auditor Encargado</label>
+                        <select id="editarencargadoAuditoria" name="editarencargadoAuditoria" class="form-control">
+                            <option value="">Seleccionar...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary waves-effect" onClick="EditarEncargado()">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>

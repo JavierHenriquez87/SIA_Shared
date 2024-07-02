@@ -1,0 +1,89 @@
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\bin\Debug\net8.0\appsettings.Development.json
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\bin\Debug\net8.0\appsettings.json
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\bin\Debug\net8.0\Skote.staticwebassets.runtime.json
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\bin\Debug\net8.0\Skote.exe
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\bin\Debug\net8.0\Skote.deps.json
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\bin\Debug\net8.0\Skote.runtimeconfig.json
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\bin\Debug\net8.0\Skote.dll
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\bin\Debug\net8.0\Skote.pdb
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\Skote.GeneratedMSBuildEditorConfig.editorconfig
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\Skote.AssemblyInfoInputs.cache
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\Skote.AssemblyInfo.cs
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\Skote.csproj.CoreCompileInputs.cache
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\Skote.MvcApplicationPartsAssemblyInfo.cache
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\Skote.RazorAssemblyInfo.cache
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\Skote.RazorAssemblyInfo.cs
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\staticwebassets.build.json
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\staticwebassets.development.json
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\staticwebassets\msbuild.Skote.Microsoft.AspNetCore.StaticWebAssets.props
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\staticwebassets\msbuild.build.Skote.props
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.Skote.props
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.Skote.props
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\staticwebassets.pack.json
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\scopedcss\bundle\Skote.styles.css
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\Skote.dll
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\refint\Skote.dll
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\Skote.pdb
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\Skote.genruntimeconfig.cache
+D:\Asp 8\Skote_Asp_Mvc_v4.2.0\Asp\Admin\Skote\obj\Debug\net8.0\ref\Skote.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\appsettings.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\package.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Skote.staticwebassets.runtime.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Skote.exe
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Skote.deps.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Skote.runtimeconfig.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Skote.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Skote.pdb
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Humanizer.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Mono.TextTemplating.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Oracle.EntityFrameworkCore.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\Oracle.ManagedDataAccess.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\System.CodeDom.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\System.Diagnostics.PerformanceCounter.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\System.DirectoryServices.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\System.DirectoryServices.Protocols.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\System.Drawing.Common.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\System.Security.Permissions.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\System.Windows.Extensions.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Diagnostics.PerformanceCounter.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\runtimes\win\lib\netcoreapp2.0\System.DirectoryServices.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\runtimes\linux\lib\netcoreapp2.0\System.DirectoryServices.Protocols.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\runtimes\osx\lib\netcoreapp2.0\System.DirectoryServices.Protocols.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\runtimes\win\lib\netcoreapp2.0\System.DirectoryServices.Protocols.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.csproj.AssemblyReference.cache
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.AssemblyInfoInputs.cache
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.AssemblyInfo.cs
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.csproj.CoreCompileInputs.cache
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.RazorAssemblyInfo.cache
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.RazorAssemblyInfo.cs
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.sourcelink.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\staticwebassets\msbuild.Skote.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\staticwebassets\msbuild.build.Skote.props
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.Skote.props
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.Skote.props
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\scopedcss\bundle\Skote.styles.css
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.csproj.Up2Date
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\refint\Skote.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.pdb
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\Skote.genruntimeconfig.cache
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net8.0\ref\Skote.dll

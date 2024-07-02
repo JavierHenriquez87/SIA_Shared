@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Usuarios";
+    ViewBag.pTitle = "Usuarios";
+    ViewBag.pageTitle = "Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <button type="button" style="margin-bottom: 15px" onClick="NuevoUsuario()" class="btn btn-primary">
+                    Nuevo Usuario
+                </button>
+
+                <table id="tbUsuarios" class="table table-bordered dt-responsive  nowrap w-100">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Nombre</th>
+                            <th>N° Identidad</th>
+                            <th>Correo</th>
+                            <th>Agencia</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+
+@await Html.PartialAsync("partialView/_mainUsuario")
+
+@section scripts{
+    <script src="~/Scripts/Helpers/Helpers.js"></script>
+    <script src="~/Scripts/Usuarios/Usuarios.js"></script>
+}

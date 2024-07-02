@@ -1,0 +1,108 @@
+﻿@{
+    ViewBag.Title = "Detalle Auditoría";
+    ViewBag.pTitle = "DETALLE DE LA AUDITORÍA";
+    ViewBag.pageTitle = "Auditorías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string disabledDA = "";
+    string disabledButtons = "";
+    string disabledOptions = "";
+    string TextStatusMDP = "";
+    string styleTextStatusMDP = "";
+    string styleDA = "width:20%;";
+
+    if (ViewBag.CANTIDAD_AUDITORIAS >= 3)
+    {
+        disabledDA = " disabled";
+    }
+
+    if (ViewBag.ESTADO_AUDITORIA == 14)
+    {
+        disabledButtons = " disabled";
+        disabledDA = " disabled";
+    }
+
+    if (ViewBag.MEMO_EXISTE == null || ViewBag.ESTADO_MDP != 3)
+    {
+        disabledOptions = "disabled-div";
+    }
+
+    if (ViewBag.ESTADO_MDP == 1)
+    {
+        TextStatusMDP = "Creado";
+        styleTextStatusMDP = "statusAD create";
+    }
+    else if (ViewBag.ESTADO_MDP == 2)
+    {
+        TextStatusMDP = "Pendiente Aprobación";
+        styleTextStatusMDP = "statusAD pendingcreate";
+    }
+    else if(ViewBag.ESTADO_MDP == 3)
+    {
+        TextStatusMDP = "Aprobado";
+        styleTextStatusMDP = "statusAD success";
+    }
+    else if (ViewBag.ESTADO_MDP == 4)
+    {
+        TextStatusMDP = "Con Observaciones";
+        styleTextStatusMDP = "statusAD pendingcreate";
+    }
+    else
+    {
+        TextStatusMDP = "No Creado";
+        styleTextStatusMDP = "statusAD pendingcreate";
+    }
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloAuditoriaDetalle.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <h5 style="width: 77%">@ViewBag.TITULO_AUDITORIA</h5>
+                    <input type="hidden" id="codAI_DA" value="@ViewBag.NUMERO_AUDITORIA_INTEGRAL" />
+                    <input type="hidden" id="anioAI_DA" value="@ViewBag.ANIO_AUDITORIA_INTEGRAL" />
+                    <button type="button" onclick="AgregarAuditoriasEspecificas()" style="@styleDA" class="btn btn-primary" id="buttonAdd" @disabledDA>Agregar Auditoría</button>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px" id="divButtons">
+                    <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
+                    <button type="button" onclick="ConfirmarAuditoria()" class="btn btn-primary" @disabledButtons>Confirmar Auditorías</button>
+                    <button type="button" onclick="TrabajarAuditoria()" class="btn btn-primary" @disabledButtons>Trabajar Auditorías</button>
+                    <button type="button" onclick="AnularAuditoria()" class="btn btn-danger" @disabledButtons>Anular Auditoría</button>
+                </div>
+
+
+                <div id="documents-lists">
+                    <div id="opcion1DA" style="display:block; cursor: pointer;">
+                        <div class="document-item" onclick="MostrarOpcionesDA()">
+                            <div class="icon folder"></div>
+                            <div class="title">MEMORÁNDUM DE PLANIFICACIÓN</div>
+                        </div>
+                    </div>
+                    <div id="opcion2DA" style="display:none;">
+                        <div class="document-item" style="cursor: pointer;" onclick="validarMemoExiste()">
+                            <div class="icon doc"></div>
+                            <div class="title">MEMORÁNDUM DE PLANIFICACIÓN</div>
+                            <div class="@styleTextStatusMDP">@TextStatusMDP</div>
+                        </div>
+                        <div class="document-item @disabledOptions" style="cursor: pointer;">
+                            <div class="icon folder"></div>
+                            <div class="title">PROGRAMAS DE TRABAJO</div>
+                        </div>
+                        <div class="document-item @disabledOptions" style="cursor: pointer;">
+                            <div class="icon folder"></div>
+                            <div class="title">CUESTIONARIOS DE TRABAJO</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+@section scripts {
+    <script src="~/Scripts/Auditorias/DetalleAuditoria.js"></script>
+}

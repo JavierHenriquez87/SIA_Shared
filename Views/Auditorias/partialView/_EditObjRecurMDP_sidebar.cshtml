@@ -1,0 +1,28 @@
+﻿<!-- Right Sidebar -->
+<div id="sidebarEditObjRecMP" class="sidebarEditObjRecMP">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">×</a>
+    <div class="sidebar-content">
+        <h2>Editar Memorándum de Planificación</h2>
+        <hr>
+        <div class="form-container">
+            <h5>@ViewBag.TITULO_AUDITORIA</h5>
+            <div class="form-group">
+                <label for="objetivoAuditoriaEdit">Objetivo de la Auditoría</label>
+                <textarea id="objetivoAuditoriaEdit" name="objetivoAuditoriaEdit" class="form-control" placeholder="Escribir..." >@ViewBag.OBJETIVO_AUDITORIA</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="equipoTrabajoEdit">Equipo de Trabajo</label>
+                <textarea id="equipoTrabajoEdit" name="equipoTrabajoEdit" class="form-control" placeholder="Escribir..." >@ViewBag.AUDITORES_AUDITORIA</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="recursosEdit">Recursos de la Auditoría</label>
+                <textarea id="recursosEdit" name="recursosEdit" class="form-control" placeholder="Escribir..." >@ViewBag.RECURSOS_AUDITORIA</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Right bar overlay-->
+<div id="overlayObjRec" class="overlay" onclick="closeSidebarObjRec()"></div>

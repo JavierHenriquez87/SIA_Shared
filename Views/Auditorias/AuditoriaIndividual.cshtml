@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "Programar Auditoría Individual";
+    ViewBag.pageTitle = "Programar Auditorías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string styleAE = "display: none;";
+    string styleSAE = "display: none;";
+
+    if (ViewBag.audEspecifica == true)
+    {
+        styleAE = "";
+    }
+    else if (ViewBag.sinAudEspecifica == true)
+    {
+        styleSAE = "";
+    }
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloAuditoriaIndividual.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <div id="divAuditoriaIndividual" style="@styleAE">
+                    <h5>PROGRAMAR NUEVA AUDITORÍA ESPECIFICA</h5>
+                    <input type="hidden" id="num_audit_integral" value="@ViewBag.NUMERO_AUDITORIA_INTEGRAL" readonly>
+                    <input type="hidden" id="anio_audit_integral" value="@ViewBag.ANIO_AUDITORIA_INTEGRAL" readonly>
+                    <input type="hidden" id="codigo_universo_auditable" value="@ViewBag.CODIGO_UNIVERSO_AUDITABLE" readonly>
+
+                    <div class="form-group">
+                        <label for="codigoAuditoriaIntegral">Código de Auditoría</label>
+                        <input type="text" id="codigoAuditoriaIntegral" name="codigoAuditoriaIntegral" class="form-control" value="@ViewBag.CODIGO_AUDITORIA" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="codigoAuditoria">Código de Auditoría</label>
+                        <input type="text" id="codigoAuditoria" name="codigoAuditoria" class="form-control" value="@ViewBag.UNIVERSO_AUDITABLE" disabled>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="tipoAuditoria"><i style="color: red;">* </i>Tipo Auditoria</label>
+                            <select id="tipoAuditoria" name="tipoAuditoria" class="form-control">
+                                <option value="">Seleccionar...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="encargadoAuditoria"><i style="color: red;">* </i>Encargado de la Auditoría</label>
+                            <select id="encargadoAuditoria" name="encargadoAuditoria" class="form-control">
+                                <option value="">Seleccionar...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <button type="button" onclick="AgregarAuditoria()" class="btn btn-primary">Agregar Auditoría</button>
+                        <button type="button" onclick="ConfirmarAuditoria()" class="btn btn-primary">Confirmar Auditorías</button>
+                    </div>
+
+                    <div class="form-container">
+                        <h5>@ViewBag.TITULO_AUDITORIA</h5>
+
+                        <table id="tbAuditorias" class="table table-bordered dt-responsive  nowrap w-100">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Auditoría</th>
+                                    <th>Tipo de Auditoría</th>
+                                    <th>Encargado de Auditoría</th>
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+
+
+                <div id="divSinAuditoriaIndividual" style="@styleSAE">
+
+                    <h5>@ViewBag.TITULO_AUDITORIA</h5>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <img src="~/assets/images/auditoria.png" style="height: 280px; width: auto;" />
+                        <h4 style="margin-top: 20px;">AÚN NO SE HAN AGREGADO AUDITORÍAS</h4>
+                        <button type="button" onclick="MostrarAuditorias()" class="btn btn-primary btn-block" style="margin-top: 10px;">Agregar Auditoría</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("partialView/_EditarEncargado")
+
+@section scripts {
+    <script src="~/Scripts/Helpers/Helpers.js"></script>
+    <script src="~/Scripts/Auditorias/AuditoriaIndividual.js"></script>
+}

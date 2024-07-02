@@ -1,0 +1,178 @@
+﻿@{
+    ViewBag.Title = "Resultados en Programa de Trabajo";
+    ViewBag.pTitle = "RESULTADOS EN PROGRAMA DE TRABAJO";
+    ViewBag.pageTitle = "Auditorías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var valor = "alto";
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloAuditoriaHallazgo.css" rel="stylesheet" type="text/css" />
+
+<div class="row" style="gap:0;">
+    <div class="form-container">
+        <h3>
+            REVISIÓN DE EXPEDIENTES DE CRÉDITOS SANEADOS
+        </h3>
+
+        <div class="row">
+            <h5>AGE101-1 | AUDITORIA AGENCIA DE SAN MARCOS</h5>
+        </div>
+
+        <div class="form-group" style="padding-top: 10px" id="divButtons">
+            <button type="button" onclick="RegresarHallazgo()" class="btn btn-primary">Regresar</button>
+            <button type="button" onclick="GuardarActualizarHallazgo()" class="btn btn-primary">Guardar y Actualizar</button>
+        </div>
+    </div>
+
+    <div class="column" style="width:55%; flex: auto; padding-left: 0 !important;">
+        <div class="form-container">
+            <div class="form-group">
+                <label for="hallazgo">Hallazgo</label>
+                <textarea id="hallazgo" rows="2" placeholder="Escribir..."></textarea>
+            </div>
+
+            <div class="toggle-buttons">
+                <button id="cuantitativa" class="active">Calificación Cuantitativa</button>
+                <button id="cualitativa">Calificación Cualitativa</button>
+            </div>
+
+            <div class="row">
+                <div class="form-group calificacion">
+                    <label for="valor_muestra">Valor de Muestra</label>
+                    <input type="number" id="valor_muestra" value="0">
+                </div>
+                <div class="form-group calificacion">
+                    <label for="muestra_inconsistente">Muestra Inconsistente</label>
+                    <input type="number" id="muestra_inconsistente" value="0">
+                </div>
+                <div class="form-group calificacion">
+                    <label for="desviacion_muestra">Desviación de Muestra</label>
+                    <input type="text" id="desviacion_muestra" value="0%">
+                </div>
+                <div class="form-group calificacion risk-level">
+                    <label for="nivel_riesgo">Nivel de Riesgo</label>
+                    <span class="card highlight-bajo">Bajo</span>
+                </div>
+            </div>
+            <div class="columns">
+
+                <div class="column">
+                    <div class="form-group">
+                        <label for="condicion">Condición</label>
+                        <textarea id="condicion" rows="2" placeholder="Escribir..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="criterio">Criterio</label>
+                        <textarea id="criterio" rows="2" placeholder="Escribir..."></textarea>
+                    </div>
+                    <div class="form-group specific-style">
+                        <label for="causa">Causa</label>
+                        <div class="input-button-group">
+                            <input id="causa" placeholder="Escribir..." />
+                            <button id="btn_causa" class="icon-button">
+                                <i class="bx bx-list-plus font-size-24"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group specific-style">
+                        <label for="efecto">Efecto</label>
+                        <div class="input-button-group">
+                            <input id="efecto" placeholder="Escribir..." />
+                            <button id="btn_efecto" class="icon-button">
+                                <i class="bx bx-list-plus font-size-24"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group specific-style">
+                        <label for="recomendaciones">Recomendaciones</label>
+                        <div class="input-button-group">
+                            <input id="recomendaciones" placeholder="Escribir..." />
+                            <button id="btn_recomendaciones" class="icon-button">
+                                <i class="bx bx-list-plus font-size-24"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group specific-style">
+                        <label for="comentarios">Comentarios</label>
+                        <div class="input-button-group">
+                            <input id="comentarios" placeholder="Escribir..." />
+                            <button id="btn_comentarios" class="icon-button">
+                                <i class="bx bx-list-plus font-size-24"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group specific-style">
+                        <label for="acciones_requeridas">Acciones Requeridas</label>
+                        <div class="input-button-group">
+                            <input id="acciones_requeridas" placeholder="Escribir..." />
+                            <button id="btn_acciones_requeridas" class="icon-button">
+                                <i class="bx bx-list-plus font-size-24"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="column" style="width:40%; flex: auto; padding-left: 0 !important;">
+        <div class="form-container" style="height: 98%;">
+            <div class="form-group">
+                <label for="objetivo_control_interno">Objetivo de Control Interno</label>
+                <select id="objetivo_control_interno">
+                    <option>Seleccionar...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="objetivo_estrategico">Objetivo Estratégico</label>
+                <select id="objetivo_estrategico">
+                    <option>Seleccionar...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="proceso_asociado">Seleccione el Proceso Asociado</label>
+                <select id="proceso_asociado">
+                    <option>Seleccionar...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cuenta_contable">Cuenta Contable</label>
+                <select id="cuenta_contable">
+                    <option>Seleccionar...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="responsable_directo">Responsable Directo</label>
+                <select id="responsable_directo">
+                    <option>Seleccionar...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="unidad_apoyo">Unidad o Unidades de Apoyo</label>
+                <select id="unidad_apoyo">
+                    <option>Seleccionar...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="documentos">Documentos</label>
+                <div class="upload-area">
+                    <input type="file" id="documentos" style="display:none;">
+                    <i class='bx bx-info-circle font-size-24' style="color: #186040; border: 2px solid #ddd; padding: 5px; border-radius: 20%; margin-bottom: 10px"></i>
+                    <p>
+                        <span style="color: #186040;">Click para subir documento</span> o arrastre y suelte el archivo aquí
+                    </p>
+                    <p><small>PDF (máx. 4MB)</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="~/Scripts/Helpers/Helpers.js"></script>
+    <script src="~/Scripts/Auditorias/AuditoriaHallazgo.js"></script>
+}
+

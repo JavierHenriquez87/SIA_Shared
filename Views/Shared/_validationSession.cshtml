@@ -1,0 +1,16 @@
+﻿@model string;
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.Extensions.Configuration;
+@inject IConfiguration _config;
+@inject IHttpContextAccessor HttpContextAccessor;
+
+@{
+    string authenticated = HttpContextAccessor.HttpContext.Session.GetString("authenticated");
+
+    if (authenticated == null || authenticated == "false")
+    {
+        <script>
+            window.location.href = '@Url.Action("Login", "Acceso")';
+        </script>
+    }
+}

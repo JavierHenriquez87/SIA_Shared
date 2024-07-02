@@ -1,0 +1,64 @@
+﻿@using System.Text.Json;
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor;
+
+<!-- ========== Left Sidebar Start ========== -->
+<div class="vertical-menu">
+
+    <div data-simplebar class="h-100">
+
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="metismenu list-unstyled" id="side-menu">
+
+                <li class="menu-title" key="t-apps">MÓDULOS</li>
+                @{
+                    string authenticated = HttpContextAccessor.HttpContext.Session.GetString("authenticated");
+                    //Si la variable de sesion authenticated es nula no cargara el menu
+                    if (!string.IsNullOrEmpty(authenticated))
+                    {
+                        string menuJson = HttpContextAccessor.HttpContext.Session.GetString("menu");
+                        List<Mg_menus_segun_rol> menu = JsonSerializer.Deserialize<List<Mg_menus_segun_rol>>(menuJson);
+                        <li>
+                            <a href="~/Dashboard/Index" class="waves-effect">
+                                <i class="bx bx-home"></i>
+                                <span key="inicio">Inicio</span>
+                            </a>
+                        </li>
+
+                        foreach (var Menu in menu)
+                        {
+                            <li>
+                                @if (Menu.mg_Menus.POSEE_OPCIONES == "N")
+                                {
+                                    <a href="@Menu.mg_Menus.URL" class="waves-effect">
+                                        <i class="@Menu.mg_Menus.ICONO"></i>
+                                        <span key="@Menu.mg_Menus.NOMBRE">@Menu.mg_Menus.NOMBRE</span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                        <i class="@Menu.mg_Menus.ICONO"></i>
+                                        <span key="@Menu.mg_Menus.NOMBRE">@Menu.mg_Menus.NOMBRE</span>
+                                    </a>
+                                }
+                                <ul class="sub-menu" aria-expanded="false">
+                                    @foreach (var SubMenu in Menu.mg_Menus.Mg_sub_menus)
+                                    {
+
+                                        <li><a href="@SubMenu.URL" key="@SubMenu.NOMBRE">@SubMenu.NOMBRE</a></li>
+
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    }
+                }
+            </ul>
+        </div>
+        <!-- Sidebar -->
+    </div>
+</div>
+<!-- Left Sidebar End -->

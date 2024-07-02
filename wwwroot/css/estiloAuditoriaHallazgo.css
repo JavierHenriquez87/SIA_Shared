@@ -1,0 +1,146 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+    .header h1 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+    .buttons button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .buttons .back {
+        background-color: #ccc;
+    }
+
+    .buttons .save {
+        background-color: #4CAF50;
+        color: #fff;
+    }
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+.columns {
+    display: flex;
+    gap: 20px;
+}
+
+.column {
+    flex: 1;
+}
+
+.risk-level {
+    align-items: center;
+}
+
+    .risk-level span {
+        padding: 5px 10px;
+        border-radius: 4px;
+    }
+
+    .risk-level .card {
+        width: inherit;
+        display: inline-flex;
+        text-align: center;
+        padding: 10px;
+    }
+
+.upload-area {
+    border: 2px dashed #ddd;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.toggle-buttons {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+    .toggle-buttons button {
+        flex: 1;
+        padding: 10px;
+        border: 0px solid #ddd;
+        color: #7c8597;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .toggle-buttons button.active {
+            background-color: #ecfef5;
+            color: #029049;
+            font-weight: bold;
+        }
+
+.row {
+    display: flex;
+    gap: 20px;
+}
+
+.calificacion {
+    flex: 1;
+}
+
+.specific-style {
+    margin-bottom: 15px;
+}
+
+    .specific-style label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .specific-style .input-button-group {
+        display: flex;
+        align-items: center;
+    }
+
+        .specific-style .input-button-group input {
+            flex: 1;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-right: 10px;
+        }
+
+        .specific-style .input-button-group .icon-button {
+            padding: 8px;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+    .specific-style .icon-button i {
+        font-size: 16px;
+        color: #186040;
+    }
+

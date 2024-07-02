@@ -1,0 +1,184 @@
+.form-container {
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+h3, h5 {
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+    .form-group label {
+        display: block;
+    }
+
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        margin-top: 5px;
+    }
+
+
+/************************
+* Estilo de Botones
+*************************/
+.btn-primary,
+.btn-primary:hover {
+    background: #2A3042 !important;
+    border-color: #2A3042 !important;
+    border-radius: 13px !important;
+}
+
+    .btn-primary:disabled {
+        background: #2A3042;
+        border-color: #2A3042;
+        border-radius: 13px;
+    }
+
+
+.btn-purple,
+.btn-purple:hover {
+    background: #6c63ff;
+    border-color: #9892ff;
+    border-radius: 13px;
+}
+
+.btn-green,
+.btn-green:hover {
+    background: #17b26a;
+    border-color: #7ed4ac;
+    border-radius: 13px;
+}
+
+/************************
+* Estilo de estados
+*************************/
+.highlight-bajo {
+    background-color: #17b26a !important;
+    color: white !important;
+}
+
+.highlight-medio {
+    background-color: #f79009 !important;
+    color: white !important;
+}
+
+.highlight-alto {
+    background-color: #f04438 !important;
+    color: white !important;
+}
+
+
+.status {
+    padding: 2px 5px;
+    border-radius: 3px;
+    background-color: #d4edda;
+    color: #155724;
+    width: fit-content !important;
+    height: 20px !important;
+    margin-left: auto !important;
+    margin-right: 20px !important;
+}
+
+    .status.create {
+        background-color: #f9fafb;
+        color: #344054;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #eaecf0;
+        border: 1px solid;
+    }
+
+    .status.approved {
+        background-color: #ecfdf3;
+        color: #067647;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #abefc6;
+        border: 1px solid;
+    }
+
+    .status.pending {
+        background-color: #fef3f2;
+        color: #b42318;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #fecdca;
+        border: 1px solid;
+    }
+
+    .status.verification {
+        background-color: #fef6ee;
+        color: #b93815;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #f9dbaf;
+        border: 1px solid;
+    }
+
+    .status.eraser {
+        background-color: #f8f9fc;
+        color: #363f72;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #d5d9eb;
+        border: 1px solid;
+    }
+
+    .status.notreceived {
+        background-color: #fffaeb;
+        color: #b54708;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #fee49e;
+        border: 1px solid;
+    }
+
+    .status.issued {
+        background-color: #fdf2fa;
+        color: #c11675;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #fcd1ef;
+        border: 1px solid;
+    }
+
+    .status.followup {
+        background-color: #f0f9ff;
+        color: #026aa2;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #c4eafe;
+        border: 1px solid;
+    }
+
+    .status.finish {
+        background-color: #ecfdf3;
+        color: #067647;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #b1f1ca;
+        border: 1px solid;
+    }
+
+
+
+/************************
+* Efecto a div como desabilitado
+*************************/
+.disabled-div {
+    background-color: #f0f0f0; /* Fondo gris claro */
+    color: #a0a0a0; /* Texto gris */
+    opacity: 0.6; /* Opacidad para hacer el div translúcido */
+    pointer-events: none; /* Deshabilitar la interacción */
+    padding: 20px; /* Relleno interno */
+    border: 1px solid #ccc; /* Borde gris */
+    border-radius: 5px; /* Esquinas redondeadas */
+    cursor: not-allowed; /* Mostrar el cursor de prohibido */
+}

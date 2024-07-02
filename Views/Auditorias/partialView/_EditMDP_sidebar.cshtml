@@ -1,0 +1,48 @@
+﻿
+<!-- Right Sidebar -->
+<div id="SidebarEditMDP" class="sidebarEditMP">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">×</a>
+    <div class="sidebar-content">
+        <h2>Editar Memorándum de Planificación</h2>
+        <hr>
+        <div class="form-container">
+            <h5>@ViewBag.TITULO_AUDITORIA</h5>
+            <textarea id="texttipoauditoriaEdit" name="texttipoauditoriaEdit" class="form-control" placeholder="Escribir..." rows="4">@Html.Raw(ViewBag.TEXTO_AUDITORIAS_EDIT)</textarea>
+            <div class="row mt-3">
+                <div class="form-group col-md-5">
+                    <label for="tipoAuditoriaEdit"><i style="color: red;">* </i>Tipo Auditoria</label>
+                    <select id="tipoAuditoriaEdit" name="tipoAuditoriaEdit" class="form-control">
+                        <option value="">Seleccionar...</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4" >
+                    <label for="encargadoAuditoria"><i style="color: red;">* </i>Encargado de la Auditoría</label>
+                    <select id="encargadoAuditoria" name="encargadoAuditoria" class="form-control">
+                        <option value="">Seleccionar...</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-3" >
+                    <label style="color: white;">Guardar</label>
+                    <button class="btn btn-primary btn-sm">Guardar</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="tbEditAuditorias" class="table table-bordered display nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Tipo de Auditoría</th>
+                            <th>Encargado de Auditoría</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Right bar overlay-->
+<div id="overlay" class="overlay" onclick="closeSidebar()"></div>

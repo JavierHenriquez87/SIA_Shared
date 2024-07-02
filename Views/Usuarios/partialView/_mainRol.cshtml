@@ -1,0 +1,136 @@
+﻿@using System.Text.Json;
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor;
+
+@{
+    string menuJson = HttpContextAccessor.HttpContext.Session.GetString("menu");
+    List<Mg_menus_segun_rol> menu = JsonSerializer.Deserialize<List<Mg_menus_segun_rol>>(menuJson);
+    var numMenu = 1;
+    int codMenu = 0;
+}
+
+<!-- Modal nuevo Usuario-->
+<div class="modal fade" id="divRol" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-width: 830px;">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header" >
+                <h5 class="modal-title" id="titleNuevoRol">Nuevo Rol</h5>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="input-group">
+                            <span id="nombreRolEdit" style="display:none;"></span>
+                            <span class="input-group-text"><i class="las la-chess la-2x">&nbsp</i>Codigo Rol</span>
+                            <input type="text" class="form-control"  aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="Rol" id="codigoRol" placeholder="Digite el codigo del rol" required="" maxlength="5">
+                            &nbsp;&nbsp;
+                            <span class="input-group-text"><i class="las la-chess la-2x">&nbsp</i>Nombre del Rol</span>
+                            <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="Nombre Rol" id="nombreRol" placeholder="Digite el nombre del rol" required="" maxlength="100">
+                        </div>
+                    </div>
+                    <span style="color:darkred; display: none" id="validacionRol"></span>
+                </div>
+
+                <div class="contenedor" style="height: 350px; overflow-y: scroll; overflow-x: hidden;">
+                    @{
+                        foreach (var item in menu)
+                        {
+                            if (item.mg_Menus.CODIGO_MENU != codMenu)
+                            {
+                                codMenu = item.mg_Menus.CODIGO_MENU ?? 0;
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <span class="input-group-text" style="background-color: #2a3042 !important; color: white;">
+                                            <i class="las @item.mg_Menus.ICONO la-1x">&nbsp</i>@item.mg_Menus.NOMBRE
+                                        </span>
+                                    </div>
+                                </div>
+                                @foreach (var item2 in item.mg_Menus.Mg_sub_menus)
+                                {
+                                    if (codMenu == item2.CODIGO_MENU)
+                                    {
+                                        var l_e = "LE" + @item2.NOMBRE;
+                                        var leer = "leer" + @item2.CODIGO_SUB_MENU;
+                                        var crear = "crear" + @item2.CODIGO_SUB_MENU;
+                                        var modificar = "modificar" + @item2.CODIGO_SUB_MENU;
+                                        var autorizar = "autorizar" + @item2.CODIGO_SUB_MENU;
+                                        var eliminar = "eliminar" + @item2.CODIGO_SUB_MENU;
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-check form-switch" style="margin-left: 4px;">
+                                                    <label class="form-check-label" for="@item2.NOMBRE" style="font-weight: bold;">@item2.NOMBRE</label>
+                                                    <input type="checkbox" name="@item2.NOMBRE" id="@item2.NOMBRE"
+                                                            class="form-check-input checkSubMenu"
+                                                            data="@item2.CODIGO_SUB_MENU"
+                                                            dataName="@item2.NOMBRE"
+                                                            dataLecEsc="@l_e">
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="form-check form-switch disabledCheck">
+                                                    <label class="form-check-label" for="@leer">Leer</label>
+                                                    <input type="checkbox" name="@l_e" id="@leer"
+                                                            class="form-check-input checkLecEsc"
+                                                            data="@item2.CODIGO_SUB_MENU"
+                                                            data-permission-type="leer"
+                                                            dataName="@l_e">
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="form-check form-switch disabledCheck">
+                                                    <label class="form-check-label" for="@crear">Crear</label>
+                                                    <input type="checkbox" name="@l_e" id="@crear"
+                                                            class="form-check-input checkLecEsc"
+                                                            data="@item2.CODIGO_SUB_MENU"
+                                                            data-permission-type="crear"
+                                                            dataName="@l_e">
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="form-check form-switch disabledCheck">
+                                                    <label class="form-check-label" for="@modificar">Modificar</label>
+                                                    <input type="checkbox" name="@l_e" id="@modificar"
+                                                            class="form-check-input checkLecEsc"
+                                                            data="@item2.CODIGO_SUB_MENU"
+                                                            data-permission-type="modificar"
+                                                            dataName="@l_e">
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="form-check form-switch disabledCheck">
+                                                    <label class="form-check-label" for="@autorizar">Autorizar</label>
+                                                    <input type="checkbox" name="@l_e" id="@autorizar"
+                                                            class="form-check-input checkLecEsc"
+                                                            data="@item2.CODIGO_SUB_MENU"
+                                                            data-permission-type="autorizar"
+                                                            dataName="@l_e">
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="form-check form-switch disabledCheck">
+                                                    <label class="form-check-label" for="@eliminar">Eliminar</label>
+                                                    <input type="checkbox" name="@l_e" id="@eliminar"
+                                                            class="form-check-input checkLecEsc"
+                                                            data="@item2.CODIGO_SUB_MENU"
+                                                            data-permission-type="eliminar"
+                                                            dataName="@l_e">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                
+                            }
+                        }
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onClick="GuardarRolNuevo()" id="btnGuardarRol">Guardar Rol</button>
+                <button type="button" class="btn btn-success" style="display: none;" onClick="GuardarRolEditado()" id="btnEditarRol">Editar Rol</button>
+            </div>
+        </div>
+    </div>
+</div>

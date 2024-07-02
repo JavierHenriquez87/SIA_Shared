@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Roles";
+    ViewBag.pTitle = "Roles";
+    ViewBag.pageTitle = "Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <button type="button" style="margin-bottom: 15px" onClick="NuevoRol()" class="btn btn-primary">
+                    Nuevo Rol
+                </button>
+
+                <table id="tbRoles" class="table table-bordered dt-responsive  nowrap w-100">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Nombre</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+
+@await Html.PartialAsync("partialView/_mainRol")
+
+@section scripts{
+    <script src="~/Scripts/Usuarios/Roles.js"></script>
+}

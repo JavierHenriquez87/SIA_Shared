@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "Detalle Auditoría";
+    ViewBag.pTitle = "Detalle Auditorías";
+    ViewBag.pageTitle = "Auditorías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloAuditoriaDetalle.css" rel="stylesheet" type="text/css" />
+
+<div class="container">
+    <h3>CREAR PROGRAMA DE TRABAJO</h3>
+    <div class="form-container">
+        <div class="row">
+            <h5 style="width: 87%">AGE101-CR-2-2024 | AUDITORÍA DE CRÉDITOS AGENCIA SAN MARCOS</h5>
+            <div class="status pending" id="divStatus" style="width: 102px; height: 20px;">EN PROCESO</div>
+        </div>
+
+        <div class="form-group" style="padding-top: 10px" id="divButtons">
+            <button type="button" onclick="RegresarPlanTrabajo()" class="btn btn-primary">Regresar</button>
+            <button type="button" onclick="VerActividades()" class="btn btn-primary">Ver Actividades</button>
+            <button type="button" onclick="SolicitarAprobacion()" class="btn btn-primary">Solicitar Aprobacion</button>
+        </div>
+
+        <h5 style="padding-top: 20px">Actividades Agregadas al Plan de Trabajo</h5>
+
+        <table id="tbProgramaTrabajo" class="table table-bordered dt-responsive  nowrap w-100">
+            <thead>
+                <tr>
+                    <th>Nombre de la Actividad</th>
+                    <th>Auditor Asignado</th>
+                    <th>Estado</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@await Html.PartialAsync("partialView/_AsignarActividades")
+@await Html.PartialAsync("partialView/_RegresarPlanTrabajo")
+
+@section scripts{
+    <script src="~/Scripts/Auditorias/ProgramaTrabajo.js"></script>
+}

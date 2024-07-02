@@ -1,0 +1,625 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = SIA
+build_property.RootNamespace = SIA
+build_property.ProjectDir = C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Acceso/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjZXNvXExvZ2luLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Blog/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmxvZ1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Blog/Grid.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmxvZ1xHcmlkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Blog/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmxvZ1xMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Calendar/CalendarFull.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FsZW5kYXJcQ2FsZW5kYXJGdWxsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Calendar/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FsZW5kYXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Candidate/list.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FuZGlkYXRlXGxpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Candidate/Overview.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FuZGlkYXRlXE92ZXJ2aWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Chart/Apex.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhcnRcQXBleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Chart/Chartjs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhcnRcQ2hhcnRqcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Chart/ChartTui.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhcnRcQ2hhcnRUdWkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Chart/Echart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhcnRcRWNoYXJ0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Chart/Flot.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhcnRcRmxvdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Chart/Knob.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhcnRcS25vYi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Chart/Sparkline.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhcnRcU3BhcmtsaW5lLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Chat/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Crypto/CryptoBuySell.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3J5cHRvXENyeXB0b0J1eVNlbGwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Crypto/CryptoExchange.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3J5cHRvXENyeXB0b0V4Y2hhbmdlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Crypto/CryptoIcoLanding.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3J5cHRvXENyeXB0b0ljb0xhbmRpbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Crypto/CryptoKycApplication.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3J5cHRvXENyeXB0b0t5Y0FwcGxpY2F0aW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Crypto/CryptoLanding.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3J5cHRvXENyeXB0b0xhbmRpbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Crypto/CryptoOrders.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3J5cHRvXENyeXB0b09yZGVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Crypto/CryptoWallet.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3J5cHRvXENyeXB0b1dhbGxldC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Dashboard/DashboardBlog.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXERhc2hib2FyZEJsb2cuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Dashboard/DashboardCrypto.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXERhc2hib2FyZENyeXB0by5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Dashboard/Dashboardjob.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXERhc2hib2FyZGpvYi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Dashboard/DashboardSaas.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXERhc2hib2FyZFNhYXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Dashboard/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Ecommerce/EcommerceAddProduct.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXEVjb21tZXJjZUFkZFByb2R1Y3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Ecommerce/EcommerceCart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXEVjb21tZXJjZUNhcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Ecommerce/EcommerceCheckout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXEVjb21tZXJjZUNoZWNrb3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Ecommerce/EcommerceCustomers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXEVjb21tZXJjZUN1c3RvbWVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Ecommerce/EcommerceOrders.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXEVjb21tZXJjZU9yZGVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Ecommerce/EcommerceProduct.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXEVjb21tZXJjZVByb2R1Y3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Ecommerce/EcommerceProductDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXEVjb21tZXJjZVByb2R1Y3REZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Ecommerce/EcommerceShops.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRWNvbW1lcmNlXEVjb21tZXJjZVNob3BzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Email/EmailInbox.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1haWxcRW1haWxJbmJveC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Email/EmailRead.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1haWxcRW1haWxSZWFkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Email/EmailTemplateAlert.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1haWxcRW1haWxUZW1wbGF0ZUFsZXJ0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Email/EmailTemplateBasic.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1haWxcRW1haWxUZW1wbGF0ZUJhc2ljLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Email/EmailTemplateBilling.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1haWxcRW1haWxUZW1wbGF0ZUJpbGxpbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/FileManager/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmlsZU1hbmFnZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Form/FormAdvanced.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxGb3JtQWR2YW5jZWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Form/FormEditors.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxGb3JtRWRpdG9ycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Form/FormElements.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxGb3JtRWxlbWVudHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Form/FormLayouts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxGb3JtTGF5b3V0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Form/FormMak.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxGb3JtTWFrLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Form/FormRepeater.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxGb3JtUmVwZWF0ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Form/FormUploads.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxGb3JtVXBsb2Fkcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Form/FormValidation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxGb3JtVmFsaWRhdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Form/FormWizard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxGb3JtV2l6YXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Form/FormXeditable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRm9ybVxGb3JtWGVkaXRhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Icon/IconBoxicons.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSWNvblxJY29uQm94aWNvbnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Icon/IconDripicons.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSWNvblxJY29uRHJpcGljb25zLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Icon/IconFontAwesome.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSWNvblxJY29uRm9udEF3ZXNvbWUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Icon/IconMaterialDesign.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSWNvblxJY29uTWF0ZXJpYWxEZXNpZ24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Invoices/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52b2ljZXNcRGV0YWlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Invoices/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52b2ljZXNcTGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Job/apply.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSm9iXGFwcGx5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Job/categories.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSm9iXGNhdGVnb3JpZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Job/details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSm9iXGRldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Job/grid.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSm9iXGdyaWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Job/list.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSm9iXGxpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutBoxed.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRCb3hlZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutColoredSidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRDb2xvcmVkU2lkZWJhci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutCompactSidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRDb21wYWN0U2lkZWJhci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutHoriBoxedWidth.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRIb3JpQm94ZWRXaWR0aC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutHoriColoredHeader.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRIb3JpQ29sb3JlZEhlYWRlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutHoriPreloader.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRIb3JpUHJlbG9hZGVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutHorizontal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRIb3Jpem9udGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutPreloader.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRQcmVsb2FkZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutScrollable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRTY3JvbGxhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutsHoriScrollable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRzSG9yaVNjcm9sbGFibGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutsHoriTopbarLight.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRzSG9yaVRvcGJhckxpZ2h0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutsIconSidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRzSWNvblNpZGViYXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutsLightSidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRzTGlnaHRTaWRlYmFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Layouts/LayoutVertical.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGF5b3V0c1xMYXlvdXRWZXJ0aWNhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Maps/MapGoogle.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFwc1xNYXBHb29nbGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Maps/MapLeaflet.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFwc1xNYXBMZWFmbGV0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Maps/MapVector.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFwc1xNYXBWZWN0b3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Pages/Page404.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnZXNcUGFnZTQwNC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Pages/Page500.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnZXNcUGFnZTUwMC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Pages/PageComingsoon.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnZXNcUGFnZUNvbWluZ3Nvb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Pages/PageFaqs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnZXNcUGFnZUZhcXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Pages/PageMaintenance.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnZXNcUGFnZU1haW50ZW5hbmNlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Pages/PagePricing.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnZXNcUGFnZVByaWNpbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Pages/PageStarter.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnZXNcUGFnZVN0YXJ0ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Pages/PageTimeline.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFnZXNcUGFnZVRpbWVsaW5lLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Projects/ProjectCreate.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcUHJvamVjdENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Projects/ProjectGrid.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcUHJvamVjdEdyaWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Projects/ProjectList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcUHJvamVjdExpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Projects/ProjectOverview.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcUHJvamVjdE92ZXJ2aWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/Layouts/_layout_boxed.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXExheW91dHNcX2xheW91dF9ib3hlZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/Layouts/_layout_colored_sidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXExheW91dHNcX2xheW91dF9jb2xvcmVkX3NpZGViYXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/Layouts/_layout_compact_sidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXExheW91dHNcX2xheW91dF9jb21wYWN0X3NpZGViYXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/Layouts/_layout_horizontal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXExheW91dHNcX2xheW91dF9ob3Jpem9udGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/Layouts/_layout_horizontal_colored_sidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXExheW91dHNcX2xheW91dF9ob3Jpem9udGFsX2NvbG9yZWRfc2lkZWJhci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/Layouts/_layout_horizontal_topbarlight.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXExheW91dHNcX2xheW91dF9ob3Jpem9udGFsX3RvcGJhcmxpZ2h0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/Layouts/_layout_hprozontal_boxed.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXExheW91dHNcX2xheW91dF9ocHJvem9udGFsX2JveGVkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/Layouts/_layout_icon_sidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXExheW91dHNcX2xheW91dF9pY29uX3NpZGViYXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/Layouts/_layout_light_sidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXExheW91dHNcX2xheW91dF9saWdodF9zaWRlYmFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/Layouts/_layout_preloader.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXExheW91dHNcX2xheW91dF9wcmVsb2FkZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_BlankLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9CbGFua0xheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_footer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9mb290ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_head_css.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9oZWFkX2Nzcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_horizontal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9ob3Jpem9udGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_layout_ico_loading.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9sYXlvdXRfaWNvX2xvYWRpbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_page_title.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9wYWdlX3RpdGxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_right_sidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9yaWdodF9zaWRlYmFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_sidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9zaWRlYmFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_title_meta.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF90aXRsZV9tZXRhLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_topbar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF90b3BiYXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Shared/_vendor_scripts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF92ZW5kb3Jfc2NyaXB0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Tables/TableBasic.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFibGVzXFRhYmxlQmFzaWMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Tables/TableDatatable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFibGVzXFRhYmxlRGF0YXRhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Tables/TableEditable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFibGVzXFRhYmxlRWRpdGFibGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Tables/TableResponsive.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFibGVzXFRhYmxlUmVzcG9uc2l2ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Tasks/TaskCreate.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFza3NcVGFza0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Tasks/TaskKanban.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFza3NcVGFza0thbmJhbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Tasks/TaskList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFza3NcVGFza0xpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Alerts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcQWxlcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Buttons.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcQnV0dG9ucy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Cards.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcQ2FyZHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Carousel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcQ2Fyb3VzZWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Colors.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcQ29sb3JzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Dropdowns.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcRHJvcGRvd25zLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/General.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcR2VuZXJhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Grid.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcR3JpZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Images.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcSW1hZ2VzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Lightbox.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcTGlnaHRib3guY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Modals.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcTW9kYWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Notifications.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcTm90aWZpY2F0aW9ucy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/OffCanvas.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcT2ZmQ2FudmFzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Placeholders.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcUGxhY2Vob2xkZXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Progressbars.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcUHJvZ3Jlc3NiYXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Rangeslider.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcUmFuZ2VzbGlkZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Rating.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcUmF0aW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/SessionTimeout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcU2Vzc2lvblRpbWVvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/SweetAlert.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcU3dlZXRBbGVydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/TabsAccordions.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcVGFic0FjY29yZGlvbnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Toasts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcVG9hc3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Typography.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcVHlwb2dyYXBoeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Utilities.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcVXRpbGl0aWVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/UI/Video.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVUlcVmlkZW8uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Usuarios/ContactsGrid.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcQ29udGFjdHNHcmlkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Usuarios/ContactsProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcQ29udGFjdHNQcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/Usuarios/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

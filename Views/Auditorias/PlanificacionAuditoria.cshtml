@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "Programar Auditoría Individual";
+    ViewBag.pTitle = "PLANIFICACIÓN DE AUDITORÍA";
+    ViewBag.pageTitle = "Auditoria Individual";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section styles {
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/libs/spectrum-colorpicker2/spectrum.min.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="~/assets/libs/@("@chenfengyuan")/datepicker/datepicker.min.css">
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/css/Planificacion_Auditoria.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <h5>CREAR NUEVA PLANIFICACIÓN DE AUDITORÍA</h5>
+
+                <div class="form-group">
+                    <label for="codigoAuditoriaIntegral">Código de Auditoría Integral</label>
+                    <input type="text" id="codigoAuditoriaIntegral" name="codigoAuditoriaIntegral" class="form-control" value="@ViewBag.CODIGO_AUDITORIA" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="universoAuditable">Universo Auditable</label>
+                    <input type="text" id="universoAuditable" name="universoAuditable" class="form-control" value="@ViewBag.UNIVERSO_AUDITABLE" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="texttipoauditoria"><i style="color: red;">* </i>Tipos de Auditorías</label>
+                    <div class="container">
+                        <textarea id="texttipoauditoria" class="editable form-control" rows="4">Durante la auditoría se realizarán las siguientes auditorías:</textarea><br />
+                        <div class="non-editable">@Html.Raw(@ViewBag.LIST_AUDITORIAS_ESP)</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="objAuditoria"><i style="color: red;">* </i>Objetivo de Auditoría</label>
+                    <textarea id="objAuditoria" name="objAuditoria" maxlength="4000" class="form-control" placeholder="Escribir..." rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="equipoAuditores"><i style="color: red;">* </i>Equipo de Auditores</label>
+                    <div class="container">
+                        <textarea id="textequipoauditores" class="editable form-control" rows="2">La auditoría será realizada por los siguientes auditores:</textarea><br />
+                        <select id="equipoAuditores" name="equipoAuditores" class="select2 form-control select2-multiple"
+                                multiple="multiple" data-placeholder="Seleccionar ...">
+                            <option value="">- Seleccione un auditor -</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="recursos"><i style="color: red;">* </i>Recursos</label>
+                    <textarea id="recursos" name="recursos" class="form-control textarea" maxlength="225" placeholder="Escribir..." rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="texttiempoauditoria"><i style="color: red;">* </i>Tiempo de la Auditoría</label>
+                    <div class="container">
+                        <textarea id="texttiempoauditoria" class="editable form-control" rows="4">La auditoría se llevará a cabo desde el </textarea><br />
+                        <div class="non-editable">@ViewBag.TIEMPOS_DE_LA_AUDITORIA</div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <button type="button" onclick="solicitarAprobacionMP()" class="btn btn-primary">Guardar Planificación</button>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+<!-- end row -->
+@section scripts {
+    <script src="~/assets/libs/select2/js/select2.min.js"></script>
+    <script src="~/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/assets/libs/spectrum-colorpicker2/spectrum.min.js"></script>
+    <script src="~/assets/libs/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+    <script src="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="~/assets/libs/@("@chenfengyuan")/datepicker/datepicker.min.js"></script>
+
+    <!-- form advanced init -->
+    <script src="~/assets/js/pages/form-advanced.init.js"></script>
+
+    <script src="~/assets/js/app.js"></script>
+
+    <script src="~/Scripts/Helpers/Helpers.js"></script>
+    <script src="~/Scripts/Auditorias/PlanificacionAuditoria.js"></script>
+}

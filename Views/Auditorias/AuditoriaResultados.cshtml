@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "Resultados en Programa de Trabajo";
+    ViewBag.pTitle = "RESULTADOS EN PROGRAMA DE TRABAJO";
+    ViewBag.pageTitle = "Auditorías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var valor = "alto";
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloAuditoriaResultado.css" rel="stylesheet" type="text/css" />
+
+<div class="container">
+    <div class="form-container">
+        <h3>
+            REVISIÓN DE EXPEDIENTES DE CRÉDITOS SANEADOS
+        </h3>
+
+        <div class="row">
+            <h5>AGE101-1 | AUDITORIA AGENCIA DE SAN MARCOS</h5>
+        </div>
+
+        <div class="form-group" style="padding-top: 10px" id="divButtons">
+            <button type="button" onclick="RegresarResultado()" class="btn btn-primary">Regresar</button>
+            <button type="button" onclick="AgregarHallazgo()" class="btn btn-primary">Agregar Hallazgo</button>
+            <button type="button" onclick="AgregarComentarios()" class="btn btn-primary">Agregar Comentarios</button>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <div class="row">
+            <h3 style="width: 87%">INEXISTENCIA DE CRÉDITOS SANEADOS</h3>
+            <button type="button" onclick="EditarInexistencia()" style="width: 10%; height: 6%;" class="btn btn-primary" id="buttonEditar">Editar</button>
+        </div>
+        <h6>
+            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point
+            of using Lorem Ipsum is that it has. Many desktop publishing packages and web page editors now use Lorem Ipsum as their
+            default model text, and a search
+        </h6>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Valor de Muestra</th>
+                    <th>Muestra con Hallazgos</th>
+                    <th>Desviación de Muestra</th>
+                    <th>Nivel de Riesgo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>191</td>
+                    <td>36</td>
+                    <td>18.8%</td>
+                    <td class="highlight-@valor">Alto</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h5 style="font-weight: bold;">
+            Criterio
+        </h5>
+        <h6>
+            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point
+            of using Lorem Ipsum is that it has
+        </h6>
+
+        <h5 style="font-weight: bold;">
+            Causas
+        </h5>
+        <h6>
+            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.<br />
+            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        </h6>
+
+        <h5 style="font-weight: bold;">
+            Efectos
+        </h5>
+        <h6>
+            PO14 - Control de Expedientes de Operaciones Saneadas
+        </h6>
+
+        <h5 style="font-weight: bold;">
+            Proceso Asociado
+        </h5>
+        <h6>
+            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        </h6>
+
+        <h5 style="font-weight: bold;">
+            Recomendaciones
+        </h5>
+        <h6>
+            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        </h6>
+
+        <h5 style="font-weight: bold;">
+            Comentarios
+        </h5>
+        <h6>
+            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        </h6>
+
+        <h5 style="font-weight: bold;">
+            Acciones Requeridas
+        </h5>
+        <h6>
+            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        </h6>
+
+        <h5 style="font-weight: bold; margin-top:40px">
+            Documentos Adjuntos
+        </h5>
+
+        <div id="pdf-container"></div>
+
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/Helpers/Helpers.js"></script>
+    <script src="~/Scripts/Auditorias/AuditoriaResultados.js"></script>
+}

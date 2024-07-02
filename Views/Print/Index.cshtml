@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+    // Recuperar el PDF en Base64 de TempData u otra fuente de datos
+    string base64PDF = TempData["Base64PDF"] as string;
+    TempData.Remove("Base64PDF");
+    var pdfGenerate = "data:application/pdf;base64," + base64PDF + "#navpanes=0&filename=doc.pdf";
+}
+<style type="text/css">
+     html, body {
+         margin: 0;
+         padding: 0;
+         height: 100%;
+     }
+     iframe {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         border: none;
+         box-sizing: border-box;
+         -moz-box-sizing: border-box;
+         -webkit-box-sizing: border-box;
+     }
+</style>
+
+<iframe src="@pdfGenerate" width="100%" height="100%" frameborder="0" onload="resizeIframe(this)" ></iframe>
+
