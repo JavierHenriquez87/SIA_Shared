@@ -26,7 +26,7 @@ namespace SIA.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> IndexAsync(string doc, int id)
+        public async Task<IActionResult> IndexAsync(string doc, string id)
         {
             MemoryStream workStream = new MemoryStream();
             byte[] pdfGenerateMemoryStream;
@@ -34,7 +34,7 @@ namespace SIA.Controllers
             {
                 case "memorandumPlanificacion":
                     memorandumPlanificacion = new MemorandumPlanificacion(_context, _config, _contextAccessor);
-                    pdfGenerateMemoryStream = await memorandumPlanificacion.CreateMemorandumPlanificacion();
+                    pdfGenerateMemoryStream = await memorandumPlanificacion.CreateMemorandumPlanificacion(id);
                     break;
 
                 default:

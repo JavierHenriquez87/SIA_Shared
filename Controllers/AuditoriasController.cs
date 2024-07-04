@@ -831,7 +831,6 @@ namespace SIA.Controllers
                 auditoriasText = auditoriasText + "<li> " + auditor.CODIGO_AUDITORIA + " " + auditor.NOMBRE_AUDITORIA + " \n";
             }
 
-
             //Obtenemos informacion de la auditoria integral
             var dataAI = await _context.AU_AUDITORIAS_INTEGRALES
                                 .Where(u => u.NUMERO_AUDITORIA_INTEGRAL == cod)
@@ -864,7 +863,6 @@ namespace SIA.Controllers
             string fechaInicio = fechaInicioVisita?.ToString("dd/MM/yyyy");
             DateTime? fechaFinVisita = dataAI.FECHA_FIN_VISITA;
             string fechaFin = fechaFinVisita?.ToString("dd/MM/yyyy");
-
 
             //Evaluamos el estado de la Auditoria
             if (dataMDP.CODIGO_ESTADO == 1)

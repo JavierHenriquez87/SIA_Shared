@@ -23,7 +23,7 @@
                         <div class="status @ViewBag.STATUS" id="divStatus" style="width: 20%; height: 20px;">@ViewBag.ESTADO</div>
                         @if (estado == "Aprobado")
                         {
-                            <div onclick="printMDP()" style="width: 10%; font-size:18px; cursor:pointer;"><i class="fas fa-print"></i></div>
+                            <a href="~/print/Index?doc=memorandumPlanificacion&id=@ViewBag.CODIGO_MEMORANDUM_PLANIFICACION" style="width: 10%; font-size:18px; cursor:pointer;"><i class="fas fa-print"></i></a>
                         }
                     </div>
 

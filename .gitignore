@@ -1,2 +1,5 @@
 .vs
 .vs\Skote
+obj/project.nuget.cache
+obj/SIA.csproj.nuget.dgspec.json
+obj/SIA.csproj.nuget.g.props

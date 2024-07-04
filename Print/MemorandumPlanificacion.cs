@@ -2,18 +2,17 @@
 using iText.Layout.Element;
 using iText.Kernel.Pdf;
 using iText.Kernel.Events;
-using iText.Kernel.Pdf.Canvas;
 using iText.Layout.Properties;
 using iText.Layout.Borders;
-using iText.IO.Font.Constants;
 using iText.IO.Font;
 using iText.Kernel.Font;
-using iText.Kernel.Colors;
-using iText.IO.Image;
 using iText.Kernel.Geom;
 using SIA.Context;
-using SIA.Print;
-using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using iText.Html2pdf;
+using System.IO;
+using System.Xml;
+using System.Drawing;
 
 namespace SIA.Print
 {
@@ -32,8 +31,30 @@ namespace SIA.Print
             _helpersPDF = new HelpersPDF(context, config, HttpContextAccessor);
         }
 
-        public async Task<byte[]> CreateMemorandumPlanificacion()
+        public async Task<byte[]> CreateMemorandumPlanificacion(string id)
         {
+            //Obtenemos informacion de la planificacion de la auditoria
+            var dataMDP = await _context.AU_PLANIFICACION_DE_AUDITORIA
+                                .FirstOrDefaultAsync(u => u.CODIGO_MEMORANDUM == id);
+
+            var listAuditores = await _context.AU_AUDITORES_ASIGNADOS
+                .Include(x => x.mg_usuarios)
+                .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == dataMDP.NUMERO_MDP)
+                .Where(e => e.ANIO_AI == dataMDP.ANIO_MDP)
+                .OrderBy(e => e.CODIGO_USUARIO)
+                .ToListAsync();
+
+            //Obtenemos informacion de la auditoria integral
+            var dataAI = await _context.AU_AUDITORIAS_INTEGRALES
+                                .Where(u => u.NUMERO_AUDITORIA_INTEGRAL == dataMDP.NUMERO_MDP)
+                                .Where(u => u.ANIO_AI == dataMDP.ANIO_MDP)
+                                .FirstOrDefaultAsync();
+
+            DateTime? fechaInicioVisita = dataAI.FECHA_INICIO_VISITA;
+            string fechaInicio = fechaInicioVisita?.ToString("dd/MM/yyyy");
+            DateTime? fechaFinVisita = dataAI.FECHA_FIN_VISITA;
+            string fechaFin = fechaFinVisita?.ToString("dd/MM/yyyy");
+
             MemoryStream workStream = new MemoryStream();
 
             using (var pdfWriter = new PdfWriter(workStream))
@@ -49,7 +70,7 @@ namespace SIA.Print
 
                     //CELDAS PARA UTILIZAR EN LAS TABLAS
                     Cell cell = new Cell();
-                    string id = "MDP-UAI-00-2024";
+
                     pdfDoc.AddEventHandler(PdfDocumentEvent.START_PAGE, new HeaderEventHandler(document, id));
 
                     //AGREGAMOS EL FOOTER DE LAS PAGINAS
@@ -75,9 +96,7 @@ namespace SIA.Print
                     cell = _helpersPDF.CreateTableCellNoBorder();
 
                     section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("San Marcos, Ocotepeque, 31 de mayo del 2024", bfArialBd, 13)
-                                .SetFontColor(_helpersPDF.ColorAzul())
-                                )));
+                                _helpersPDF.CreateTextFormat("San Marcos, Ocotepeque, " + DateTime.Now.ToString("dd 'de' MMMM 'del' yyyy"), bfArialBd, 13).SetFontColor(_helpersPDF.ColorAzul()))));
 
                     section1.AddCell(cell.Add(new Paragraph(
                                 _helpersPDF.CreateTextFormat("Introducción:", bfArialBd, 13)
@@ -103,7 +122,7 @@ namespace SIA.Print
 
                     cell = _helpersPDF.CreateTableCellNoBorder();
                     section2.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Auditoria de cumplimiento sobre Riesgo de Liquidez", bfArial, 12)))).SetMarginBottom(10);
+                                _helpersPDF.CreateTextFormat("Auditoria de " + dataAI.NOMBRE_AUDITORIA, bfArial, 12)))).SetMarginBottom(10);
 
                     document.Add(section2);
 
@@ -122,168 +141,24 @@ namespace SIA.Print
                     cell = _helpersPDF.CreateTableCellNoBorder();
                     section3.AddCell(new Cell().SetBorder(Border.NO_BORDER));
 
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section3.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("revisar la efectividad y la eficiencia de los controles internos y los procedimientos de gestión del riesgo de liquidez, revisando que se alineen con las normativas vigentes establecidas por la Comisión Nacional de Bancos y Seguros (CNBS) y que la entidad esté preparada para manejar situaciones de estrés de liquidez de manera adecuada.", bfArial, 12)))).SetMarginBottom(10);
-
                     document.Add(section3);
 
-                    // OTRA LINEA
-                    var section4 = new Table(UnitValue.CreatePercentArray(new float[] { 8, 2, 90 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    IList<IElement> elements = HtmlConverter.ConvertToElements(dataMDP.OBJETIVO);
 
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("1.", bfArial, 13)).SetMarginLeft(14)));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Revisar la Estructura Organizacional:", bfArialBd, 13))));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1,2);
-                    section4.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Verificar que la entidad tenga una estructura organizacional clara y bien definida para la gestión del riesgo de liquidez, con roles y responsabilidades adecuadamente asignados a los miembros del Comité de Activos y Pasivos (CAPA) y del Comité de Crisis.", bfArial, 12)).SetMarginBottom(10)));
-
-                    // OTRA LINEA
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("2.", bfArial, 13)).SetMarginLeft(14)));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Evaluar las Políticas de Gestión del Riesgo de Liquidez:", bfArialBd, 13))));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Asegurar que existan políticas y procedimientos documentados y aprobados por la Junta Directiva o el Consejo de Administración, que cubran todos los aspectos relevantes de la gestión del riesgo de liquidez.", bfArial, 12)).SetMarginBottom(10)));
-
-                    // OTRA LINEA
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("3.", bfArial, 13)).SetMarginLeft(14)));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Revisar la Definición y Cumplimiento de Límites Internos:", bfArialBd, 13))));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Evaluar la adecuación de los límites internos establecidos para la exposición al riesgo de liquidez y verificar el cumplimiento de estos límites mediante el análisis de informes y datos históricos.", bfArial, 12)).SetMarginBottom(10)));
-
-                    // OTRA LINEA
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("4.", bfArial, 13)).SetMarginLeft(14)));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Analizar los Escenarios de Estrés:", bfArialBd, 13))));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Revisar los escenarios de estrés desarrollados por la entidad para evaluar su capacidad de respuesta ante crisis de liquidez, asegurando que sean realistas y representativos de posibles situaciones de estrés.", bfArial, 12)).SetMarginBottom(10)));
-
-                    // OTRA LINEA
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("5.", bfArial, 13)).SetMarginLeft(14)));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Verificar los Indicadores de Alerta Temprana:", bfArialBd, 13))));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Identificar y evaluar la implementación y el monitoreo de indicadores de alerta temprana utilizados para detectar posibles problemas de liquidez de manera oportuna.", bfArial, 12)).SetMarginBottom(10)));
-
-                    // OTRA LINEA
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("6.", bfArial, 13)).SetMarginLeft(14)));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Evaluar los Planes de Contingencia:", bfArialBd, 13))));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Asegurar que existan planes de contingencia bien documentados y actualizados para gestionar situaciones de crisis de liquidez y evaluar la preparación del personal para implementar dichos planes.", bfArial, 12)).SetMarginBottom(10)));
-
-                    // OTRA LINEA
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("7.", bfArial, 13)).SetMarginLeft(14)));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Revisar los Sistemas de Información:", bfArialBd, 13))));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Evaluar la efectividad y confiabilidad de los sistemas de información utilizados para la gestión y el reporte del riesgo de liquidez, asegurando que proporcionen datos precisos y oportunos.", bfArial, 12)).SetMarginBottom(10)));
-
-                    // OTRA LINEA
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("8.", bfArial, 13)).SetMarginLeft(14)));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Asegurar la Documentación y Comunicación Efectiva:", bfArialBd, 13))));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Verificar que la documentación y los procedimientos de gestión del riesgo de liquidez estén adecuadamente documentados y que exista una comunicación efectiva entre las diferentes áreas involucradas.", bfArial, 12)).SetMarginBottom(10)));
-
-                    // OTRA LINEA
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("9.", bfArial, 13)).SetMarginLeft(14)));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Cumplir con las Normas Regulatoria:", bfArialBd, 13))));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section4.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
-
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section4.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Evaluar el cumplimiento de las normas y regulaciones establecidas por la CNBS y otros organismos regulatorios, asegurando que la entidad cumpla con los requerimientos de reporte y divulgación de información sobre el riesgo de liquidez.", bfArial, 12)).SetMarginBottom(10)));
-
-                    document.Add(section4);
+                    foreach (var element in elements)
+                    {
+                        if (element is Paragraph paragraph)
+                        {
+                            paragraph.SetFont(bfArial).SetMarginLeft(40);
+                            document.Add(paragraph);
+                        }
+                        else if (element is IBlockElement blockElement)
+                        {
+                            Paragraph tempParagraph = new Paragraph().Add(blockElement).SetFont(bfArial).SetMarginLeft(40);
+                            document.Add(tempParagraph);
+                        }
+                    }
+                    document.Add(sectionSpacing);
 
                     // OTRA LINEA
                     var section5 = new Table(UnitValue.CreatePercentArray(new float[] { 8, 95 })).SetWidth(UnitValue.CreatePercentValue(100));
@@ -303,19 +178,25 @@ namespace SIA.Print
 
                     cell = _helpersPDF.CreateTableCellNoBorder();
                     section5.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("La auditoría será ejecuta en dos etapas por el siguiente personal asignado:", bfArial, 12))));
+                                _helpersPDF.CreateTextFormat(dataMDP.TEXTO_EQUIPO_TRABAJO, bfArial, 12))));
 
                     document.Add(section5);
 
                     section5 = new Table(UnitValue.CreatePercentArray(new float[] { 8, 6, 90 })).SetWidth(UnitValue.CreatePercentValue(100));
 
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section5.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
+                    var auditoresText = "";
 
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section5.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Aldany Josué Ramírez (asistente de Auditoria)", bfArial, 12)).SetMarginBottom(10)));
+                    // Crear y agregar entidades para cada auditor en el array
+                    foreach (var auditores in listAuditores)
+                    {
+                        cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
+                        section5.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
+                            .SetTextAlignment(TextAlignment.RIGHT).SetMargin(0).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
+
+                        cell = _helpersPDF.CreateTableCellNoBorder();
+                        section5.AddCell(cell.Add(new Paragraph(
+                                    _helpersPDF.CreateTextFormat(auditores.mg_usuarios.NOMBRE_USUARIO, bfArial, 12)).SetMarginBottom(10)));
+                    }
 
                     document.Add(section5);
 
@@ -334,25 +215,51 @@ namespace SIA.Print
 
                     document.Add(section5);
 
-                    section5 = new Table(UnitValue.CreatePercentArray(new float[] { 8, 6, 90 })).SetWidth(UnitValue.CreatePercentValue(100));
 
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section5.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
+                    /*elements = HtmlConverter.ConvertToElements(dataMDP.RECURSOS);
+                    foreach (var element in elements)
+                    {
+                        if (element is IBlockElement blockElement)
+                        {
+                            document.Add(blockElement).SetFont(bfArialBd).SetLeftMargin(14);
+                        }
+                    }*/
+                    // Convertir HTML a elementos iText
+                    IList<IElement> elementos = HtmlConverter.ConvertToElements(dataMDP.RECURSOS);
 
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section5.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Se solicitará información al área de Finanzas", bfArial, 12))));
+                    foreach (var element in elementos)
+                    {
+                        if (element is Paragraph paragraph)
+                        {
+                            // Aplicar la fuente y el margen al párrafo
+                            paragraph.SetFont(bfArial).SetMarginLeft(40);
+                            document.Add(paragraph);
+                        }
+                        else if (element is IBlockElement blockElement)
+                        {
+                            Paragraph tempParagraph = new Paragraph().Add(blockElement).SetFont(bfArial).SetMarginLeft(40);
+                            document.Add(tempParagraph);
+                        }
+                    }
+                    //section5 = new Table(UnitValue.CreatePercentArray(new float[] { 8, 6, 90 })).SetWidth(UnitValue.CreatePercentValue(100));
 
-                    cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
-                    section5.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
-                        .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
+                    //cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
+                    //section5.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
+                    //    .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
 
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-                    section5.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Se utilizará computadora asignada para realizar la auditoria", bfArial, 12))));
+                    //cell = _helpersPDF.CreateTableCellNoBorder();
+                    //section5.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Se solicitará información al área de Finanzas", bfArial, 12))));
 
-                    document.Add(section5);
+                    //cell = _helpersPDF.CreateTableCellNoBorder(1, 2);
+                    //section5.AddCell(cell.Add(new Paragraph(_helpersPDF.CreateTextFormat("•", bfArialBd, 14))
+                    //    .SetTextAlignment(TextAlignment.RIGHT).SetMarginRight(8).SetPadding(0)).SetVerticalAlignment(VerticalAlignment.TOP));
+
+                    //cell = _helpersPDF.CreateTableCellNoBorder();
+                    //section5.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Se utilizará computadora asignada para realizar la auditoria", bfArial, 12))));
+
+                    //document.Add(section5);
 
                     // OTRA LINEA
                     section5 = new Table(UnitValue.CreatePercentArray(new float[] { 8, 95 })).SetWidth(UnitValue.CreatePercentValue(100));
@@ -372,7 +279,7 @@ namespace SIA.Print
 
                     cell = _helpersPDF.CreateTableCellNoBorder();
                     section5.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Se estima que la primera etapa dure 1 mes desde la entrega de la información solicitada", bfArial, 12))));
+                                _helpersPDF.CreateTextFormat(dataMDP.TEXTO_TIEMPO_AUDITORIA + " " + fechaInicio + " al " + fechaFin, bfArial, 12))));
 
                     document.Add(section5);
 
