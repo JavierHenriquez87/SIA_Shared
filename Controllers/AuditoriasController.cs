@@ -1294,6 +1294,18 @@ namespace SIA.Controllers
 
 
 
+        //********************************************************************************
+        // CUESTIONARIO
+        //********************************************************************************
+        /// <summary>
+        /// Mostramos el cuestionario de preguntas
+        /// </summary>
+        /// <returns></returns>
+        [Route("Auditorias/CuestionariosAuditoria/CuestionarioTrabajo")]
+        public async Task<IActionResult> CuestionarioTrabajo()
+        {
+            return View();
+        }
 
 
 
