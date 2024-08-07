@@ -1,0 +1,86 @@
+﻿@{
+    var cuestionarios = ViewBag.AUDITORIAS_CUESTIONARIOS as List<SIA.Models.Mg_auditorias_cuestionarios>;
+    ViewBag.Title = "Cuestionarios Auditoría";
+    ViewBag.pTitle = "CUESTIONARIOS DE LA AUDITORÍA";
+    ViewBag.pageTitle = "Auditorías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string styleDA = "width:20%;";
+
+    var TextStatus = "";
+    var styleTextStatus = "";
+
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloAuditoriaCuestionarios.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <h5 style="width: 77%">@ViewBag.TITULO_AUDITORIA</h5>
+                    <input type="hidden" id="codAI_CU" value="@ViewBag.NUMERO_AUDITORIA_INTEGRAL" />
+                    <input type="hidden" id="anioAI_CU" value="@ViewBag.ANIO_AUDITORIA_INTEGRAL" />
+                </div>
+                <div class="form-group" style="padding-top: 10px" id="divButtons">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
+                        <button type="button" onclick="openSidebarCuest()" class="btn btn-primary" id="buttonAddCues" style="@styleDA">Agregar Cuestionario</button>
+                    </div>
+                </div>
+
+                <br>
+                <div id="documents-lists">
+                    @if (cuestionarios != null && cuestionarios.Any())
+                    {
+                        @foreach (var cuestionario in cuestionarios)
+                        {
+                            <div style="display:block; cursor: pointer;">
+                                <div class="document-item" onclick="">
+                                    <div class="icon doc"></div>
+                                    <div class="title">@cuestionario.CODIGO_AUD_CUEST CUESTIONARIO DE TRABAJO</div>
+                                    @{
+                                        if (cuestionario.CODIGO_ESTADO == 1)
+                                        {
+                                            TextStatus = "Creado";
+                                            styleTextStatus = "statusAD create";
+                                        }
+                                        else if (cuestionario.CODIGO_ESTADO == 2)
+                                        {
+                                            TextStatus = "Pendiente Aprobación";
+                                            styleTextStatus = "statusAD pendingcreate";
+                                        }
+                                        else if (cuestionario.CODIGO_ESTADO == 3)
+                                        {
+                                            TextStatus = "Aprobado";
+                                            styleTextStatus = "statusAD success";
+                                        }
+                                        else
+                                        {
+                                            TextStatus = "Con Observaciones";
+                                            styleTextStatus = "statusAD pendingcreate";
+                                        }
+                                    }
+                                    <div class="@styleTextStatus">@TextStatus</div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <br />
+                        <p style="text-align:center;">No hay cuestionarios disponibles en esta auditoría.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+@Html.Partial("partialView/_AgregarCuestionario")
+@Html.Partial("partialView/_VerCuestionario")
+
+@section scripts {
+    <script src="~/Scripts/Auditorias/AuditoriaCuestionarios.js"></script>
+}

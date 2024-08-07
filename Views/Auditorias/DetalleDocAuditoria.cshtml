@@ -44,7 +44,7 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="tipoAuditoria">Tipos de Auditoría</label>
+                                <label for="DETtipoAuditoria">Tipos de Auditoría</label>
                             </div>
                             <div class="col-md-6" style="text-align:right">
                                 <button type="button" class="btn btn-xl waves-effect" onclick="openSidebar()">
@@ -52,7 +52,7 @@
                                 </button>
                             </div>
                         </div>
-                        <pre id="tipoAuditoria" name="tipoAuditoria" class="form-control" placeholder="Escribir..." disabled>@Html.Raw(ViewBag.TIPOS_DE_AUDITORIAS_REALIZAR)</pre>
+                        <pre id="DETtipoAuditoria" name="DETtipoAuditoria" class="form-control" placeholder="Escribir..." disabled>@Html.Raw(ViewBag.TIPOS_DE_AUDITORIAS_REALIZAR)</pre>
                     </div>
 
                     <div class="form-group">
@@ -66,17 +66,17 @@
                                 </button>
                             </div>
                         </div>
-                        <textarea id="objetivoAuditoria" name="objetivoAuditoria" class="form-control" placeholder="Escribir..." disabled>@ViewBag.OBJETIVO_AUDITORIA</textarea>
+                        <textarea id="objetivoAuditoria" name="objetivoAuditoria" class="form-control" placeholder="Escribir..." disabled rows="7">@ViewBag.OBJETIVO_AUDITORIA</textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="equipoTrabajo">Equipo de Trabajo</label>
-                        <textarea id="equipoTrabajo" name="equipoTrabajo" class="form-control" placeholder="Escribir..." disabled>@ViewBag.AUDITORES_AUDITORIA</textarea>
+                        <textarea id="equipoTrabajo" name="equipoTrabajo" class="form-control" placeholder="Escribir..." disabled rows="7">@ViewBag.AUDITORES_AUDITORIA</textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="recursos">Recursos</label>
-                        <textarea id="recursos" name="recursos" class="form-control" placeholder="Escribir..." disabled>@ViewBag.RECURSOS_AUDITORIA</textarea>
+                        <textarea id="recursos" name="recursos" class="form-control" placeholder="Escribir..." disabled rows="7">@ViewBag.RECURSOS_AUDITORIA</textarea>
                     </div>
 
                     <div class="form-group">
@@ -95,7 +95,7 @@
                     </div>
 
                     @* Verificamos si el memorandum de planificacion esta aprobado *@
-                    @if (estado == "Creado" || estado == "Pendiente Aprobación")
+                    @if (estado == "Pendiente Aprobación")
                     {
                         @if (estadoAI != 14)
                         {

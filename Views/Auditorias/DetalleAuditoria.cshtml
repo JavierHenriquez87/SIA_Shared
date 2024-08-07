@@ -22,7 +22,7 @@
         disabledDA = " disabled";
     }
 
-    if (ViewBag.MEMO_EXISTE == null || ViewBag.ESTADO_MDP != 3)
+    if (ViewBag.MEMO_EXISTE == null )//|| ViewBag.ESTADO_MDP != 3
     {
         disabledOptions = "disabled-div";
     }
@@ -89,11 +89,11 @@
                             <div class="title">MEMORÁNDUM DE PLANIFICACIÓN</div>
                             <div class="@styleTextStatusMDP">@TextStatusMDP</div>
                         </div>
-                        <div class="document-item @disabledOptions" style="cursor: pointer;">
+                        <div class="document-item @disabledOptions" style="cursor: pointer;" onclick="validarMemoExiste()">
                             <div class="icon folder"></div>
                             <div class="title">PROGRAMAS DE TRABAJO</div>
                         </div>
-                        <div class="document-item @disabledOptions" style="cursor: pointer;">
+                        <div class="document-item @disabledOptions" style="cursor: pointer;" onclick="IrCuestionarioAudi()">
                             <div class="icon folder"></div>
                             <div class="title">CUESTIONARIOS DE TRABAJO</div>
                         </div>

@@ -39,7 +39,7 @@ function validarMemoExiste() {
         }
     });
 
-    
+
 }
 
 // Función que será llamada al hacer clic en un folder
@@ -143,4 +143,10 @@ function MostrarOpcionesDA() {
     //Alterna la visibilidad de los div entre display none a block
     $('#opcion1DA').toggle();
     $('#opcion2DA').toggle();
+}
+
+// Función que será llamada al hacer clic en un documento
+//==========================================================================================
+function IrCuestionarioAudi() {
+    window.location.href = '/Auditorias/CuestionariosAuditoria';
 }

@@ -5,6 +5,8 @@ using SIA.Models;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace SIA.Controllers
 {
@@ -30,6 +32,16 @@ namespace SIA.Controllers
         /// </summary>
         /// <returns></returns>
         public IActionResult ProgramarAuditoria()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Pagina principal con listado de auditorias integrales
+        /// </summary>
+        /// <returns></returns>
+        [Route("Auditorias")]
+        public IActionResult Auditorias()
         {
             return View();
         }
@@ -725,7 +737,7 @@ namespace SIA.Controllers
                                                 .Where(u => u.ANIO_AI == (int)HttpContext.Session.GetInt32("anio_auditoria_integral"))
                                                 .FirstOrDefaultAsync();
 
-                    dataAudInt!.CODIGO_ESTADO = 3;
+                    dataAudInt!.CODIGO_ESTADO = 2;
                     dataAudInt!.MDP_EMITIDO = "S";
                     dataAudInt!.MDP_FECHA_EMISION = DateTime.Now;
                     dataAudInt!.MDP_EMITIDO_POR = HttpContext.Session.GetString("user");
@@ -1079,6 +1091,225 @@ namespace SIA.Controllers
 
 
 
+        //********************************************************************************
+        // CUESTIONARIOS DE TRABAJO
+        //********************************************************************************
+        /// <summary>
+        /// Metodo para mostrar los cuestionarios de trabajo que se han agregado a la auditoria
+        /// </summary>
+        /// <returns></returns>
+        [Route("Auditorias/CuestionariosAuditoria")]
+        public async Task<IActionResult> CuestionariosAuditoria()
+        {
+            int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+            int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+
+            //obtenemos el numero de auditorias especificas de la integral
+            var cuestionarios = await _context.MG_AUDITORIAS_CUESTIONARIOS
+                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == cod)
+                    .Where(e => e.ANIO == anio)
+                    .ToListAsync();
+
+
+            ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
+            ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
+            ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
+            ViewBag.AUDITORIAS_CUESTIONARIOS = cuestionarios;
+
+            return View();
+        }
+
+        /// <summary>
+        /// Metodo para obtener los cuestionarios autorizados para ser agregados a la auditoria
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> ObtenerCuestionarios(int num_auditoria_integral, int anio_auditoria_integral)
+        {
+            var estadoRequest = Request.Form["estado"].FirstOrDefault();
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][data]"].FirstOrDefault().ToUpper();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault().ToUpper();
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+            int recordsTotal = 0;
+
+            List<Au_cuestionarios> data = new List<Au_cuestionarios>();
+
+            if (!string.IsNullOrEmpty(searchValue) && searchValue.Count() >= 3)
+            {
+                if (sortColumnDirection.Equals("asc"))
+                {
+                    data = await _context.AU_CUESTIONARIOS
+                        .OrderByDescending(e => e.NOMBRE_CUESTIONARIO)
+                        .Where(e => e.NOMBRE_CUESTIONARIO.ToUpper().Contains(searchValue))
+                        .Where(e => e.ESTADO == 3)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .ToListAsync();
+                }
+                else
+                {
+                    data = await _context.AU_CUESTIONARIOS
+                        .OrderBy(e => e.NOMBRE_CUESTIONARIO)
+                        .Where(e => e.NOMBRE_CUESTIONARIO.Contains(searchValue))
+                        .Where(e => e.ESTADO == 3)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .ToListAsync();
+                }
+
+                recordsTotal = await _context.AU_CUESTIONARIOS
+                    .Where(e => e.ESTADO == 3)
+                    .CountAsync(x => x.NOMBRE_CUESTIONARIO.Contains(searchValue));
+            }
+            else
+            {
+                if (sortColumnDirection.Equals("asc"))
+                {
+                    data = await _context.AU_CUESTIONARIOS
+                        .Where(e => e.ESTADO == 3)
+                        .OrderByDescending(e => e.NOMBRE_CUESTIONARIO)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .ToListAsync();
+                }
+                else
+                {
+                    data = await _context.AU_CUESTIONARIOS
+                        .Where(e => e.ESTADO == 3)
+                        .OrderBy(e => e.NOMBRE_CUESTIONARIO)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .ToListAsync();
+                }
+
+                recordsTotal = await _context.AU_CUESTIONARIOS
+                    .Where(e => e.ESTADO == 3)
+                    .CountAsync();
+            }
+
+            var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
+            return Ok(jsonData);
+
+        }
+
+        /// <summary>
+        /// Guardar un cuestionario a la auditoria
+        /// </summary>
+        /// <param name="DataAI"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> Guardar_Audit_Cuestionario([FromBody] Mg_auditorias_cuestionarios DataCuest)
+        {
+            try
+            {
+                if (DataCuest == null) return new JsonResult("error");
+
+                //Obtenemos el codigo del siguiente registro
+                int maxNumeroRegistro = await _context.MG_AUDITORIAS_CUESTIONARIOS
+                    .MaxAsync(a => (int?)a.CODIGO_AUDITORIA_CUESTIONARIO) ?? 0;
+                // Incrementar el valor máximo en 1
+                var nuevoIdRegistro = maxNumeroRegistro + 1;
+
+
+
+                //Obtenemos el codigo del siguiente correlativo del cuestionario
+                int maxNumero = await _context.MG_AUDITORIAS_CUESTIONARIOS
+                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == DataCuest.NUMERO_AUDITORIA_INTEGRAL)
+                    .Where(e => e.ANIO == DataCuest.ANIO)
+                    .MaxAsync(a => (int?)a.CORRELATIVO_CUESTIONARIO) ?? 0;
+                // Incrementar el valor máximo en 1
+                var nuevoId = maxNumero + 1;
+
+
+
+                //Obtenemos informacion complementaria del universo auditable
+                var auditoria = await _context.AU_AUDITORIAS_INTEGRALES
+                                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == DataCuest.NUMERO_AUDITORIA_INTEGRAL)
+                                    .Where(e => e.ANIO_AI == DataCuest.ANIO)
+                                    .FirstOrDefaultAsync();
+
+                DataCuest.CODIGO_AUDITORIA_CUESTIONARIO = nuevoIdRegistro;
+                DataCuest.CODIGO_AUD_CUEST = "CDT-" + auditoria.CODIGO_UNIVERSO_AUDITABLE + "-" + DataCuest.CODIGO_AUD_CUEST + "-" + nuevoId + "-" + DataCuest.ANIO;
+                DataCuest.CODIGO_ESTADO = 1;
+                DataCuest.CREADO_POR = HttpContext.Session.GetString("user");
+                DataCuest.FECHA_CREACION = DateTime.Now;
+                DataCuest.CORRELATIVO_CUESTIONARIO = nuevoId;
+
+                _context.Add(DataCuest);
+
+
+                //Guardamos el cuestionario
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("Ok");
+        }
+
+        /// <summary>
+        /// Metodo para obtener un cuestionarios autorizado y ver sus preguntas
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> ObtenerPreguntasCuestionario(int codigo_cuestionario)
+        {
+            try
+            {
+                List<string> datacuestionario = new List<string>();
+
+                var data = await _context.AU_CUESTIONARIOS
+                    .Where(e => e.CODIGO_CUESTIONARIO == codigo_cuestionario)
+                    .FirstOrDefaultAsync();
+
+                List<Mg_secciones> secciones = await _context.MG_SECCIONES
+                        .Include(x => x.sub_secciones)
+                        .ThenInclude(x => x.Preguntas_Cuestionarios)
+                        .ToListAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    WriteIndented = true,
+                };
+
+                return new JsonResult(secciones, options);
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         //********************************************************************************
         // PAGES NEWS
@@ -1100,15 +1331,6 @@ namespace SIA.Controllers
 
 
 
-        /// <summary>
-        /// Pagina principal con listado de auditorias integrales
-        /// </summary>
-        /// <returns></returns>
-        [Route("Auditorias")]
-        public IActionResult Auditorias()
-        {
-            return View();
-        }
 
 
 

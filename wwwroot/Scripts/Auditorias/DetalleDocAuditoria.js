@@ -310,7 +310,8 @@ async function GeAuditoriasEspecEdit() {
                 },
                 {
                     "data": "mg_tipos_de_auditorias.descripcion",
-                    "render": function (data, type, row, meta) { return "<div class='tipo_auditoria'>" + row.mg_tipos_de_auditorias.descripcion + "</div>"; }, "name": "TIPO DE AUDITORIA",
+                    "render": function (data, type, row, meta) { return "<div class='tipo_auditoria'>" + row.mg_tipos_de_auditorias.descripcion + "</div>"; },
+                    "name": "TIPO DE AUDITORIA",
                     "autoWidth": true,
                     "orderable": false
                 },
