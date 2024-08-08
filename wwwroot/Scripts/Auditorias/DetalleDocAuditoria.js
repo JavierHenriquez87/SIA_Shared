@@ -441,7 +441,7 @@ function CargarAuditoresMDPEditar(encargado_auditoria) {
         dataType: 'json',
         success: function (result) {
             let SelectAuditores = document.getElementById("encargadoAuditoria");
-            SelectAuditores.innerHTML = ""; // Limpiar el select antes de llenarlo
+            SelectAuditores.innerHTML = "";
 
             if (result == "error") {
                 Swal.fire(

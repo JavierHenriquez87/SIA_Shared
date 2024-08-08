@@ -167,6 +167,14 @@ h3, h5 {
         border: 1px solid;
     }
 
+    .status.partially {
+        background-color: #fffde6;
+        color: #9c8a00;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #f4e900;
+        border: 1px solid;
+    }
 
 
 /************************

@@ -1,12 +1,11 @@
-
-
 .card-tarjet {
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    width: 100%;
+    width: 48%;
+    margin: 10px;
 }
 
 .row {
@@ -21,18 +20,13 @@
 
 .column {
     display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+    flex-wrap: wrap;
 }
-
-    .column label {
-        margin-right: 10px;
-    }
 
 .textarea-container {
     flex-grow: 1;
     margin-right: 10px;
-    width:60%;
+    width: 100%;
 }
 
     .textarea-container textarea {
@@ -40,6 +34,7 @@
         height: 100px;
         border: 1px solid #74788d;
         border-radius: 10px;
+        padding: 10px;
     }
 
 .select-container {
@@ -57,11 +52,12 @@
     }
 
 .percentage {
-    border: 1px solid red;
-    width: 200px;
+    width: 130px;
     text-align: center;
-    padding: 5px;
+    padding: 3px;
     border-radius: 20px;
+    margin-right: 8px !important;
+    margin-top: 10px !important;
 }
 
 .radio-group {
@@ -77,3 +73,17 @@
     .radio-group label {
         margin-right: 15px;
     }
+
+.text-card-title {
+    text-align: center !important;
+    border: outset !important;
+    padding: 5px !important;
+    background-color: #dde2fa;
+}
+
+.text-card-subtitle {
+    text-align: center !important;
+    border: outset !important;
+    padding: 5px !important;
+    background-color: #e3e4e8;
+}
