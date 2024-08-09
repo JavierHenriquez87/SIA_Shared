@@ -150,3 +150,7 @@ function MostrarOpcionesDA() {
 function IrCuestionarioAudi() {
     window.location.href = '/Auditorias/CuestionariosAuditoria';
 }
+
+function IrPlanTrabajo() {
+    window.location.href = '/Auditorias/ProgramasDeTrabajo';
+}

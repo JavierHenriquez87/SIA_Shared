@@ -90,6 +90,8 @@ async function AgregarCuestionarioAuditoria(num_audit_integral, anio_audit_integ
         CODIGO_AUD_CUEST: tipo_auditoria
     };
 
+    Swal.showLoading();
+
     return new Promise((resolve, reject) => {
         $.ajax({
             method: 'POST',
@@ -193,7 +195,7 @@ async function VerCuestionario(codigo_cuestionario) {
                             });
                         });
                     });
-                
+
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
@@ -207,3 +209,68 @@ async function VerCuestionario(codigo_cuestionario) {
     });
 
 };
+
+function handleClickCuestionario(element) {
+    var codigoCuest = element.getAttribute('data-codigo-cuest');
+    window.location.href = 'CuestionariosAuditoria/CuestionarioTrabajo?dc=' + codigoCuest;
+}
+
+//FUNCION PARA BORRAR UN CUESTIONARIO
+//==========================================================================================
+function borrarCuestionario(event) {
+    event.stopPropagation(); // Detiene la propagación del evento para que no se dispare el onclick del contenedor principal.
+
+    // Obtener el elemento contenedor principal (div) desde el ícono de borrar
+    const parentDiv = event.currentTarget.closest('[data-codigo-cuest]');
+    const codigoCuest = parentDiv.getAttribute('data-codigo-cuest');
+
+    console.log("Eliminar cuestionario con código:", codigoCuest);
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-success mx-2", // mx-2 agrega margen horizontal
+            cancelButton: "btn btn-danger mx-2"
+        },
+        buttonsStyling: false // Esto es necesario para que SweetAlert2 no sobrescriba los estilos de Bootstrap
+    });
+
+    swalWithBootstrapButtons.fire({
+        title: "Borrar Cuestionario",
+        text: "¿Desea borrar este cuestionario de la auditoria?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'ajax',
+                method: 'post',
+                url: '/Auditorias/BorrarCuestionario',
+                data: {
+                    codigo_cuestionario: codigoCuest
+                },
+                dataType: 'json',
+                success: function (result) {
+                    if (result == "error") {
+                        Swal.fire(
+                            'Error!',
+                            'No se pudo borrar el cuestionario. Contacte con TI si el problema persiste.',
+                            'error'
+                        )
+                    }
+                    else {
+                        window.location.reload();
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    Swal.fire(
+                        'Error!',
+                        'Su registro no se puede borrar  ' + xhr.responseText,
+                        'error'
+                    )
+                }
+            });
+        }
+    });
+}

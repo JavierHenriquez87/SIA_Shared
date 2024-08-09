@@ -376,9 +376,7 @@ namespace SIA.Controllers
                     au_Auditorias.ENCARGADO_AUDITORIA = encargado_auditoria;
                     au_Auditorias.ANIO_AE = anio_auditoria_integral;
 
-
                     _context.Add(au_Auditorias);
-
 
                     //Guardamos el rol editado
                     await _context.SaveChangesAsync();
@@ -432,6 +430,8 @@ namespace SIA.Controllers
         {
             try
             {
+                var nuevoPDT = 0;
+
                 //Obtenemos data de la auditoria integral
                 var auditIntegral = await _context.AU_AUDITORIAS_INTEGRALES
                                     .Where(u => u.NUMERO_AUDITORIA_INTEGRAL == num_auditoria_integral)
@@ -456,7 +456,41 @@ namespace SIA.Controllers
                     auditoria.CODIGO_AUDITORIA = auditIntegral.CODIGO_UNIVERSO_AUDITABLE + "-" + auditoria.CODIGO_TIPO_AUDITORIA + "-" + num_auditoria_integral + "-" + anio_auditoria_integral;
 
                     // Guarda los cambios en la base de datos una vez
-                    await _context.SaveChangesAsync();
+                    int result = await _context.SaveChangesAsync();
+
+
+                    if (result > 0)
+                    {
+                        //Obtenemos el codigo del siguiente registro segun el anio actual
+                        int maxNumeroPlanAuditGeneral = await _context.AU_PLANES_DE_TRABAJO
+                        .MaxAsync(a => (int?)a.NUMERO_PDT) ?? 0;
+
+                        // Incrementar el valor máximo en 1
+                        nuevoPDT = maxNumeroPlanAuditGeneral + 1;
+
+                        //Obtenemos el codigo del siguiente registro segun el anio actual
+                        int maxNumeroPlanAudit = await _context.AU_PLANES_DE_TRABAJO
+                            .MaxAsync(a => (int?)a.NUMERO_PDT) ?? 0;
+
+                        // Incrementar el valor máximo en 1
+                        nuevoPDT = maxNumeroPlanAudit + 1;
+
+                        Au_Planes_De_Trabajo au_planes_de_trabajo = new();
+                        au_planes_de_trabajo.NUMERO_PDT = nuevoPDT;
+                        au_planes_de_trabajo.NUMERO_AUDITORIA_INTEGRAL = num_auditoria_integral;
+                        au_planes_de_trabajo.ANIO_AUDITORIA = anio_auditoria_integral;
+                        au_planes_de_trabajo.NUMERO_AUDITORIA = auditoria.NUMERO_AUDITORIA;
+                        au_planes_de_trabajo.CODIGO_TIPO_AUDITORIA = auditoria.CODIGO_TIPO_AUDITORIA;
+                        au_planes_de_trabajo.CODIGO_PDT = "PDT-" + auditoria.CODIGO_AUDITORIA;
+                        au_planes_de_trabajo.CODIGO_ESTADO = 1;
+                        au_planes_de_trabajo.FECHA_CREACION = DateTime.Now;
+                        au_planes_de_trabajo.CREADO_POR = HttpContext.Session.GetString("user");
+
+                        _context.Add(au_planes_de_trabajo);
+
+                        //Guardamos el rol editado
+                        await _context.SaveChangesAsync();
+                    }
                 }
             }
             catch (Exception ex)
@@ -1244,7 +1278,44 @@ namespace SIA.Controllers
 
 
                 //Guardamos el cuestionario
-                await _context.SaveChangesAsync();
+                int resp = await _context.SaveChangesAsync();
+
+                //Si se guardo el cuestionario, guardamos las preguntas
+                if (resp > 0)
+                {
+                    //Obtenemos informacion complementaria del universo auditable
+                    var preguntas = await _context.MG_PREGUNTAS_CUESTIONARIO
+                                        .Where(e => e.CODIGO_CUESTIONARIO == DataCuest.CODIGO_CUESTIONARIO)
+                                        .ToListAsync();
+
+                    foreach (var item in preguntas)
+                    {
+                        //Obtenemos el codigo del siguiente registro
+                        int maxNumeroPreg = await _context.MG_RESPUESTAS_CUESTIONARIO
+                            .MaxAsync(a => (int?)a.CODIGO_RESPUESTA) ?? 0;
+                        // Incrementar el valor máximo en 1
+                        var IdPregunta = maxNumeroPreg + 1;
+
+                        Mg_respuestas_cuestionario RespCuest = new();
+                        RespCuest.CODIGO_RESPUESTA = IdPregunta;
+                        RespCuest.CODIGO_PREGUNTA = item.CODIGO_PREGUNTA;
+                        RespCuest.CUMPLE = 0;
+                        RespCuest.NO_CUMPLE = 0;
+                        RespCuest.CUMPLE_PARCIALMENTE = 0;
+                        RespCuest.NO_APLICA = 0;
+                        RespCuest.OBSERVACIONES = null;
+                        RespCuest.CALIFICACIONES = null;
+                        RespCuest.PUNTAJE = 0;
+                        RespCuest.CREADO_POR = HttpContext.Session.GetString("user");
+                        RespCuest.FECHA_CREACION = DateTime.Now;
+                        RespCuest.CODIGO_AUDITORIA_CUESTIONARIO = nuevoIdRegistro;
+
+                        _context.Add(RespCuest);
+
+                        //Guardamos el cuestionario
+                        await _context.SaveChangesAsync();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -1292,22 +1363,186 @@ namespace SIA.Controllers
 
         }
 
-
-
-        //********************************************************************************
-        // CUESTIONARIO
-        //********************************************************************************
         /// <summary>
         /// Mostramos el cuestionario de preguntas
         /// </summary>
         /// <returns></returns>
-        [Route("Auditorias/CuestionariosAuditoria/CuestionarioTrabajo")]
+        [HttpGet("Auditorias/CuestionariosAuditoria/CuestionarioTrabajo")]
         public async Task<IActionResult> CuestionarioTrabajo()
         {
+            int codigoCuest = Int32.Parse(Request.Query["dc"]);
+
+            var data = await _context.MG_AUDITORIAS_CUESTIONARIOS
+                    .Where(e => e.CODIGO_AUDITORIA_CUESTIONARIO == codigoCuest)
+                    .FirstOrDefaultAsync();
+
+            ViewBag.CODIGO_CUEST = codigoCuest;
+            ViewBag.ESTADO_CUESTIONARIO = data.CODIGO_ESTADO;
+
             return View();
         }
 
+        /// <summary>
+        /// Metodo para obtener las respuestas de un cuestionario agregado a la auditoria
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> ObtenerRespuestasCuestionario(int codigo_cuestionario)
+        {
+            try
+            {
+                List<Mg_secciones> secciones = await _context.MG_SECCIONES
+                        .Include(x => x.sub_secciones)
+                        .ThenInclude(x => x.Preguntas_Cuestionarios)
+                        .ToListAsync();
 
+                var respuestasData = await _context.MG_RESPUESTAS_CUESTIONARIO
+                                .Where(e => e.CODIGO_AUDITORIA_CUESTIONARIO == codigo_cuestionario)
+                                .ToListAsync();
+
+                foreach (var item in secciones)
+                {
+                    foreach (var item2 in item.sub_secciones)
+                    {
+                        foreach (var item3 in item2.Preguntas_Cuestionarios)
+                        {
+                            var respuesta = respuestasData.FirstOrDefault(r => r.CODIGO_PREGUNTA == item3.CODIGO_PREGUNTA);
+
+                            item3.RESPUESTA_PREGUNTA = respuesta;
+                        }
+                    }
+                }
+
+                var options = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    WriteIndented = true,
+                };
+
+                return new JsonResult(secciones, options);
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+
+
+        }
+
+
+        /// <summary>
+        /// Guardar un cuestionario a la auditoria
+        /// </summary>
+        /// <param name="DataAI"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> Edit_Cuestionario([FromBody] List<Mg_respuestas_cuestionario> DataCuest)
+        {
+            try
+            {
+                if (DataCuest == null) return new JsonResult("error");
+
+                foreach (var item in DataCuest)
+                {
+                    var dataPregunta = await _context.MG_RESPUESTAS_CUESTIONARIO
+                                        .Where(u => u.CODIGO_RESPUESTA == item.CODIGO_RESPUESTA)
+                                        .FirstOrDefaultAsync();
+
+                    dataPregunta.CUMPLE = item.CUMPLE;
+                    dataPregunta.NO_CUMPLE = item.NO_CUMPLE;
+                    dataPregunta.CUMPLE_PARCIALMENTE = item.CUMPLE_PARCIALMENTE;
+                    dataPregunta.NO_APLICA = item.NO_APLICA;
+                    dataPregunta.OBSERVACIONES = item.OBSERVACIONES;
+                    dataPregunta.CALIFICACIONES = item.CALIFICACIONES;
+                    dataPregunta.PUNTAJE = item.PUNTAJE;
+                    dataPregunta.FECHA_MODIFICACION = DateTime.Now;
+                    dataPregunta.MODIFICADO_POR = HttpContext.Session.GetString("user");
+
+                    // Guarda los cambios en la base de datos
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("Ok");
+        }
+
+        /// <summary>
+        /// Borrar un cuestionario
+        /// </summary>
+        /// <param name="DataAI"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> BorrarCuestionario(int codigo_cuestionario)
+        {
+            try
+            {
+                int exito = await _context.MG_AUDITORIAS_CUESTIONARIOS
+                        .Where(x => x.CODIGO_AUDITORIA_CUESTIONARIO == codigo_cuestionario)
+                        .ExecuteDeleteAsync();
+
+                if (exito > 0)
+                {
+                    return new JsonResult("success");
+                }
+                else
+                {
+                    return new JsonResult("error");
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+        }
+
+
+
+
+
+        //********************************************************************************
+        // PROGRAMAS DE TRABAJO
+        //********************************************************************************
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("Auditorias/ProgramasDeTrabajo")]
+        public async Task<IActionResult> ProgramasTrabajoAuditoria()
+        {
+            int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+            int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+
+            //obtenemos el numero de auditorias especificas de la integral
+            var planesTrab = await _context.AU_PLANES_DE_TRABAJO
+                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == cod)
+                    .Where(e => e.ANIO_AUDITORIA == anio)
+                    .ToListAsync();
+
+
+            ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
+            ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
+            ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
+            ViewBag.AUDITORIAS_PLANESDETRABAJO = planesTrab;
+
+            return View();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("Auditorias/ProgramaTrabajo")]
+        public IActionResult ProgramaTrabajo()
+        {
+            return View();
+        }
 
 
 
@@ -1348,15 +1583,7 @@ namespace SIA.Controllers
 
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [Route("Auditorias/ProgramaTrabajo")]
-        public IActionResult ProgramaTrabajo()
-        {
-            return View();
-        }
+
 
         /// <summary>
         /// 

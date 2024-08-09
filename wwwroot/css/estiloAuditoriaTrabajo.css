@@ -82,7 +82,7 @@
 }
 
 .text-card-subtitle {
-    text-align: center !important;
+    text-align: left !important;
     border: outset !important;
     padding: 5px !important;
     background-color: #e3e4e8;

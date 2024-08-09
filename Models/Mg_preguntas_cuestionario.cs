@@ -16,7 +16,12 @@ namespace SIA.Models
         public string? MODIFICADO_POR { get; set; }
         public int? CODIGO_CUESTIONARIO { get; set; }
 
+        // Propiedad que no estará en la base de datos
+        [NotMapped]
+        public Mg_respuestas_cuestionario RESPUESTA_PREGUNTA { get; set; }
+
         // Propiedad de navegación a Mg_secciones
         public Mg_sub_secciones Sub_secciones { get; set; }
+
     }
 }

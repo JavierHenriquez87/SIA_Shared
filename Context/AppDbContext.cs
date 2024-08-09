@@ -16,7 +16,7 @@ namespace SIA.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Mg_menus_segun_rol>().HasKey(e => new { e.CODIGO_ROL, e.CODIGO_MENU }); 
+            modelBuilder.Entity<Mg_menus_segun_rol>().HasKey(e => new { e.CODIGO_ROL, e.CODIGO_MENU });
             modelBuilder.Entity<Mg_permisos_submenus>().HasKey(e => new { e.CODIGO_ROL, e.CODIGO_SUB_MENU });
             modelBuilder.Entity<Au_auditorias_integrales>().HasKey(e => new { e.NUMERO_AUDITORIA_INTEGRAL, e.ANIO_AI });
             modelBuilder.Entity<Au_auditorias>().HasKey(e => new { e.NUMERO_AUDITORIA_INTEGRAL, e.NUMERO_AUDITORIA });
@@ -33,6 +33,7 @@ namespace SIA.Context
             .HasMany(s => s.Preguntas_Cuestionarios)
             .WithOne(sub => sub.Sub_secciones)
             .HasForeignKey(sub => sub.CODIGO_SUB_SECCION);
+
         }
 
         public virtual DbSet<Mg_usuarios> MG_USUARIOS { get; set; }

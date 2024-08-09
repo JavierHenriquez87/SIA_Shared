@@ -19,12 +19,11 @@
 <link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
 <link href="~/css/estiloAuditoriaIndividual.css" rel="stylesheet" type="text/css" />
 
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-
-                <div id="divAuditoriaIndividual" style="@styleAE">
+<div id="divAuditoriaIndividual" style="@styleAE">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
                     <h5>PROGRAMAR NUEVA AUDITORÍA ESPECIFICA</h5>
                     <input type="hidden" id="num_audit_integral" value="@ViewBag.NUMERO_AUDITORIA_INTEGRAL" readonly>
                     <input type="hidden" id="anio_audit_integral" value="@ViewBag.ANIO_AUDITORIA_INTEGRAL" readonly>
@@ -59,28 +58,33 @@
                         <button type="button" onclick="AgregarAuditoria()" class="btn btn-primary">Agregar Auditoría</button>
                         <button type="button" onclick="ConfirmarAuditoria()" class="btn btn-primary">Confirmar Auditorías</button>
                     </div>
-
-                    <div class="form-container">
-                        <h5>@ViewBag.TITULO_AUDITORIA</h5>
-
-                        <table id="tbAuditorias" class="table table-bordered dt-responsive  nowrap w-100">
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Auditoría</th>
-                                    <th>Tipo de Auditoría</th>
-                                    <th>Encargado de Auditoría</th>
-                                    <th>Opciones</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="form-container">
+        <h5>@ViewBag.TITULO_AUDITORIA</h5>
 
+        <table id="tbAuditorias" class="table table-bordered dt-responsive  nowrap w-100">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Auditoría</th>
+                    <th>Tipo de Auditoría</th>
+                    <th>Encargado de Auditoría</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
 
-                <div id="divSinAuditoriaIndividual" style="@styleSAE">
-
+<div id="divSinAuditoriaIndividual" style="@styleSAE">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
                     <h5>@ViewBag.TITULO_AUDITORIA</h5>
                     <div style="display: flex; flex-direction: column; align-items: center;">
                         <img src="~/assets/images/auditoria.png" style="height: 280px; width: auto;" />
@@ -92,6 +96,7 @@
         </div>
     </div>
 </div>
+
 
 @await Html.PartialAsync("partialView/_EditarEncargado")
 
