@@ -166,7 +166,7 @@ function handleInputChange(event) {
     var preguntaIndex = preguntasObj.findIndex(function (item) {
         return item.CODIGO_PREGUNTA == parseInt(codigoPregunta, 10);
     });
-
+    6
     if (preguntaIndex !== -1) {
         var preguntaExistente = preguntasObj[preguntaIndex];
         if (input.type === 'radio') {

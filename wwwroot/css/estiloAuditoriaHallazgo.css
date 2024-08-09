@@ -144,3 +144,18 @@
         color: #186040;
     }
 
+.input-button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre filas */
+}
+
+#input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre los inputs */
+}
+
+.input-button-group > button {
+    align-self: flex-end; /* Mantener el botón al final */
+}
