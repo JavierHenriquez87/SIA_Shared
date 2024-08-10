@@ -111,7 +111,11 @@
 }
 
 .specific-style {
-    margin-bottom: 15px;
+    border: 1px solid #ccc; /* Borde de la tarjeta */
+    border-radius: 8px; /* Esquinas redondeadas */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    padding: 16px; /* Espacio interno */
+    background-color: #fff; /* Fondo blanco */
 }
 
     .specific-style label {
@@ -133,7 +137,6 @@
         }
 
         .specific-style .input-button-group .icon-button {
-            padding: 8px;
             cursor: pointer;
             border: none;
             background: none;
@@ -158,4 +161,71 @@
 
 .input-button-group > button {
     align-self: flex-end; /* Mantener el botón al final */
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+    .input-group .additional-input {
+        flex-grow: 1;
+        margin-right: 8px;
+    }
+
+    .input-group .remove-button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        color: #f00;
+        font-size: 20px;
+        padding-top: 10px;
+    }
+
+.risk-level-options {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 10px;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 100;
+}
+
+    .risk-level-options .card {
+        padding: 10px 20px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+#selectedRisk {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.card.highlight-bajo {
+    background-color: #d1e7dd; /* Verde claro para "Bajo" */
+    border-color: #0f5132;
+    color: #0f5132;
+}
+
+.card.highlight-medio {
+    background-color: #fff3cd; /* Amarillo claro para "Medio" */
+    border-color: #856404;
+    color: #856404;
+}
+
+.card.highlight-alto {
+    background-color: #f8d7da; /* Rojo claro para "Alto" */
+    border-color: #842029;
+    color: #842029;
 }

@@ -53,8 +53,14 @@
                 </div>
                 <div class="form-group calificacion risk-level">
                     <label for="nivel_riesgo">Nivel de Riesgo</label>
-                    <span class="card highlight-bajo">Bajo</span>
+                    <div id="selectedRisk" class="card highlight-bajo" data-risk="bajo">Bajo</div>
+                    <div id="riskLevels" class="risk-level-options" style="display: none;">
+                        <span class="card" data-risk="bajo" style="width: 100%;">Bajo</span>
+                        <span class="card" data-risk="medio" style="width: 100%;">Medio</span>
+                        <span class="card" data-risk="alto" style="width: 100%;">Alto</span>
+                    </div>
                 </div>
+                <input type="hidden" id="nivel_riesgo" name="nivel_riesgo" value="bajo" />
             </div>
             <div class="columns">
 
@@ -68,10 +74,12 @@
                         <textarea id="criterio" rows="2" placeholder="Escribir..."></textarea>
                     </div>
                     <div class="form-group specific-style">
-                        <label for="causa">Causa</label>
+                        <label for="efecto">Causa</label>
                         <div class="input-button-group">
-                            <input id="causa" placeholder="Escribir..." />
-                            <button id="btn_causa" class="icon-button">
+                            <div id="input_causa" style="width: 100%;">
+                                <input id="causa" placeholder="Escribir..." />
+                            </div>
+                            <button id="btn_causa" class="icon-button" type="button">
                                 <i class="bx bx-list-plus font-size-24"></i>
                             </button>
                         </div>
@@ -79,7 +87,7 @@
                     <div class="form-group specific-style">
                         <label for="efecto">Efecto</label>
                         <div class="input-button-group">
-                            <div id="input-container">
+                            <div id="input_efecto" style="width: 100%;">
                                 <input id="efecto" placeholder="Escribir..." />
                             </div>
                             <button id="btn_efecto" class="icon-button" type="button">
@@ -88,28 +96,34 @@
                         </div>
                     </div>
                     <div class="form-group specific-style">
-                        <label for="recomendaciones">Recomendaciones</label>
+                        <label for="efecto">Recomendaciones</label>
                         <div class="input-button-group">
-                            <input id="recomendaciones" placeholder="Escribir..." />
-                            <button id="btn_recomendaciones" class="icon-button">
+                            <div id="input_recomendaciones" style="width: 100%;">
+                                <input id="recomendaciones" placeholder="Escribir..." />
+                            </div>
+                            <button id="btn_recomendaciones" class="icon-button" type="button">
                                 <i class="bx bx-list-plus font-size-24"></i>
                             </button>
                         </div>
                     </div>
                     <div class="form-group specific-style">
-                        <label for="comentarios">Comentarios</label>
+                        <label for="efecto">Comentarios</label>
                         <div class="input-button-group">
-                            <input id="comentarios" placeholder="Escribir..." />
-                            <button id="btn_comentarios" class="icon-button">
+                            <div id="input_comentarios" style="width: 100%;">
+                                <input id="comentarios" placeholder="Escribir..." />
+                            </div>
+                            <button id="btn_comentarios" class="icon-button" type="button">
                                 <i class="bx bx-list-plus font-size-24"></i>
                             </button>
                         </div>
                     </div>
                     <div class="form-group specific-style">
-                        <label for="acciones_requeridas">Acciones Requeridas</label>
+                        <label for="efecto">Acciones Requeridas</label>
                         <div class="input-button-group">
-                            <input id="acciones_requeridas" placeholder="Escribir..." />
-                            <button id="btn_acciones_requeridas" class="icon-button">
+                            <div id="input_acciones_requeridas" style="width: 100%;">
+                                <input id="acciones_requeridas" placeholder="Escribir..." />
+                            </div>
+                            <button id="btn_acciones_requeridas" class="icon-button" type="button">
                                 <i class="bx bx-list-plus font-size-24"></i>
                             </button>
                         </div>
