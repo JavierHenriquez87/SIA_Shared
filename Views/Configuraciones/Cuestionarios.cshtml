@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "Cuestionarios";
+    ViewBag.pTitle = "Cuestionarios";
+    ViewBag.pageTitle = "Cuestionarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <button type="button" style="margin-bottom: 15px" onClick="NuevoCuestionario()" class="btn btn-primary">
+                    Nuevo Cuestionario
+                </button>
+
+                <table id="tbCuestionarios" class="table table-bordered dt-responsive  nowrap w-100">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Nombre</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+@await Html.PartialAsync("partialView/_mainCuestionario")
+
+@section scripts{
+    <script src="~/Scripts/Configuraciones/Cuestionarios.js"></script>
+}

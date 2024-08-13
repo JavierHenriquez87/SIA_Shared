@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\Scripts\Configuraciones\Cuestionarios.js" />
     <Content Remove="wwwroot\Scripts\Helpers\Helpers.js" />
     <Content Remove="wwwroot\Scripts\Usuarios\Roles.js" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Views\Print\Index.cshtml" />
+    <None Include="wwwroot\Scripts\Configuraciones\Cuestionarios.js" />
     <None Include="wwwroot\Scripts\Helpers\Helpers.js" />
     <None Include="wwwroot\Scripts\Usuarios\Roles.js" />
     <None Include="wwwroot\Scripts\Usuarios\Usuarios.js" />

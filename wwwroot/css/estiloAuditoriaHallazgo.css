@@ -212,6 +212,10 @@
     display: inline-block;
 }
 
+.card {
+    margin-bottom: 10px !important;
+}
+
 .card.highlight-bajo {
     background-color: #d1e7dd; /* Verde claro para "Bajo" */
     border-color: #0f5132;
