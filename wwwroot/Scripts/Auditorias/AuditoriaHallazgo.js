@@ -8,11 +8,12 @@ document.getElementById('cualitativa').addEventListener('click', function (event
     event.preventDefault();
 });
 
+let formularioData = {};
 
 // Esperar a que el DOM esté completamente cargado
 document.addEventListener("DOMContentLoaded", function () {
     // Objeto JavaScript para almacenar los valores del formulario
-    const formularioData = {
+    formularioData = {
         hallazgo: "",
         calificacion: "",
         valor_muestra: "",
@@ -22,7 +23,19 @@ document.addEventListener("DOMContentLoaded", function () {
         condicion: "",
         criterio: "",
         causageneral: [
-            { id: "causa", causa: "" }  // Causa inicial por defecto
+            { id: "causa", causa: "" }
+        ],
+        efecto: [
+            { id: "efecto", efecto: "" }
+        ],
+        recomendaciones: [
+            { id: "recomendaciones", recomendaciones: "" }
+        ],
+        comentarios: [
+            { id: "comentarios", comentarios: "" }
+        ],
+        acciones_requeridas: [
+            { id: "acciones_requeridas", acciones_requeridas: "" }
         ]
     };
 
@@ -33,13 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
     inputs.forEach(input => {
         input.addEventListener('change', handleInputChange);
     });
-
-    // Función para manejar el cambio en los inputs
-    function handleInputChange(event) {
-        const { name, value } = event.target;
-        formularioData[name] = value;
-        console.log(formularioData);
-    }
 
     // Agregar eventos a los botones para cambiar la calificación
     document.getElementById('cuantitativa').addEventListener('click', function (event) {
@@ -53,6 +59,50 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Función para manejar el cambio en los inputs
+function handleInputChange(event) {
+    const { name, value } = event.target;
+    
+    if (name.includes("causa")) {
+        const causaId = name; // Asume que el nombre del campo es el mismo que el ID en el array
+        const causaObj = formularioData.causageneral.find(obj => obj.id === causaId);
+        if (causaObj) {
+            causaObj.causa = value;
+        }
+    }
+    else if (name.includes("efecto")) {
+        const efectoId = name; // Asume que el nombre del campo es el mismo que el ID en el array
+        const efectoObj = formularioData.efecto.find(obj => obj.id === efectoId);
+        if (efectoObj) {
+            efectoObj.efecto = value;
+        }
+    }
+    else if (name.includes("recomendaciones")) {
+        const recomendacionesId = name; // Asume que el nombre del campo es el mismo que el ID en el array
+        const recomendacionesObj = formularioData.recomendaciones.find(obj => obj.id === recomendacionesId);
+        if (recomendacionesObj) {
+            recomendacionesObj.recomendaciones = value;
+        }
+    }
+    else if (name.includes("comentarios")) {
+        const comentariosId = name; // Asume que el nombre del campo es el mismo que el ID en el array
+        const comentariosObj = formularioData.comentarios.find(obj => obj.id === comentariosId);
+        if (comentariosObj) {
+            comentariosObj.comentarios = value;
+        }
+    }
+    else if (name.includes("acciones_requeridas")) {
+        const acciones_requeridasId = name; // Asume que el nombre del campo es el mismo que el ID en el array
+        const acciones_requeridasObj = formularioData.acciones_requeridas.find(obj => obj.id === acciones_requeridasId);
+        if (acciones_requeridasObj) {
+            acciones_requeridasObj.acciones_requeridas = value;
+        }
+    }
+    else {
+        formularioData[name] = value;
+    }
+    console.log(formularioData);
+}
 
 function calculoMuestra() {
     var valor_muestra = $('#valor_muestra').val();
@@ -128,6 +178,7 @@ document.getElementById('btn_causa').addEventListener('click', function () {
     // Asignar un ID único al nuevo input
     const uniqueId = `causa-${causaCount}`;
     newInput.id = uniqueId;
+    newInput.name = uniqueId; // Añadir un nombre único al input
 
     // Crear un botón de eliminar
     const removeButton = document.createElement('button');
@@ -138,6 +189,8 @@ document.getElementById('btn_causa').addEventListener('click', function () {
     // Añadir evento para eliminar el input cuando se haga clic en el botón
     removeButton.addEventListener('click', function () {
         inputContainer.remove();
+        // Eliminar del array de objetos
+        formularioData.causageneral = formularioData.causageneral.filter(causa => causa.id !== uniqueId);
     });
 
     // Añadir el input y el botón de eliminar al contenedor div
@@ -149,8 +202,11 @@ document.getElementById('btn_causa').addEventListener('click', function () {
     container.appendChild(inputContainer);
 
     //Agregar al array de objetos
-    const nuevasCausas = formularioData.causageneral;
-    nuevasCausas.push({ id: uniqueId, causa: "" });
+    formularioData.causageneral.push({ id: uniqueId, causa: "" });
+
+    // Vincular la función handleInputChange al evento input del nuevo input
+    newInput.addEventListener('change', handleInputChange);
+
     // Incrementar el contador
     causaCount++;
 });
@@ -172,6 +228,7 @@ document.getElementById('btn_efecto').addEventListener('click', function () {
     // Asignar un ID único al nuevo input
     const uniqueId = `efecto-${efectoCount}`;
     newInput.id = uniqueId;
+    newInput.name = uniqueId;
 
     // Crear un botón de eliminar
     const removeButton = document.createElement('button');
@@ -182,6 +239,8 @@ document.getElementById('btn_efecto').addEventListener('click', function () {
     // Añadir evento para eliminar el input cuando se haga clic en el botón
     removeButton.addEventListener('click', function () {
         inputContainer.remove();
+        // Eliminar del array de objetos
+        formularioData.efecto = formularioData.efecto.filter(efecto => efecto.id !== uniqueId);
     });
 
     // Añadir el input y el botón de eliminar al contenedor div
@@ -191,6 +250,11 @@ document.getElementById('btn_efecto').addEventListener('click', function () {
     // Añadir el contenedor div al contenedor principal
     const container = document.getElementById('input_efecto');
     container.appendChild(inputContainer);
+
+    //Agregar al array de objetos
+    formularioData.efecto.push({ id: uniqueId, efecto: "" });
+    // Vincular la función handleInputChange al evento input del nuevo input
+    newInput.addEventListener('change', handleInputChange);
 
     // Incrementar el contador
     efectoCount++;
@@ -211,6 +275,7 @@ document.getElementById('btn_recomendaciones').addEventListener('click', functio
     // Asignar un ID único al nuevo input
     const uniqueId = `recomendaciones-${recomendacionesCount}`;
     newInput.id = uniqueId;
+    newInput.name = uniqueId;
 
     // Crear un botón de eliminar
     const removeButton = document.createElement('button');
@@ -221,6 +286,8 @@ document.getElementById('btn_recomendaciones').addEventListener('click', functio
     // Añadir evento para eliminar el input cuando se haga clic en el botón
     removeButton.addEventListener('click', function () {
         inputContainer.remove();
+        // Eliminar del array de objetos
+        formularioData.recomendaciones = formularioData.recomendaciones.filter(recomendaciones => recomendaciones.id !== uniqueId);
     });
 
     // Añadir el input y el botón de eliminar al contenedor div
@@ -230,6 +297,11 @@ document.getElementById('btn_recomendaciones').addEventListener('click', functio
     // Añadir el contenedor div al contenedor principal
     const container = document.getElementById('input_recomendaciones');
     container.appendChild(inputContainer);
+
+    //Agregar al array de objetos
+    formularioData.recomendaciones.push({ id: uniqueId, recomendaciones: "" });
+    // Vincular la función handleInputChange al evento input del nuevo input
+    newInput.addEventListener('change', handleInputChange);
 
     // Incrementar el contador
     recomendacionesCount++;
@@ -250,6 +322,7 @@ document.getElementById('btn_comentarios').addEventListener('click', function ()
     // Asignar un ID único al nuevo input
     const uniqueId = `comentarios-${comentariosCount}`;
     newInput.id = uniqueId;
+    newInput.name = uniqueId;
 
     // Crear un botón de eliminar
     const removeButton = document.createElement('button');
@@ -260,6 +333,8 @@ document.getElementById('btn_comentarios').addEventListener('click', function ()
     // Añadir evento para eliminar el input cuando se haga clic en el botón
     removeButton.addEventListener('click', function () {
         inputContainer.remove();
+        // Eliminar del array de objetos
+        formularioData.comentarios = formularioData.comentarios.filter(comentarios => comentarios.id !== uniqueId);
     });
 
     // Añadir el input y el botón de eliminar al contenedor div
@@ -269,6 +344,11 @@ document.getElementById('btn_comentarios').addEventListener('click', function ()
     // Añadir el contenedor div al contenedor principal
     const container = document.getElementById('input_comentarios');
     container.appendChild(inputContainer);
+
+    //Agregar al array de objetos
+    formularioData.comentarios.push({ id: uniqueId, comentarios: "" });
+    // Vincular la función handleInputChange al evento input del nuevo input
+    newInput.addEventListener('change', handleInputChange);
 
     // Incrementar el contador
     comentariosCount++;
@@ -289,6 +369,7 @@ document.getElementById('btn_acciones_requeridas').addEventListener('click', fun
     // Asignar un ID único al nuevo input
     const uniqueId = `acciones_requeridas-${accionesRequeridasCount}`;
     newInput.id = uniqueId;
+    newInput.name = uniqueId;
 
     // Crear un botón de eliminar
     const removeButton = document.createElement('button');
@@ -299,6 +380,8 @@ document.getElementById('btn_acciones_requeridas').addEventListener('click', fun
     // Añadir evento para eliminar el input cuando se haga clic en el botón
     removeButton.addEventListener('click', function () {
         inputContainer.remove();
+        // Eliminar del array de objetos
+        formularioData.acciones_requeridas = formularioData.acciones_requeridas.filter(acciones_requeridas => acciones_requeridas.id !== uniqueId);
     });
 
     // Añadir el input y el botón de eliminar al contenedor div
@@ -308,6 +391,11 @@ document.getElementById('btn_acciones_requeridas').addEventListener('click', fun
     // Añadir el contenedor div al contenedor principal
     const container = document.getElementById('input_acciones_requeridas');
     container.appendChild(inputContainer);
+
+    //Agregar al array de objetos
+    formularioData.acciones_requeridas.push({ id: uniqueId, acciones_requeridas: "" });
+    // Vincular la función handleInputChange al evento input del nuevo input
+    newInput.addEventListener('change', handleInputChange);
 
     // Incrementar el contador
     accionesRequeridasCount++;
