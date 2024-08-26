@@ -1,33 +1,53 @@
-﻿<div class="modal fade" id="divAsignarActividades" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-width: 800px;">
+﻿@{
+    var lstActividades = ViewBag.DATA_ACTIVIDADES as List<SIA.Models.Mg_actividades>;
+}
+
+<div class="modal fade modal-xl" id="divAsignarActividades" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog ">
         <div class="modal-content">
-            <div class="modal-header" >
+            <div class="modal-header">
                 <h5 class="modal-title">ASIGNAR ACTIVIDADES AL PLAN DE TRABAJO</h5>
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">X</button>
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <div style="text-align:right; color: red;">
+                        <label><i class="fa fa-info-circle"></i> NOTA: Actividades ya asignadas al auditor seleccionado en este Plan de Trabajo, no se guardaran.</label>
+                    </div>
                     <div class="form-group">
                         <label for="selectEquipoAuditores">Equipo de Auditores</label>
-                        <select class="form-select form-control" id="selectEquipoAuditores">
+                        <select class="form-select form-control" id="EquipoAuditoresAsignados">
                             <option value="">- SELECCIONAR -</option>
                         </select>
                     </div>
 
-                    <table id="tbActividades" class="table table-bordered dt-responsive  nowrap w-100">
+                    <table id="tbActividades" class="table table-bordered table-sm dt-responsive w-100">
                         <thead>
                             <tr>
-                                <th>Seleccionar</th>
+                                <th style="text-align: center;">Seleccionar</th>
                                 <th>Nombre de la Actividad</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            @foreach (var item in lstActividades)
+                            {
+                                <tr>
+                                    <td class="text-center align-middle">
+                                        <div class="form-check form-checkbox-outline form-check-primary mb-3 d-flex" style="height: 100%;">
+                                            <input type="checkbox" value="@item.CODIGO_ACTIVIDAD" class="form-check-input custom-checkbox" id="customCheck-outlinecolor1">
+                                        </div>
+                                    </td>
+                                    <td title="@item.DESCRIPCION">@item.NOMBRE_ACTIVIDAD</td>
+                                </tr>
+                            }
+                        </tbody>
                     </table>
 
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" onClick="AsignarActividad()" id="btnAsignarActividad">Asignar Actividad</button>
+                <button type="button" class="btn btn-primary" onClick="AsignarActividad()">Asignar Actividad</button>
             </div>
         </div>
     </div>

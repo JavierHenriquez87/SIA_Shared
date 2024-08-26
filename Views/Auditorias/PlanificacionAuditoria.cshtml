@@ -5,7 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 @section styles {
     <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
     <link href="~/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
@@ -37,8 +36,9 @@
 
                 <div class="form-group">
                     <label for="texttipoauditoria"><i style="color: red;">* </i>Tipos de Auditorías</label>
-                    <div class="container">
-                        <textarea id="texttipoauditoria" class="editable form-control" rows="4">Durante la auditoría se realizarán las siguientes auditorías:</textarea><br />
+                    <div class="">
+                        <textarea id="texttipoauditoria" class="editable form-control" rows="4">Durante la auditoría se realizarán las siguientes auditorías:</textarea>
+                        <br />
                         <div class="non-editable">@Html.Raw(@ViewBag.LIST_AUDITORIAS_ESP)</div>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
 
                 <div class="form-group">
                     <label for="equipoAuditores"><i style="color: red;">* </i>Equipo de Auditores</label>
-                    <div class="container">
+                    <div class="">
                         <textarea id="textequipoauditores" class="editable form-control" rows="2">La auditoría será realizada por los siguientes auditores:</textarea><br />
                         <select id="equipoAuditores" name="equipoAuditores" class="select2 form-control select2-multiple"
                                 multiple="multiple" data-placeholder="Seleccionar ...">

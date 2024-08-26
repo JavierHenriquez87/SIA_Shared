@@ -65,7 +65,7 @@
                     <h5 style="width: 77%">@ViewBag.TITULO_AUDITORIA</h5>
                     <input type="hidden" id="codAI_DA" value="@ViewBag.NUMERO_AUDITORIA_INTEGRAL" />
                     <input type="hidden" id="anioAI_DA" value="@ViewBag.ANIO_AUDITORIA_INTEGRAL" />
-                    <button type="button" onclick="AgregarAuditoriasEspecificas()" style="@styleDA" class="btn btn-primary" id="buttonAdd" @disabledDA>Agregar Auditoría</button>
+                    <button type="button" onclick="AgregarAuditoriasEspecificas()" style="@styleDA" class="btn btn-primary" id="buttonAdd" @disabledDA>Editar Auditoría</button>
                 </div>
 
                 <div class="form-group" style="padding-top: 10px" id="divButtons">
@@ -96,6 +96,10 @@
                         <div class="document-item @disabledOptions" style="cursor: pointer;" onclick="IrCuestionarioAudi()">
                             <div class="icon folder"></div>
                             <div class="title">CUESTIONARIOS DE TRABAJO</div>
+                        </div>
+                        <div class="document-item @disabledOptions" style="cursor: pointer;" onclick="">
+                            <div class="icon folder"></div>
+                            <div class="title">SOLICITUD DE INFORMACIÓN</div>
                         </div>
                     </div>
                 </div>

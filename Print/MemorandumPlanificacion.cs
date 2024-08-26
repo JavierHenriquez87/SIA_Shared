@@ -39,14 +39,14 @@ namespace SIA.Print
 
             var listAuditores = await _context.AU_AUDITORES_ASIGNADOS
                 .Include(x => x.mg_usuarios)
-                .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == dataMDP.NUMERO_MDP)
+                .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == dataMDP.NUMERO_AUDITORIA_INTEGRAL)
                 .Where(e => e.ANIO_AI == dataMDP.ANIO_MDP)
                 .OrderBy(e => e.CODIGO_USUARIO)
                 .ToListAsync();
 
             //Obtenemos informacion de la auditoria integral
             var dataAI = await _context.AU_AUDITORIAS_INTEGRALES
-                                .Where(u => u.NUMERO_AUDITORIA_INTEGRAL == dataMDP.NUMERO_MDP)
+                                .Where(u => u.NUMERO_AUDITORIA_INTEGRAL == dataMDP.NUMERO_AUDITORIA_INTEGRAL)
                                 .Where(u => u.ANIO_AI == dataMDP.ANIO_MDP)
                                 .FirstOrDefaultAsync();
 

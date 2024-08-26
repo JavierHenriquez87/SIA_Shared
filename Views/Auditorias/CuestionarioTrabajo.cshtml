@@ -1,14 +1,21 @@
 ﻿@{
+    var datacuestionarios = ViewBag.DATA_CUESTIONARIO as List<SIA.Models.Mg_secciones>;
+    var auditoresAsig = ViewBag.AUDITORES_ASIG as List<SIA.Models.Au_auditores_asignados>;
+
     ViewBag.Title = "Cuestionario de trabajo";
     ViewBag.pTitle = "CUESTIONARIOS DE TRABAJO";
     ViewBag.pageTitle = "Auditorías";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var estado_cuestionario = "";
+    var contador = 0;
+    var color = "white";
+    var check = "";
 
     if (ViewBag.ESTADO_CUESTIONARIO == 1 || ViewBag.ESTADO_CUESTIONARIO == 2)
     {
-        estado_cuestionario = "disabled"; 
+        estado_cuestionario = "disabled";
+        color = "blue";
     }
 }
 
@@ -20,29 +27,214 @@
         <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <h5 style="width: 77%">@ViewBag.TITULO_AUDITORIA</h5>
+                    <h4>Formulario para Evaluación de: Agencias</h5>
                     <input type="hidden" value="@ViewBag.CODIGO_CUEST" id="codigo_cuest" />
                 </div>
-                <div class="form-group" id="divButtons">
+                    <div class="form-group" id="divButtons">
+                        <label style="color: @color; text-align: right;"><i class="fa fa-info-circle"></i> No puede modificar este cuestionario, porque no ha sido autorizado.</label>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
                         <button type="button" class="btn btn-primary" onclick="saveQuestion()" @estado_cuestionario>Guardar Cuestionario</button>
                     </div>
                 </div>
-
-                <div  id="contenedor-cuestionarios"></div>
-
+                <br />
                 <div class="form-group" id="divButtons">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <button type="button" class="btn btn-primary" onclick="scrollToTop()">Regresar Arriba</button>
-                        <button type="button" class="btn btn-primary" onclick="saveQuestion()" @estado_cuestionario>Guardar Cuestionario</button>
+                    <div class="row">
+                        <div class="col-md-4 d-flex align-items-center">
+                            <label class="mb-0 me-2" style="font-size:16px;">Agencia: @ViewBag.AGENCIA</label>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <label class="mb-0 me-2">Fecha: </label>
+                            <input type="date" class="form-control mx-2" id="fecha_cuestionario" value="@ViewBag.FECHA_CUESTIONARIO"/>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center">
+                            <label for="EquipoAuditoresAsignados" class="mb-0 me-2">Auditor: </label>
+                            <select class="form-select form-control" id="EquipoAuditoresAsignados">
+                                <option value="">- Seleccionar -</option>
+                                @foreach(var item in auditoresAsig)
+                                {
+                                    if (item.mg_usuarios.CODIGO_USUARIO == ViewBag.AUDITOR_ASIGNADO)
+                                    {
+                                        <option value="@item.mg_usuarios.CODIGO_USUARIO" selected>@item.mg_usuarios.NOMBRE_USUARIO</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.mg_usuarios.CODIGO_USUARIO">@item.mg_usuarios.NOMBRE_USUARIO</option>
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="divButtons">
+                    <div class="row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <label class="mb-0 me-2">Responsables: </label>
+                            <input type="text" class="form-control mx-2" id="responsable_cuestionario" value="@ViewBag.RESPONSABLE"/>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <label for="" class="mb-0 me-2">Revisado por: </label>
+                            <select class="form-select form-control" id="cuest_revisado_por">
+                                <option value="">- Seleccionar -</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+
+                <div id="contenedor-cuestionarios">
+                    @if (datacuestionarios != null && datacuestionarios.Any())
+                    {
+                        @foreach (var respuestas in datacuestionarios)
+                        {
+                            <h3 class="text-card-title">@respuestas.DESCRIPCION_SECCION</h3>
+                            @foreach (var sub_sec in respuestas.sub_secciones)
+                            {
+                                <div class="text-card-subtitle d-flex justify-content-between">
+                                    <div>
+                                        <label style="font-weight:bold;">@sub_sec.DESCRIPCION</label>
+                                    </div>
+                                    @{
+                                        var promedio_subseccion = "";
+                                        var stilo_percent = "";
+                                    }
+
+                                    @if (sub_sec.PORCENTAJE == 0)
+                                    {
+                                        promedio_subseccion = "No calculado";
+                                        stilo_percent = "status_percent nocalculado"; 
+                                    }
+                                    else if(sub_sec.PORCENTAJE < 50.90){
+                                    promedio_subseccion = "Cumplimiento Bajo: " + sub_sec.PORCENTAJE.ToString("F2") + "%";
+                                            stilo_percent = "status_percent bajo";
+                                        }else if (sub_sec.PORCENTAJE < 65.90)
+                                        {
+                                            promedio_subseccion = "Cumplimiento Medio-Bajo: " + sub_sec.PORCENTAJE.ToString("F2") + "%";
+                                            stilo_percent = "status_percent mediobajo";
+                                        }else if (sub_sec.PORCENTAJE < 85.90)
+                                        {
+                                            promedio_subseccion = "Cumplimiento Medio: " + sub_sec.PORCENTAJE.ToString("F2") + "%";
+                                            stilo_percent = "status_percent medio";
+                                        }else
+                                        {
+                                            promedio_subseccion = "Cumplimiento Alto: " + sub_sec.PORCENTAJE.ToString("F2") + "%";
+                                            stilo_percent = "status_percent alto";
+                                        }
+                                    <div class="@stilo_percent" style="font-size:18px" id="cumplimiento-percent-@sub_sec.CODIGO_SUB_SECCION">
+                                        <label >@promedio_subseccion</label>
+                                    </div>
+                                </div>
+                                bool isRowOpen = false;
+                                @foreach (var pregunta in sub_sec.Preguntas_Cuestionarios)
+                                {
+                                    @* Abrir una nueva fila si el contador es divisible por 2 *@
+                                    if (contador % 2 == 0)
+                                    {
+                                        if (isRowOpen)
+                                        {
+                                            @:</div> @* Cerrar la fila anterior si estaba abierta *@
+                                        }
+                                        isRowOpen = true;
+                                        @:<div class="column"> @* Abrir una nueva fila *@
+                                    }
+                                    var chk1 = "";
+                                    var chk2 = "";
+                                    var chk3 = "";
+                                    var chk4 = "";
+                                    var classradio = "status create percentage";
+                                    var percent = "0%";
+
+                                    if (pregunta.RESPUESTA_PREGUNTA.CUMPLE == 1) {
+                                        chk1 = "checked";
+                                        chk2 = "";
+                                        chk3 = "";
+                                        chk4 = "";
+                                        classradio = "status approved percentage";
+                                        percent = "100%";
+                                    } else if (pregunta.RESPUESTA_PREGUNTA.NO_CUMPLE == 1) {
+                                        chk1 = "";
+                                        chk2 = "checked";
+                                        chk3 = "";
+                                        chk4 = "";
+                                        classradio = "status pending percentage";
+                                        percent = "0%";
+                                    } else if (pregunta.RESPUESTA_PREGUNTA.CUMPLE_PARCIALMENTE == 1) {
+                                        chk1 = "";
+                                        chk2 = "";
+                                        chk3 = "checked";
+                                        chk4 = "";
+                                        classradio = "status partially percentage";
+                                        percent = "50%";
+                                    } else if (pregunta.RESPUESTA_PREGUNTA.NO_APLICA == 1) {
+                                        chk1 = "";
+                                        chk2 = "";
+                                        chk3 = "";
+                                        chk4 = "checked";
+                                        classradio = "status create percentage";
+                                        percent = "0%";
+                                    }
+                                    <div class="col-md-6 col-sm-12 subseccion-@sub_sec.CODIGO_SUB_SECCION">
+                                        <div class="card-tarjet">
+                                            <div class="row">
+                                                <b for="question">@pregunta.DESCRIPCION</b>
+                                            </div>
+                                            <div class="radio-group">
+                                                <input type="radio" id="cumple-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="cumple" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk1>
+                                                <label for="cumple-@pregunta.CODIGO_PREGUNTA">Cumple</label>
+                                                <input type="radio" id="parcialmente-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="parcialmente" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk3>
+                                                <label for="parcialmente-@pregunta.CODIGO_PREGUNTA">Cumple Parcialmente</label>
+                                                <input type="radio" id="no-cumple-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="no-cumple" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk2>
+                                                <label for="no-cumple-@pregunta.CODIGO_PREGUNTA">No Cumple</label>
+                                                <input type="radio" id="na-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="na" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk4>
+                                                <label for="na-@pregunta.CODIGO_PREGUNTA">N/A</label>
+                                            </div>
+                                            <div class="textarea-container">
+                                                <textarea id="textarea-@pregunta.CODIGO_PREGUNTA" name="textarea-@pregunta.CODIGO_PREGUNTA" data-codigo="@pregunta.CODIGO_PREGUNTA" class="observaciones-textarea">@pregunta.RESPUESTA_PREGUNTA.OBSERVACIONES</textarea>
+                                            </div>
+                                            <div id="divPorcentaje-@pregunta.CODIGO_PREGUNTA" class="@classradio">
+                                                <b>Puntaje: </b><label id="porcentaje-@pregunta.CODIGO_PREGUNTA">@percent</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    @* Incrementar el contador y cerrar la fila después de dos tarjetas o si es la última tarjeta *@
+                                    contador++;
+                                    @* Cerrar la fila después de dos tarjetas o si es la última tarjeta *@
+                                    if (contador % 2 == 0 || contador == sub_sec.Preguntas_Cuestionarios.Count())
+                                    {
+                                        @:</div> @* Cerrar la fila *@
+                                        isRowOpen = false;
+                                    }
+                                }
+                                @* Asegurarse de cerrar la fila si quedó abierta al final del foreach *@
+                                if (isRowOpen)
+                                {
+                                    @:</div>
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <br />
+                        <p style="text-align:center;">No hay datos disponibles en este cuestionario.</p>
+                    }
+
+                    <div class="form-group" id="divButtons">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <button type="button" class="btn btn-primary" onclick="scrollToTop()">Regresar Arriba</button>
+                            <button type="button" class="btn btn-primary" onclick="saveQuestion()" @estado_cuestionario>Guardar Cuestionario</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
-
-@section scripts {
-    <script src="~/Scripts/Auditorias/AuditoriaTrabajo.js"></script>
-}
+    @section scripts {
+        <script src="~/Scripts/Helpers/Helpers.js"></script>
+        <script src="~/Scripts/Auditorias/AuditoriaTrabajo.js"></script>
+    }

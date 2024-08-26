@@ -90,53 +90,73 @@ async function AgregarCuestionarioAuditoria(num_audit_integral, anio_audit_integ
         CODIGO_AUD_CUEST: tipo_auditoria
     };
 
-    Swal.showLoading();
+    Swal.fire({
+        title: "¿Agregar Cuestionario?",
+        text: "¿Desea agregar este cuestionario a la auditoría?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#2A3042",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Agregar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Mostrar el loader antes de iniciar la solicitud AJAX
+            Swal.fire({
+                title: "Guardando...",
+                text: "Por favor, espere.",
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            method: 'POST',
-            url: '/Auditorias/Guardar_Audit_Cuestionario',
-            data: JSON.stringify(DataCuest),
-            contentType: 'application/json',
-            success: function (respuesta) {
-                if (respuesta == "error") {
+            $.ajax({
+                method: 'POST',
+                url: '/Auditorias/Guardar_Audit_Cuestionario',
+                data: JSON.stringify(DataCuest),
+                contentType: 'application/json',
+                success: function (respuesta) {
+                    Swal.close(); // Cierra la alerta de carga
+
+                    if (respuesta == "error") {
+                        Swal.fire(
+                            'Error!',
+                            'Su registro no se pudo guardar.',
+                            'error'
+                        )
+                    } else {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: "success",
+                            title: "Se guardó el cuestionario para la auditoría con éxito."
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.close(); // Cierra la alerta de carga
+
+                    // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
                     Swal.fire(
                         'Error!',
-                        'Su registro no se pudo guardar.',
+                        'Hubo un problema al procesar su solicitud.',
                         'error'
-                    )
-                } else {
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: "top-end",
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.onmouseenter = Swal.stopTimer;
-                            toast.onmouseleave = Swal.resumeTimer;
-                        }
-                    });
-                    Toast.fire({
-                        icon: "success",
-                        title: "Se guardo el cuestionario para la auditoria con éxito."
-                    });
-
+                    );
                 }
-            },
-            error: function () {
-                // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
-                Swal.fire(
-                    'Error!',
-                    'Hubo un problema al procesar su solicitud.',
-                    'error'
-                );
-            }
-        });
-        resolve();
+            });
+        }
     });
 }
-
 
 //OBTENEMOS LAS PREGUNTAS DE UN CUESTIONARIO PARA MOSTRARLAS
 //==========================================================================================
@@ -210,9 +230,11 @@ async function VerCuestionario(codigo_cuestionario) {
 
 };
 
+//FUNCION PARA REDIRECCIONAR AL USUARIO AL CUESTIONARIO
 function handleClickCuestionario(element) {
     var codigoCuest = element.getAttribute('data-codigo-cuest');
-    window.location.href = 'CuestionariosAuditoria/CuestionarioTrabajo?dc=' + codigoCuest;
+    codigoCuestEncode = encodeBase64(codigoCuest);
+    window.location.href = 'CuestionariosAuditoria/CuestionarioTrabajo?dc=' + codigoCuestEncode;
 }
 
 //FUNCION PARA BORRAR UN CUESTIONARIO
@@ -224,7 +246,6 @@ function borrarCuestionario(event) {
     const parentDiv = event.currentTarget.closest('[data-codigo-cuest]');
     const codigoCuest = parentDiv.getAttribute('data-codigo-cuest');
 
-    console.log("Eliminar cuestionario con código:", codigoCuest);
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: "btn btn-success mx-2", // mx-2 agrega margen horizontal
@@ -273,4 +294,9 @@ function borrarCuestionario(event) {
             });
         }
     });
+}
+
+//FUNCION PARA CODIFICAR A BASE64 LOS DATOS DE LA URL
+function encodeBase64(str) {
+    return btoa(unescape(encodeURIComponent(str)));
 }

@@ -28,6 +28,8 @@ namespace SIA.Models
         public string? FIRMA { get; set; }
         public string? USUARIO { get; set; }
         public int? CODIGO_RESPONSABLE { get; set; }
+        [NotMapped]
+        public bool SELECTED { get; set; }
 
         [ForeignKey("CODIGO_AGENCIA")]
         public Mg_agencias mg_agencias { get; set; }

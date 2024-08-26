@@ -16,5 +16,9 @@ namespace SIA.Models
         public int? ANIO { get; set; }
         public int? CODIGO_CUESTIONARIO { get; set; }
         public int? CORRELATIVO_CUESTIONARIO { get; set; }
+        public DateTime? FECHA_CUESTIONARIO { get; set; }
+        public string? AUDITOR_ASIGNADO { get; set; }
+        public string? RESPONSABLE { get; set; }
+        public string? REVISADO_POR { get; set; }
     }
 }

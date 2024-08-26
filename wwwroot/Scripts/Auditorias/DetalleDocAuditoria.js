@@ -2,6 +2,7 @@
 //Llama a la funcion en helpers.js que obtiene los auditores encargados
 CargarAuditoresEncargados();
 CargarTiposAuditorias();
+CargarAuditoresAsignados();
 
 async function AgregarComentario() {
     // Objeto que contiene los datos a enviar
@@ -74,8 +75,8 @@ async function AprobarMDP() {
     var CODIGO_MEMORANDUM = $('#codigoMemorandum').val();
 
     Swal.fire({
-        title: 'Aprobación de Memorandum',
-        text: "¿Desea aprobar este memorandum de planificación?",
+        title: 'Aprobación de Memorándum',
+        text: "¿Desea aprobar este memorándum de planificación?",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#34c38f',
@@ -106,7 +107,7 @@ async function AprobarMDP() {
                     } else {
                         Swal.fire({
                             title: 'Guardado!',
-                            text: 'Se aprobó el memorandum de planificación con éxito!',
+                            text: 'Se aprobó el memorándum de planificación con éxito!',
                             icon: 'success',
                             didClose: () => {
                                 window.location.reload();
@@ -131,13 +132,13 @@ async function RegresarMDP() {
     var CODIGO_MEMORANDUM = $('#codigoMemorandum').val();
 
     Swal.fire({
-        title: 'Regresar de Memorandum',
-        text: "¿Desea regresar el memorandum de planificación para que los auditores realicen cambios? \n\n Asegurese de haber agregado comentarios para que los auditores conozcan los cambios que solicita.",
+        title: 'Regresar Memorándum',
+        text: "¿Desea regresar al auditor el memorándum de planificación para que realice cambios? \n\n\n Asegurese de haber agregado comentarios en la parte inferior de esta ventana, para que los auditores conozcan los cambios que solicita.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#f1b44c',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Regresar',
+        confirmButtonText: 'Aceptar',
         cancelButtonText: `Cancelar`,
     }).then((result) => {
         if (result.isConfirmed) {
@@ -154,7 +155,7 @@ async function RegresarMDP() {
                     if (respuesta == "error") {
                         Swal.fire({
                             title: 'Error',
-                            text: "Ocurrió un error al intentar regresar el memorandum de planificación",
+                            text: "Ocurrió un error al intentar regresar el memorándum de planificación",
                             icon: 'error',
                             showCancelButton: false,
                             confirmButtonColor: '#2A3042',
@@ -163,7 +164,7 @@ async function RegresarMDP() {
                     } else {
                         Swal.fire({
                             title: 'Guardado!',
-                            text: 'Se regreso el memorandum de planificación con éxito!',
+                            text: 'Se regreso el memorándum de planificación con éxito!',
                             icon: 'success',
                             didClose: () => {
                                 window.location.reload();
@@ -194,7 +195,7 @@ function openSidebar() {
     document.getElementById("overlay").style.display = "block";
 }
 
-async function closeSidebar() {
+async function closeSidebarBtnSave() {
     var text = $('#texttipoauditoriaEdit').val();
 
     if (text.length == 0) {
@@ -232,6 +233,16 @@ async function closeSidebar() {
 
 }
 
+async function closeSidebar() {
+    document.getElementById("SidebarEditMDP").style.width = "0";
+    document.getElementById("overlay").style.display = "none";
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
+
+
+}
+
 function openSidebarObjRec() {
     var sidebar = document.getElementById("sidebarEditObjRecMP");
     if (window.innerWidth <= 600) {
@@ -242,10 +253,17 @@ function openSidebarObjRec() {
     document.getElementById("overlayObjRec").style.display = "block";
 }
 
-async function closeSidebarObjRec() {
-    var text = $('#texttipoauditoriaEdit').val();
+async function closeSidebarObjRecBtnSave() {
+    var OBJETIVO_AUDITORIA = $('#objetivoAuditoriaEdit').val();
+    var EQUIPO_TRABAJO = $('#equipoTrabajoEdit').val();
+    var EQUIPO_AUDITORES = $('#selectequipoTrabajoEdit').val();
+    var RECURSOS = $('#recursosEdit').val();
+    var numeroMDPEdit = $('#numeroMDPEdit').val();
+    var tiempoEdit = $('#tiempoEdit').val();
+    var fechaInicioEdit = $('#fechaInicioEdit').val();
+    var fechaFinEdit = $('#fechaFinEdit').val();
 
-    if (text.length == 0) {
+    if (objetivoAuditoriaEdit.length == 0 || equipoTrabajoEdit.length == 0 || recursosEdit.length == 0 || EQUIPO_AUDITORES.length == 0 || tiempoEdit.length == 0 || fechaInicioEdit.length == 0 || fechaFinEdit.length == 0) {
         const Toast = Swal.mixin({
             toast: true,
             position: "top-end",
@@ -259,26 +277,75 @@ async function closeSidebarObjRec() {
         });
         Toast.fire({
             icon: "error",
-            title: "Complete el campo de texto para la auditoría."
+            title: "No puede dejar vacio el Objetivo, Equipo de Trabajo o Recursos de la Auditoría."
         });
 
         return
     } else {
         try {
-            //await EditarTextoAuditoria();
+            //Convertimos los auditores a string separado por ,
+            // Convertir el array a un string separado por comas
+            var equipoAuditoresString = EQUIPO_AUDITORES.join(',');
+
+            Swal.showLoading();
+
+            $.ajax({
+                method: 'POST',
+                url: '/Auditorias/editarObjEqRecursosMP',
+                data: {
+                    objetivo_auditoria: OBJETIVO_AUDITORIA,
+                    equipo_trabajo: EQUIPO_TRABAJO,
+                    equipo_auditores: equipoAuditoresString,
+                    recursos: RECURSOS,
+                    numeromdp: numeroMDPEdit,
+                    tiempo_edit: tiempoEdit,
+                    fecha_inicio: fechaInicioEdit,
+                    fecha_fin: fechaFinEdit
+                },
+                dataType: 'json',
+                success: function (respuesta) {
+                    if (respuesta == "Ok") {
+                        Swal.fire({
+                            title: 'Guardado!',
+                            text: 'Se actualizo con exito.',
+                            icon: 'success',
+                            didClose: () => {
+                                document.getElementById("sidebarEditObjRecMP").style.width = "0";
+                                document.getElementById("overlayObjRec").style.display = "none";
+                                window.location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            'Su registro no se pudo actualizar.',
+                            'error'
+                        )
+                    }
+                },
+                error: function () {
+                    // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
+                    Swal.fire(
+                        'Error!',
+                        'Hubo un problema al procesar su solicitud.',
+                        'error'
+                    );
+                }
+            });
         } catch (error) {
             return;
         }
     }
+}
 
+async function closeSidebarObjRecBtn() {
     document.getElementById("sidebarEditObjRecMP").style.width = "0";
     document.getElementById("overlayObjRec").style.display = "none";
     setTimeout(() => {
         window.location.reload();
     }, 500);
-
-
 }
+
 //OBTENEMOS LAS AUDITORIAS ESPECIFICAS PARA EDITAR
 //==========================================================================================
 async function GeAuditoriasEspecEdit() {
@@ -459,6 +526,53 @@ function CargarAuditoresMDPEditar(encargado_auditoria) {
                     if (data.codigO_USUARIO == encargado_auditoria) {
                         opcion.selected = true;
                     }
+                    SelectAuditores.appendChild(opcion);
+                });
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            Swal.fire(
+                'Error!',
+                'Sus tipos de auditorias no se pueden obtener  ' + xhr.responseText,
+                'error'
+            )
+        }
+    });
+}
+
+//FUNCION PARA CARGAR TODOS LOS AUDITORES QUE SERAN PARTE DE LA AUDITORIA
+//==========================================================================================
+function CargarAuditoresAsignados() {
+    var num_audit_integral = $('#numAudInteg').val();
+    var anio_audit_integral = $('#anioAudInteg').val();
+
+    $.ajax({
+        type: 'GET',
+        url: '/Auditorias/GetAuditoresAsignados',
+        data: {
+            num_audit_integral: num_audit_integral,
+            anio_audit_integral: anio_audit_integral
+        },
+        dataType: 'json',
+        success: function (result) {
+            let SelectAuditores = document.getElementById("selectequipoTrabajoEdit");
+
+            if (result == "error") {
+                Swal.fire(
+                    'Error!',
+                    'No se pudieron obtener los auditores',
+                    'error'
+                )
+            }
+            else {
+                result.forEach(function (tipo) {
+                    let opcion = document.createElement("option");
+                    opcion.value = tipo.codigO_USUARIO;
+                    opcion.text = tipo.nombrE_USUARIO;
+                    // Marcar la opción como seleccionada si debe estarlo
+                    if (tipo.selected) {  // Verifica que el objeto devuelto incluya esta propiedad
+                        opcion.selected = true;
+                    }   
                     SelectAuditores.appendChild(opcion);
                 });
             }

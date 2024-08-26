@@ -1,45 +1,74 @@
 ﻿@{
-    ViewBag.Title = "Detalle Auditoría";
-    ViewBag.pTitle = "Detalle Auditorías";
+    ViewBag.Title = "Crear Programa de Trabajo";
+    ViewBag.pTitle = "CREAR PROGRAMA DE TRABAJO";
     ViewBag.pageTitle = "Auditorías";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var rolcode = ViewBag.ROL_CODE;
 }
 
 <link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
 <link href="~/css/estiloAuditoriaDetalle.css" rel="stylesheet" type="text/css" />
 
-<div class="container">
-    <h3>CREAR PROGRAMA DE TRABAJO</h3>
-    <div class="form-container">
-        <div class="row">
-            <h5 style="width: 87%">AGE101-CR-2-2024 | AUDITORÍA DE CRÉDITOS AGENCIA SAN MARCOS</h5>
-            <div class="status pending" id="divStatus" style="width: 102px; height: 20px;">EN PROCESO</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <input type="hidden" id="codAI_CU" value="@ViewBag.NUMERO_AUDITORIA_INTEGRAL" />
+                    <input type="hidden" id="anioAI_CU" value="@ViewBag.ANIO_AUDITORIA_INTEGRAL" />
+                    <input type="hidden" id="numero_PDT_pt" value="@ViewBag.NUMERO_PDT" />
+                    <input type="hidden" id="numero_auditoria_pt" value="@ViewBag.NUMERO_AUDITORIA" />
+                    <h3 style="width: 77%">@ViewBag.TITULO_AUDITORIA</h3>
+                    <div class="status pending" id="divStatus" style="width: 102px; height: 20px;">EN PROCESO</div>
+                    <br />
+                    <label style="width: 77%">MEMORÁNDUM DE PLANIFICACIÓN \ @ViewBag.CODIGO_PDT PLAN DE TRABAJO</label>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px" id="divButtons">
+                    <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
+                    @* Verificamos si el rol del usuario logueado es Auditor Interno*@
+                    @* @if (rolcode == "AI")
+                    { *@
+                    <button type="button" onclick="RegresarPlanTrabajo()" class="btn btn-warning">Regresar</button>
+                    <button type="button" onclick="AprobarPDT()" class="btn btn-primary">Aprobar</button>
+                    @*  }
+                    else if (rolcode == "AA")
+                    { *@
+                    @* Verificamos si el rol del usuario logueado es Asistente de Auditor*@
+                    <button type="button" onclick="VerActividades()" class="btn btn-primary">Asignar Actividades</button>
+                    <button type="button" onclick="SolicitarAprobacion()" class="btn btn-primary">Solicitar Aprobacion</button>
+                    @* } *@
+                </div>
+
+                <h5 style="padding-top: 20px">Actividades Agregadas al Plan de Trabajo</h5>
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="SelectEquipoAuditoresAsignados">Filtrar Tareas Asignadas a:</label>
+                        <select class="form-select form-control" id="SelectEquipoAuditoresAsignados" onchange="GeActividadesAsignadasXAuditor()">
+                            <option value="T">- Todos los auditores -</option>
+                        </select>
+                    </div>
+                </div>
+
+                <table id="tbProgramaTrabajo" class="table table-bordered dt-responsive w-100">
+                    <thead>
+                        <tr>
+                            <th>Nombre de la Actividad</th>
+                            <th>Auditor Asignado</th>
+                            <th>Estado</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
-
-        <div class="form-group" style="padding-top: 10px" id="divButtons">
-            <button type="button" onclick="RegresarPlanTrabajo()" class="btn btn-primary">Regresar</button>
-            <button type="button" onclick="VerActividades()" class="btn btn-primary">Ver Actividades</button>
-            <button type="button" onclick="SolicitarAprobacion()" class="btn btn-primary">Solicitar Aprobacion</button>
-        </div>
-
-        <h5 style="padding-top: 20px">Actividades Agregadas al Plan de Trabajo</h5>
-
-        <table id="tbProgramaTrabajo" class="table table-bordered dt-responsive  nowrap w-100">
-            <thead>
-                <tr>
-                    <th>Nombre de la Actividad</th>
-                    <th>Auditor Asignado</th>
-                    <th>Estado</th>
-                    <th>Opciones</th>
-                </tr>
-            </thead>
-        </table>
     </div>
 </div>
 
 @await Html.PartialAsync("partialView/_AsignarActividades")
 @await Html.PartialAsync("partialView/_RegresarPlanTrabajo")
 
-@section scripts{
+@section scripts {
+    <script src="~/Scripts/Helpers/Helpers.js"></script>
     <script src="~/Scripts/Auditorias/ProgramaTrabajo.js"></script>
 }

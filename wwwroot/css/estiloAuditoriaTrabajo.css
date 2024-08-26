@@ -4,7 +4,6 @@
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    width: 48%;
     margin: 10px;
 }
 
@@ -77,13 +76,74 @@
 .text-card-title {
     text-align: center !important;
     border: outset !important;
+    border-radius: 10px;
     padding: 5px !important;
-    background-color: #dde2fa;
+    background-color: #008000;
+    color: black;
 }
 
 .text-card-subtitle {
     text-align: left !important;
     border: outset !important;
+    border-radius: 10px;
     padding: 5px !important;
     background-color: #e3e4e8;
 }
+
+.radio-group input[type="radio"] {
+    cursor: pointer;
+}
+
+.status_percent {
+    padding: 2px 5px;
+    border-radius: 3px;
+    background-color: #d4edda;
+    color: #155724;
+    margin-left: auto !important;
+    margin-right: 20px !important;
+}
+
+    .status_percent.nocalculado {
+        background-color: #f9fafb;
+        color: #344054;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: black;
+        border: 1px solid;
+    }
+
+    .status_percent.bajo {
+        background-color: #c0392b;
+        color: white;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: black;
+        border: 1px solid;
+    }
+
+    .status_percent.mediobajo {
+        background-color: #f39c12;
+        color: black;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: black;
+        border: 1px solid;
+    }
+
+    .status_percent.medio {
+        background-color: #FFFF00;
+        color: black;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: black;
+        border: 1px solid;
+    }
+
+    .status_percent.alto {
+        background-color: #28b463;
+        color: black;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: black;
+        border: 1px solid;
+    }

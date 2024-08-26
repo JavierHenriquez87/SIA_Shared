@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SIA.Controllers
 {
@@ -36,6 +37,7 @@ namespace SIA.Controllers
             return View();
         }
 
+
         /// <summary>
         /// Pagina principal con listado de auditorias integrales
         /// </summary>
@@ -45,6 +47,7 @@ namespace SIA.Controllers
         {
             return View();
         }
+
 
         /// <summary>
         /// Obtener las auditorias Integrales
@@ -127,6 +130,7 @@ namespace SIA.Controllers
             return Ok(jsonData);
         }
 
+
         /// <summary>
         /// Guardar nueva Auditoria Integral
         /// </summary>
@@ -191,6 +195,7 @@ namespace SIA.Controllers
         }
 
 
+
         //********************************************************************************
         //PAGINA DE AUDITORIA INDIVIDUAL (ESPECIFICA)
         //********************************************************************************
@@ -248,6 +253,7 @@ namespace SIA.Controllers
 
             return View();
         }
+
 
         /// <summary>
         /// Obtener las auditorias especificas de una auditoria Integral
@@ -328,6 +334,7 @@ namespace SIA.Controllers
             return Ok(jsonData);
         }
 
+
         /// <summary>
         /// Guardar Auditoria Individual (Especifica)
         /// </summary>
@@ -390,6 +397,7 @@ namespace SIA.Controllers
             }
         }
 
+
         /// <summary>
         /// Borrar Auditoria Individual (Especifica)
         /// </summary>
@@ -419,6 +427,7 @@ namespace SIA.Controllers
                 return new JsonResult("error");
             }
         }
+
 
         /// <summary>
         /// Guardar Auditoria Individual (Especifica)
@@ -501,6 +510,7 @@ namespace SIA.Controllers
             return new JsonResult("Success");
         }
 
+
         /// <summary>
         /// Actualizamos la variable de sesion cada vez que el usuario accede a una nueva Auditoria Integral
         /// </summary>
@@ -525,6 +535,7 @@ namespace SIA.Controllers
 
             return new JsonResult("success");
         }
+
 
         /// <summary>
         /// Guardar Auditoria Individual (Especifica)
@@ -554,9 +565,12 @@ namespace SIA.Controllers
             }
         }
 
+
+
         //********************************************************************************
         // PAGINA DETALLE DE AUDITORIA
-        //********************************************************************************      
+        //********************************************************************************
+
         /// <summary>
         /// 
         /// </summary>
@@ -595,6 +609,7 @@ namespace SIA.Controllers
 
             return View();
         }
+
 
         /// <summary>
         /// Validamos si el memoramdun de planificacion ya existe
@@ -666,6 +681,7 @@ namespace SIA.Controllers
         //********************************************************************************
         // PAGINA PLANIFICACION DE AUDITORIA
         //********************************************************************************  
+
         /// <summary>
         /// 
         /// </summary>
@@ -726,6 +742,7 @@ namespace SIA.Controllers
 
             return View();
         }
+
 
         /// <summary>
         /// 
@@ -838,6 +855,90 @@ namespace SIA.Controllers
             }
         }
 
+        /// <summary>
+        /// Editar objetivos, equipo de trabajo y recursos del memorandum de planificacion
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> editarObjEqRecursosMP(string objetivo_auditoria, string equipo_trabajo, string equipo_auditores, string recursos, int numeromdp, string tiempo_edit, string fecha_inicio, string fecha_fin)
+        {
+            try
+            {
+                int numAuditInt = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+                int anioAuditInt = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+
+                // Obtenemos informacion de la Planificacion
+                var dataAuditoria = await _context.AU_PLANIFICACION_DE_AUDITORIA
+                                    .Where(u => u.NUMERO_AUDITORIA_INTEGRAL == numAuditInt)
+                                    .Where(u => u.ANIO_MDP == anioAuditInt)
+                                    .FirstOrDefaultAsync();
+
+                dataAuditoria.OBJETIVO = objetivo_auditoria;
+                dataAuditoria.RECURSOS = recursos;
+                dataAuditoria.TEXTO_EQUIPO_TRABAJO = equipo_trabajo;
+                dataAuditoria.TEXTO_TIEMPO_AUDITORIA = tiempo_edit;
+                dataAuditoria.FECHA_ACTUALIZACION = DateTime.Now;
+                dataAuditoria.ACTUALIZADO_POR = HttpContext.Session.GetString("user");
+
+                // Guarda los cambios en la base de datos
+                var save = await _context.SaveChangesAsync();
+
+                if (save > 0)
+                {
+                    // Obtenemos informacion de la auditoria Integral para modificar la fecha si se realizaron cambios
+                    var dataPlanificacion = await _context.AU_AUDITORIAS_INTEGRALES
+                                        .Where(u => u.NUMERO_AUDITORIA_INTEGRAL == numAuditInt)
+                                        .Where(u => u.ANIO_AI == anioAuditInt)
+                                        .FirstOrDefaultAsync();
+
+                    dataPlanificacion.FECHA_INICIO_VISITA = DateTime.Parse(fecha_inicio);
+                    dataPlanificacion.FECHA_FIN_VISITA = DateTime.Parse(fecha_fin);
+
+                    // Guarda los cambios en la base de datos
+                    save = await _context.SaveChangesAsync();
+
+                    /********/
+                    //Borramos los auditores para volverlos a agregar los nuevos
+                    int exito = await _context.AU_AUDITORES_ASIGNADOS
+                        .Where(x => x.NUMERO_MDP == numeromdp)
+                        .Where(x => x.NUMERO_AUDITORIA_INTEGRAL == numAuditInt)
+                        .Where(x => x.ANIO_AI == anioAuditInt)
+                        .ExecuteDeleteAsync();
+
+                    if (exito > 0)
+                    {
+                        // Convertir el string equipo_auditores en un array
+                        string[] auditoresArray = equipo_auditores.Split(',');
+
+                        // Crear y agregar entidades para cada auditor en el array
+                        foreach (string auditor in auditoresArray)
+                        {
+                            var asignarAuditores = new Au_auditores_asignados
+                            {
+                                CODIGO_USUARIO = auditor,
+                                NUMERO_MDP = numeromdp,
+                                NUMERO_AUDITORIA_INTEGRAL = numAuditInt,
+                                ANIO_AI = anioAuditInt,
+                                FECHA_CREACION = DateTime.Now,
+                                CREADO_POR = HttpContext.Session.GetString("user")
+                            };
+
+                            _context.Add(asignarAuditores);
+
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("Ok");
+        }
+
         //********************************************************************************
         // PAGINA DETALLE DE LA AUDITORIA
         //********************************************************************************  
@@ -939,18 +1040,23 @@ namespace SIA.Controllers
             ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
             ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
             ViewBag.CODIGO_MEMORANDUM_PLANIFICACION = dataMDP.CODIGO_MEMORANDUM;
-            ViewBag.FECHA_APROBACION = dataMDP.FECHA_APROBACION?.ToString() ?? "-";
+            ViewBag.FECHA_APROBACION = dataMDP.FECHA_APROBACION?.ToString() ?? "";
             ViewBag.TIPOS_DE_AUDITORIAS_REALIZAR = dataMDP.TEXTO_TIPO_AUDITORIA + " \n\n" + auditoriasText;
             ViewBag.TEXTO_AUDITORIAS_EDIT = dataMDP.TEXTO_TIPO_AUDITORIA;
             ViewBag.OBJETIVO_AUDITORIA = dataMDP.OBJETIVO;
             ViewBag.RECURSOS_AUDITORIA = dataMDP.RECURSOS;
-            ViewBag.AUDITORES_AUDITORIA = dataMDP.TEXTO_EQUIPO_TRABAJO + " " + auditoresText;
-            ViewBag.TIEMPO_AUDITORIA = dataMDP.TEXTO_TIEMPO_AUDITORIA + " " + fechaInicio + " al " + fechaFin;
+            ViewBag.TEXTO_AUDITORES_AUDITORIA = dataMDP.TEXTO_EQUIPO_TRABAJO;
+            ViewBag.NUMERO_MDP = dataMDP.NUMERO_MDP;
+            ViewBag.AUDITORES_AUDITORIA = auditoresText;
+            ViewBag.TEXTO_TIEMPO_AUDITORIA = dataMDP.TEXTO_TIEMPO_AUDITORIA;
+            ViewBag.TIEMPO_AUDITORIA_INICIO = DateTime.Parse(fechaInicio.ToString()).ToString("yyyy-MM-dd");
+            ViewBag.TIEMPO_AUDITORIA_FIN = DateTime.Parse(fechaFin.ToString()).ToString("yyyy-MM-dd");
             ViewBag.COMENTARIOS = listComentarios;
             ViewBag.ROL_CODE = HttpContext.Session.GetString("rolCode");
 
             return View();
         }
+
 
         /// <summary>
         /// Metodo para obtener los comentarios del memorandum de planificacion
@@ -973,6 +1079,7 @@ namespace SIA.Controllers
             }
 
         }
+
 
         /// <summary>
         /// Guardar nueva Auditoria Integral
@@ -1032,6 +1139,7 @@ namespace SIA.Controllers
             return new JsonResult("Ok");
         }
 
+
         /// <summary>
         /// Dar por aprobada un memorandum de planificacion
         /// </summary>
@@ -1077,6 +1185,7 @@ namespace SIA.Controllers
 
             return new JsonResult("success");
         }
+
 
         /// <summary>
         /// Regresar un memorandum de planificacion
@@ -1124,10 +1233,48 @@ namespace SIA.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<ActionResult<List<Mg_usuarios>>> GetAuditoresAsignados(int num_audit_integral, int anio_audit_integral)
+        {
+            try
+            {
+                // Obtener todos los usuarios
+                var todosLosUsuarios = await _context.MG_USUARIOS
+                    .Where(i => i.ESTADO == 1)
+                    .Where(i => i.CODIGO_ROL == "AA")
+                    .OrderBy(i => i.NOMBRE_USUARIO)
+                    .ToListAsync();
+
+                // Obtener los auditores asignados para la auditoría específica
+                var auditoresAsignados = await _context.AU_AUDITORES_ASIGNADOS
+                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == num_audit_integral)
+                    .Where(e => e.ANIO_AI == anio_audit_integral)
+                    .Select(e => e.CODIGO_USUARIO)
+                    .ToListAsync();
+
+                // Combinar los resultados
+                todosLosUsuarios.ForEach(usuario =>
+                {
+                    usuario.SELECTED = auditoresAsignados.Contains(usuario.CODIGO_USUARIO);
+                });
+
+                if (todosLosUsuarios == null)
+                {
+                    return NotFound();
+                }
+
+                return todosLosUsuarios;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
 
         //********************************************************************************
         // CUESTIONARIOS DE TRABAJO
         //********************************************************************************
+
         /// <summary>
         /// Metodo para mostrar los cuestionarios de trabajo que se han agregado a la auditoria
         /// </summary>
@@ -1152,6 +1299,7 @@ namespace SIA.Controllers
 
             return View();
         }
+
 
         /// <summary>
         /// Metodo para obtener los cuestionarios autorizados para ser agregados a la auditoria
@@ -1230,6 +1378,7 @@ namespace SIA.Controllers
             return Ok(jsonData);
 
         }
+
 
         /// <summary>
         /// Guardar un cuestionario a la auditoria
@@ -1325,6 +1474,7 @@ namespace SIA.Controllers
             return new JsonResult("Ok");
         }
 
+
         /// <summary>
         /// Metodo para obtener un cuestionarios autorizado y ver sus preguntas
         /// </summary>
@@ -1358,7 +1508,11 @@ namespace SIA.Controllers
             {
                 return new JsonResult("error");
             }
+
+
+
         }
+
 
         /// <summary>
         /// Mostramos el cuestionario de preguntas
@@ -1367,17 +1521,97 @@ namespace SIA.Controllers
         [HttpGet("Auditorias/CuestionariosAuditoria/CuestionarioTrabajo")]
         public async Task<IActionResult> CuestionarioTrabajo()
         {
-            int codigoCuest = Int32.Parse(Request.Query["dc"]);
+            string codigoCuestionario = DecodeBase64(Request.Query["dc"]);
 
+            int codigoCuest = int.Parse(codigoCuestionario);
+            int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+            int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+
+            //Obtenemos los auditores asignados a la auditoria
+            var Auditores = await _context.AU_AUDITORES_ASIGNADOS
+                    .Include(e => e.mg_usuarios)
+                    .OrderBy(e => e.mg_usuarios.NOMBRE_USUARIO)
+                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == cod)
+                    .Where(e => e.ANIO_AI == anio)
+                    .ToListAsync();
+
+            //Obtenemos la data del cuestionario de la auditoria
             var data = await _context.MG_AUDITORIAS_CUESTIONARIOS
                     .Where(e => e.CODIGO_AUDITORIA_CUESTIONARIO == codigoCuest)
                     .FirstOrDefaultAsync();
 
+            //Obtenemos informacion de la auditoria integral a la que pertenece el cuestionario
+            var dataAI = await _context.AU_AUDITORIAS_INTEGRALES
+                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == data.NUMERO_AUDITORIA_INTEGRAL)
+                    .Where(e => e.ANIO_AI == data.ANIO)
+                    .FirstOrDefaultAsync();
+
+            //Obtenemos las preguntas del cuestionario
+            List<Mg_secciones> secciones = await _context.MG_SECCIONES
+                        .Include(x => x.sub_secciones)
+                        .ThenInclude(x => x.Preguntas_Cuestionarios)
+                        .ToListAsync();
+
+            //Obtenemos las respuestas del cuestionario
+            var respuestasData = await _context.MG_RESPUESTAS_CUESTIONARIO
+                            .Where(e => e.CODIGO_AUDITORIA_CUESTIONARIO == codigoCuest)
+                            .ToListAsync();
+
+            foreach (var item in secciones)
+            {
+                foreach (var item2 in item.sub_secciones)
+                {
+                    var totalPuntos = 0;
+                    var numPreguntas = 0;
+                    foreach (var item3 in item2.Preguntas_Cuestionarios)
+                    {
+                        var respuesta = respuestasData.FirstOrDefault(r => r.CODIGO_PREGUNTA == item3.CODIGO_PREGUNTA);
+
+                        item3.RESPUESTA_PREGUNTA = respuesta;
+
+                        if (respuesta?.CUMPLE == 1)
+                        {
+                            totalPuntos += 100;
+                            numPreguntas++;
+                        }
+                        else if (respuesta?.CUMPLE_PARCIALMENTE == 1)
+                        {
+                            totalPuntos += 50;
+                            numPreguntas++;
+                        }
+                        else if (respuesta?.NO_CUMPLE == 1)
+                        {
+                            totalPuntos += 0;
+                            numPreguntas++;
+                        }
+                        else if (respuesta?.NO_APLICA == 1)
+                        {
+                            totalPuntos += 0;
+                        }
+                        else
+                        {
+                            totalPuntos += 0;
+                        }
+                    }
+                    // Calcular el promedio
+                    item2.PORCENTAJE = numPreguntas > 0 ? (double)totalPuntos / numPreguntas : 0;
+                }
+            }
+
+            ViewBag.DATA_CUESTIONARIO = secciones;
             ViewBag.CODIGO_CUEST = codigoCuest;
             ViewBag.ESTADO_CUESTIONARIO = data.CODIGO_ESTADO;
+            ViewBag.AGENCIA = dataAI.NOMBRE_AUDITORIA;
+            ViewBag.FECHA_CUESTIONARIO = data.FECHA_CUESTIONARIO != null ? DateTime.Parse(data.FECHA_CUESTIONARIO.ToString()).ToString("yyyy-MM-dd") : null;
+            ViewBag.AUDITOR_ASIGNADO = data.AUDITOR_ASIGNADO;
+            ViewBag.RESPONSABLE = data.RESPONSABLE;
+            ViewBag.REVISADO_POR = data.REVISADO_POR;
+            ViewBag.AUDITORES_ASIG = Auditores;
+
 
             return View();
         }
+
 
         /// <summary>
         /// Metodo para obtener las respuestas de un cuestionario agregado a la auditoria
@@ -1430,7 +1664,7 @@ namespace SIA.Controllers
 
 
         /// <summary>
-        /// Guardar un cuestionario a la auditoria
+        /// Editar un cuestionario a la auditoria
         /// </summary>
         /// <param name="DataAI"></param>
         /// <returns></returns>
@@ -1460,6 +1694,40 @@ namespace SIA.Controllers
                     // Guarda los cambios en la base de datos
                     await _context.SaveChangesAsync();
                 }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("Ok");
+        }
+
+
+
+        /// <summary>
+        /// Editar datos un cuestionario a la auditoria
+        /// </summary>
+        /// <param name="DataAI"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> Edit_Audi_Cuest([FromBody] Mg_auditorias_cuestionarios DataAuditCuest)
+        {
+            try
+            {
+                if (DataAuditCuest == null) return new JsonResult("error");
+
+                var data = await _context.MG_AUDITORIAS_CUESTIONARIOS
+                                    .Where(u => u.CODIGO_AUDITORIA_CUESTIONARIO == DataAuditCuest.CODIGO_AUDITORIA_CUESTIONARIO)
+                                    .FirstOrDefaultAsync();
+
+                data.FECHA_CUESTIONARIO = DataAuditCuest.FECHA_CUESTIONARIO;
+                data.AUDITOR_ASIGNADO = DataAuditCuest.AUDITOR_ASIGNADO;
+                data.RESPONSABLE = DataAuditCuest.RESPONSABLE;
+                data.REVISADO_POR = DataAuditCuest.REVISADO_POR;
+
+                // Guarda los cambios en la base de datos
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -1500,8 +1768,6 @@ namespace SIA.Controllers
 
 
 
-
-
         //********************************************************************************
         // PROGRAMAS DE TRABAJO
         //********************************************************************************
@@ -1531,26 +1797,428 @@ namespace SIA.Controllers
             return View();
         }
 
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         [Route("Auditorias/ProgramaTrabajo")]
-        public IActionResult ProgramaTrabajo()
+        public async Task<IActionResult> ProgramaTrabajo()
         {
+            int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+            int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+
+            string numPdtEncoded = DecodeBase64(Request.Query["pdt"]);
+            int numeroPDT = int.Parse(numPdtEncoded);
+
+            var data = await _context.AU_PLANES_DE_TRABAJO
+                    .Where(e => e.NUMERO_PDT == numeroPDT)
+                    .FirstOrDefaultAsync();
+
+            var dataAct = await _context.MG_ACTIVIDADES
+                            .Where(e => e.CODIGO_ESTADO == "A")
+                            .OrderBy(e => e.NOMBRE_ACTIVIDAD)
+                            .ToListAsync();
+
+            ViewBag.NUMERO_PDT = data.NUMERO_PDT;
+            ViewBag.NUMERO_AUDITORIA = data.NUMERO_AUDITORIA;
+            ViewBag.CODIGO_PDT = data.CODIGO_PDT;
+            ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
+            ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
+            ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
+            ViewBag.DATA_ACTIVIDADES = dataAct;
+            ViewBag.ROL_CODE = HttpContext.Session.GetString("rolCode");
+
+            return View();
+        }
+
+        /// <summary>
+        /// Guardar actividades asignadas a un usuario
+        /// </summary>
+        /// <param name="DataAI"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> Guardar_Actividades_asignadas([FromBody] dynamic data)
+        {
+            try
+            {
+                int numeroPdt = Int32.Parse(data.GetProperty("numeropdt").GetString());
+                int numeroAi = Int32.Parse(data.GetProperty("numeroai").GetString());
+                int anioAi = Int32.Parse(data.GetProperty("anioai").GetString());
+                int numeroAuditoria = Int32.Parse(data.GetProperty("numero_auditoria").GetString());
+                string codigoUsuarioAsignado = data.GetProperty("codigo_usuario_asignado").GetString();
+                // Obtener la cadena 'actividades' y dividirla en un array
+                var actividadesString = data.GetProperty("actividades").GetString();
+
+                var actividadesArray = actividadesString.Split(','); // Divide la cadena en un array de cadenas
+
+                // Obtén todas las actividades existentes para la combinación dada
+                var actividadesExistentesAuditor = await _context.AU_DETALLE_PLAN_DE_TRABAJO
+                    .Where(a => a.NUMERO_PDT == numeroPdt &&
+                        a.NUMERO_AUDITORIA_INTEGRAL == numeroAi &&
+                        a.ANIO_AI == anioAi &&
+                        a.NUMERO_AUDITORIA == numeroAuditoria &&
+                        a.CODIGO_USUARIO_ASIGNADO == codigoUsuarioAsignado)
+                    .Select(a => a.CODIGO_ACTIVIDAD)
+                    .ToListAsync();
+
+                foreach (var actividad in actividadesArray)
+                {
+                    if (!actividadesExistentesAuditor.Contains(Int32.Parse(actividad)))
+                    {
+                        Au_detalle_plan_de_trabajo detallePDT = new();
+                        detallePDT.CODIGO_ACTIVIDAD = Int32.Parse(actividad);
+                        detallePDT.NUMERO_PDT = numeroPdt;
+                        detallePDT.NUMERO_AUDITORIA_INTEGRAL = numeroAi;
+                        detallePDT.ANIO_AI = anioAi;
+                        detallePDT.NUMERO_AUDITORIA = numeroAuditoria;
+                        detallePDT.CODIGO_ESTADO = 0;
+                        detallePDT.CODIGO_USUARIO_ASIGNADO = codigoUsuarioAsignado;
+                        detallePDT.FECHA_CREACION = DateTime.Now;
+                        detallePDT.CREADO_POR = HttpContext.Session.GetString("user");
+
+                        _context.Add(detallePDT);
+
+                        //Guardamos las actividades
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("Ok");
+        }
+
+
+        /// <summary>
+        /// Metodo para obtener las actividades asignadas
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> ActividadesAsignadas(int numero_pdt, string cod_auditor = "T")
+        {
+            dynamic data = new List<dynamic>();
+            var estadoRequest = Request.Form["estado"].FirstOrDefault();
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][data]"].FirstOrDefault().ToUpper();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault().ToUpper();
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+            int recordsTotal = 0;
+            var userLogeado = HttpContext.Session.GetString("user");
+
+            var query = _context.AU_DETALLE_PLAN_DE_TRABAJO
+                .Where(e => e.NUMERO_PDT == numero_pdt);
+
+            var recordsT = _context.AU_DETALLE_PLAN_DE_TRABAJO
+                .Where(e => e.NUMERO_PDT == numero_pdt);
+
+            // Agrega el filtro condicional por cod_auditor solo si no es "T"
+            if (cod_auditor != "T")
+            {
+                query = query.Where(e => e.CODIGO_USUARIO_ASIGNADO == cod_auditor);
+                recordsT = recordsT.Where(e => e.CODIGO_USUARIO_ASIGNADO == cod_auditor);
+            }
+
+            if (!string.IsNullOrEmpty(searchValue) && searchValue.Count() >= 3)
+            {
+                if (sortColumnDirection.Equals("asc"))
+                {
+
+                    query = query.Where(e => e.mg_actividades.NOMBRE_ACTIVIDAD.ToUpper().Contains(searchValue))
+                    .OrderByDescending(e => e.CODIGO_USUARIO_ASIGNADO == userLogeado) // Ordena para que el usuario logueado esté primero
+                    .ThenByDescending(e => e.CODIGO_USUARIO_ASIGNADO) // Luego ordena ascendentemente por el código de usuario asignado
+                        .ThenByDescending(e => e.mg_actividades.NOMBRE_ACTIVIDAD) // Finalmente, ordena ascendentemente por el nombre de la actividad
+                    .Skip(skip)
+                    .Take(pageSize);
+
+                    var result = query.Select(e => new
+                    {
+                        e.CODIGO_ACTIVIDAD,
+                        e.NUMERO_PDT,
+                        e.NUMERO_AUDITORIA_INTEGRAL,
+                        e.ANIO_AI,
+                        e.NUMERO_AUDITORIA,
+                        e.CODIGO_ESTADO,
+                        e.CODIGO_USUARIO_ASIGNADO,
+                        e.FECHA_CREACION,
+                        e.CREADO_POR,
+                        e.FECHA_ACTUALIZACION,
+                        e.ACTUALIZADO_POR,
+                        NOMBRE_ACTIVIDAD = e.mg_actividades != null ? e.mg_actividades.NOMBRE_ACTIVIDAD : "", // Verificar null para mg_actividades
+                        DESCRIPCION = e.mg_actividades != null ? e.mg_actividades.DESCRIPCION : "", // Verificar null para mg_actividades
+                        NOMBRE_USUARIO = e.mg_usuarios != null ? e.mg_usuarios.NOMBRE_USUARIO : "" // Verificar null para mg_usuarios
+                    });
+
+                    data = await result.ToListAsync();
+                }
+                else
+                {
+                    query = query.Where(e => e.mg_actividades.NOMBRE_ACTIVIDAD.Contains(searchValue))
+                    .OrderBy(e => e.CODIGO_USUARIO_ASIGNADO == userLogeado) // Primero ordena para que el usuario logueado esté primero
+                    .ThenBy(e => e.CODIGO_USUARIO_ASIGNADO) // Luego ordena ascendentemente por el código de usuario asignado
+                    .ThenBy(e => e.mg_actividades.NOMBRE_ACTIVIDAD) // Finalmente, ordena ascendentemente por el nombre de la actividad                       
+                    .Skip(skip)
+                    .Take(pageSize);
+
+                    var result = query.Select(e => new
+                    {
+                        e.CODIGO_ACTIVIDAD,
+                        e.NUMERO_PDT,
+                        e.NUMERO_AUDITORIA_INTEGRAL,
+                        e.ANIO_AI,
+                        e.NUMERO_AUDITORIA,
+                        e.CODIGO_ESTADO,
+                        e.CODIGO_USUARIO_ASIGNADO,
+                        e.FECHA_CREACION,
+                        e.CREADO_POR,
+                        e.FECHA_ACTUALIZACION,
+                        e.ACTUALIZADO_POR,
+                        NOMBRE_ACTIVIDAD = e.mg_actividades != null ? e.mg_actividades.NOMBRE_ACTIVIDAD : "", // Verificar null para mg_actividades
+                        DESCRIPCION = e.mg_actividades != null ? e.mg_actividades.DESCRIPCION : "", // Verificar null para mg_actividades
+                        NOMBRE_USUARIO = e.mg_usuarios != null ? e.mg_usuarios.NOMBRE_USUARIO : "" // Verificar null para mg_usuarios
+                    });
+
+                    data = await result.ToListAsync();
+                }
+
+                recordsTotal = await recordsT.CountAsync(x => x.mg_actividades.NOMBRE_ACTIVIDAD.Contains(searchValue));
+            }
+            else
+            {
+                if (sortColumnDirection.Equals("asc"))
+                {
+
+                    query = query.OrderByDescending(e => e.CODIGO_USUARIO_ASIGNADO == userLogeado) // Primero ordena para que el usuario logueado esté primero
+                        .ThenByDescending(e => e.CODIGO_USUARIO_ASIGNADO) // Luego ordena ascendentemente por el código de usuario asignado
+                        .ThenByDescending(e => e.mg_actividades.NOMBRE_ACTIVIDAD) // Finalmente, ordena ascendentemente por el nombre de la actividad
+                        .Skip(skip)
+                        .Take(pageSize);
+
+                    var result = query.Select(e => new
+                    {
+                        e.CODIGO_ACTIVIDAD,
+                        e.NUMERO_PDT,
+                        e.NUMERO_AUDITORIA_INTEGRAL,
+                        e.ANIO_AI,
+                        e.NUMERO_AUDITORIA,
+                        e.CODIGO_ESTADO,
+                        e.CODIGO_USUARIO_ASIGNADO,
+                        e.FECHA_CREACION,
+                        e.CREADO_POR,
+                        e.FECHA_ACTUALIZACION,
+                        e.ACTUALIZADO_POR,
+                        NOMBRE_ACTIVIDAD = e.mg_actividades != null ? e.mg_actividades.NOMBRE_ACTIVIDAD : "", // Verificar null para mg_actividades
+                        DESCRIPCION = e.mg_actividades != null ? e.mg_actividades.DESCRIPCION : "", // Verificar null para mg_actividades
+                        NOMBRE_USUARIO = e.mg_usuarios != null ? e.mg_usuarios.NOMBRE_USUARIO : "" // Verificar null para mg_usuarios
+                    });
+
+                    data = await result.ToListAsync();
+                }
+                else
+                {
+                    query = query.OrderBy(e => e.CODIGO_USUARIO_ASIGNADO == userLogeado) // Primero ordena para que el usuario logueado esté primero
+                        .ThenBy(e => e.CODIGO_USUARIO_ASIGNADO) // Luego ordena ascendentemente por el código de usuario asignado
+                        .ThenBy(e => e.mg_actividades.NOMBRE_ACTIVIDAD) // Finalmente, ordena ascendentemente por el nombre de la actividad
+                        .Skip(skip)
+                        .Take(pageSize);
+
+                    var result = query.Select(e => new
+                    {
+                        e.CODIGO_ACTIVIDAD,
+                        e.NUMERO_PDT,
+                        e.NUMERO_AUDITORIA_INTEGRAL,
+                        e.ANIO_AI,
+                        e.NUMERO_AUDITORIA,
+                        e.CODIGO_ESTADO,
+                        e.CODIGO_USUARIO_ASIGNADO,
+                        e.FECHA_CREACION,
+                        e.CREADO_POR,
+                        e.FECHA_ACTUALIZACION,
+                        e.ACTUALIZADO_POR,
+                        NOMBRE_ACTIVIDAD = e.mg_actividades != null ? e.mg_actividades.NOMBRE_ACTIVIDAD : "", // Verificar null para mg_actividades
+                        DESCRIPCION = e.mg_actividades != null ? e.mg_actividades.DESCRIPCION : "", // Verificar null para mg_actividades
+                        NOMBRE_USUARIO = e.mg_usuarios != null ? e.mg_usuarios.NOMBRE_USUARIO : "" // Verificar null para mg_usuarios
+                    });
+
+                    data = await result.ToListAsync();
+                }
+
+                recordsTotal = await recordsT.CountAsync();
+            }
+
+            var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
+            return Ok(jsonData);
+
+        }
+
+
+        //********************************************************************************
+        // HALLAZGOS
+        //********************************************************************************
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("Auditorias/AuditoriaResultados")]
+        public async Task<IActionResult> AuditoriaResultados(string ca, string pdt, string us)
+        {
+            int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+            int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+            string codigoActividad = DecodeBase64(ca);
+            string numeroPdt = DecodeBase64(pdt);
+            string codigoUsuarioAsignado = DecodeBase64(us);
+
+            int codigoActividadInt = int.Parse(codigoActividad);
+            int numeroPdtInt = int.Parse(numeroPdt);
+
+            HttpContext.Session.SetInt32("codigoActividadInt", codigoActividadInt);
+            HttpContext.Session.SetInt32("numeroPdt", numeroPdtInt);
+            HttpContext.Session.SetString("codigoUsuarioAsignado", codigoUsuarioAsignado);
+
+            //var detalles_actividad = await _context.MG_ACTIVIDADES
+            //    .Where(a => _context.AU_DETALLE_PLAN_DE_TRABAJO
+            //    .Where(a => a.CODIGO_ACTIVIDAD == codigoActividadInt)
+            //    .Any(d => d.CODIGO_ACTIVIDAD == a.CODIGO_ACTIVIDAD &&
+            //      d.NUMERO_PDT == numeroPdtInt &&
+            //      d.NUMERO_AUDITORIA_INTEGRAL == cod &&
+            //      d.ANIO_AI == anio))
+            //    .Select(a => new
+            //    {
+            //        Actividad = a,
+            //        Detalles = _context.AU_DETALLE_PLAN_DE_TRABAJO
+            //        .Where(d => d.CODIGO_ACTIVIDAD == a.CODIGO_ACTIVIDAD)
+            //        .Select(d => new
+            //        {
+            //            d.NUMERO_PDT,
+            //            d.NUMERO_AUDITORIA_INTEGRAL,
+            //            d.ANIO_AI,
+            //            d.NUMERO_AUDITORIA,
+            //            d.CODIGO_ESTADO,
+            //            d.CODIGO_USUARIO_ASIGNADO,
+            //            d.FECHA_CREACION,
+            //            d.CREADO_POR,
+            //            d.FECHA_ACTUALIZACION,
+            //            d.ACTUALIZADO_POR
+            //        })
+            //        .ToList()
+            //    })
+            //    .ToListAsync();
+
+            var detalles_actividad = await _context.MG_ACTIVIDADES
+                .Where(a => a.au_detalle_plan_trabajo
+                .Any(d => d.CODIGO_ACTIVIDAD == codigoActividadInt &&
+                d.NUMERO_PDT == numeroPdtInt &&
+                d.NUMERO_AUDITORIA_INTEGRAL == cod &&
+                d.ANIO_AI == anio))
+                .Include(a => a.au_detalle_plan_trabajo
+                .Where(d => d.NUMERO_PDT == numeroPdtInt &&
+                    d.NUMERO_AUDITORIA_INTEGRAL == cod &&
+                    d.ANIO_AI == anio))
+                .ToListAsync();
+
+            // Ejemplo de uso
+            if (detalles_actividad != null)
+            {
+                foreach (var item in detalles_actividad)
+                {
+                    var nombreActividad = item.NOMBRE_ACTIVIDAD;
+                    var codActividad = item.CODIGO_ACTIVIDAD;
+                    var detalles = item.au_detalle_plan_trabajo;
+
+                    // Puedes pasar esta estructura a tu ViewBag o modelo de vista
+                    ViewBag.DETALLES_ACTIVIDAD = new
+                    {
+                        Nombre_actividad = nombreActividad,
+                        Codigo_actividad = codActividad,
+                        Detalles = detalles
+                    };
+                }
+            }
+            else
+            {
+                // Manejo de caso cuando no se encuentra la actividad
+                ViewBag.DETALLES_ACTIVIDAD = null;
+            }
+
+            ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
+
             return View();
         }
 
 
+        /// <summary>
+        /// Pantalla para agregar Hallazgos a una actividad
+        /// </summary>
+        /// <returns></returns>
+        [Route("Auditorias/AuditoriaResultados/AuditoriaHallazgo")]
+        public async Task<IActionResult> AuditoriaHallazgo()
+        {
+            int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+            int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+            int codigoActividadInt = (int)HttpContext.Session.GetInt32("codigoActividadInt");
+            int numeroPdtInt = (int)HttpContext.Session.GetInt32("numeroPdt");
+            string codigoUsuarioAsignado = HttpContext.Session.GetString("codigoUsuarioAsignado");
 
+            var detalles_actividad = await _context.MG_ACTIVIDADES
+                .Where(a => a.au_detalle_plan_trabajo
+                .Any(d => d.CODIGO_ACTIVIDAD == codigoActividadInt &&
+                d.NUMERO_PDT == numeroPdtInt &&
+                d.NUMERO_AUDITORIA_INTEGRAL == cod &&
+                d.ANIO_AI == anio))
+                .Include(a => a.au_detalle_plan_trabajo
+                .Where(d => d.NUMERO_PDT == numeroPdtInt &&
+                    d.NUMERO_AUDITORIA_INTEGRAL == cod &&
+                    d.ANIO_AI == anio))
+                .ToListAsync();
 
+            // Ejemplo de uso
+            if (detalles_actividad != null)
+            {
+                foreach (var item in detalles_actividad)
+                {
+                    var nombreActividad = item.NOMBRE_ACTIVIDAD;
+                    var codActividad = item.CODIGO_ACTIVIDAD;
+                    var detalles = item.au_detalle_plan_trabajo;
 
+                    // Puedes pasar esta estructura a tu ViewBag o modelo de vista
+                    ViewBag.DETALLES_ACTIVIDAD = new
+                    {
+                        Nombre_actividad = nombreActividad,
+                        Codigo_actividad = codActividad,
+                        Detalles = detalles
+                    };
+                }
+            }
+            else
+            {
+                // Manejo de caso cuando no se encuentra la actividad
+                ViewBag.DETALLES_ACTIVIDAD = null;
+            }
 
+            ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
 
+            return View();
+        }
 
-
-
-
+        /// <summary>
+        /// Metodo para decodificar los datos codificados de la URL
+        /// </summary>
+        /// <param name="base64EncodedData"></param>
+        /// <returns></returns>
+        public static string DecodeBase64(string base64EncodedData)
+        {
+            var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
+            return Encoding.UTF8.GetString(base64EncodedBytes);
+        }
 
 
 
@@ -1582,25 +2250,7 @@ namespace SIA.Controllers
 
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [Route("Auditorias/AuditoriaResultados")]
-        public IActionResult AuditoriaResultados()
-        {
-            return View();
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [Route("Auditorias/AuditoriaResultados/AuditoriaHallazgo")]
-        public IActionResult AuditoriaHallazgo()
-        {
-            return View();
-        }
 
         /// <summary>
         /// 

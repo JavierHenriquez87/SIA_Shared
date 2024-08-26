@@ -1,0 +1,38 @@
+﻿<!-- Modal nuevo Usuario-->
+<div class="modal fade" id="divActividad" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-width: 500px;">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleNuevaActividad"></h5>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="codigoActividadEdit" id="codigoActividadEdit">
+
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <label><i style="color: red">*</i> Nombre de la Actividad</label>
+                        <textarea type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="inputNombreActividad" id="inputNombreActividad" placeholder="Digite el nombre de la Actividad" required="" maxlength="250"></textarea>
+                    </div>
+
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <label><i style="color: red">*</i> Descripción de la Actividad</label>
+                        <textarea type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="inputDescripActividad" id="inputDescripActividad" placeholder="Digite la descripción de la Actividad" required="" maxlength="1000"></textarea>
+                    </div>
+
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <label><i style="color: red">*</i> Tipo de Auditoria</label>
+                        <select id="tipoAuditoriaActNew" name="tipoAuditoriaActNew" class="form-control">
+                            <option value="">- Seleccione un Tipo de Auditoría -</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onClick="GuardarActividadNueva()" id="btnGuardarActividad">Guardar Actividad</button>
+                <button type="button" class="btn btn-primary" style="display: none;" onClick="GuardarActividadEditada()" id="GuardarActividadEditada">Editar Actividad</button>
+            </div>
+        </div>
+    </div>
+</div>

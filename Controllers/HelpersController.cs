@@ -276,5 +276,34 @@ namespace SIA.Controllers
                 return null;
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Au_auditores_asignados>>> GetAuditoresAsignados()
+        {
+            try
+            {
+                int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+                int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+
+                var Auditores = await _context.AU_AUDITORES_ASIGNADOS
+                    .Include(e => e.mg_usuarios)
+                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == cod)
+                    .Where(e => e.ANIO_AI == anio)
+                    .OrderBy(e => e.mg_usuarios.NOMBRE_USUARIO)
+                    .ToListAsync();
+
+                if (Auditores == null)
+                {
+                    return NotFound();
+                }
+
+                return Auditores;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
     }
 }

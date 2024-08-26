@@ -46,7 +46,7 @@ async function solicitarAprobacionMP() {
                         text: 'Registro guardado con exito.',
                         icon: 'success',
                         didClose: () => {
-                            window.location.href = '/Auditorias/ProgramarAuditoria';
+                            window.location.href = '/Auditorias/DetalleAuditoria';
                         }
                     });
                 } else {

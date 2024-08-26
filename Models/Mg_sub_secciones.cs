@@ -21,5 +21,9 @@ namespace SIA.Models
             // Inicializar la colección para evitar null references
             Preguntas_Cuestionarios = new List<Mg_preguntas_cuestionario>();
         }
+
+        // Propiedad que no estará en la base de datos
+        [NotMapped]
+        public double PORCENTAJE { get; set; }
     }
 }

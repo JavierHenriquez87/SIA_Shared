@@ -1,19 +1,117 @@
-﻿const cuantitativaButton = document.getElementById('cuantitativa');
+﻿//Evitamos que el boton envie el formulario
+document.getElementById('cuantitativa').addEventListener('click', function (event) {
+    event.preventDefault();
+});
+
+//Evitamos que el boton envie el formulario
+document.getElementById('cualitativa').addEventListener('click', function (event) {
+    event.preventDefault();
+});
+
+
+// Esperar a que el DOM esté completamente cargado
+document.addEventListener("DOMContentLoaded", function () {
+    // Objeto JavaScript para almacenar los valores del formulario
+    const formularioData = {
+        hallazgo: "",
+        calificacion: "",
+        valor_muestra: "",
+        muestra_inconsistente: "",
+        desviacion_muestra: "",
+        selectedRisk: "",
+        condicion: "",
+        criterio: "",
+        causageneral: [
+            { id: "causa", causa: "" }  // Causa inicial por defecto
+        ]
+    };
+
+    console.log(formularioData);
+
+    // Seleccionar todos los inputs y agregar el evento de cambio
+    const inputs = document.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('change', handleInputChange);
+    });
+
+    // Función para manejar el cambio en los inputs
+    function handleInputChange(event) {
+        const { name, value } = event.target;
+        formularioData[name] = value;
+        console.log(formularioData);
+    }
+
+    // Agregar eventos a los botones para cambiar la calificación
+    document.getElementById('cuantitativa').addEventListener('click', function (event) {
+        event.preventDefault();
+        formularioData.calificacion = "1";  // Cuantitativa es 1
+    });
+
+    document.getElementById('cualitativa').addEventListener('click', function (event) {
+        event.preventDefault();
+        formularioData.calificacion = "2";  // Cualitativa es 2
+    });
+});
+
+
+function calculoMuestra() {
+    var valor_muestra = $('#valor_muestra').val();
+    var muestra_inconsistente = $('#muestra_inconsistente').val();
+
+    if (valor_muestra == 0) {
+        $('#desviacion_muestra').val('0%');
+        selectedRisk.classList.remove('highlight-alto');
+        selectedRisk.classList.remove('highlight-medio');
+        selectedRisk.classList.add('highlight-bajo');
+    } else {
+        var desviacion = (muestra_inconsistente / valor_muestra) * 100;
+        desviacion = desviacion.toFixed(2);
+
+        $('#desviacion_muestra').val(desviacion + "%");
+
+        if (desviacion <= 5.1) {
+            selectedRisk.classList.remove('highlight-alto');
+            selectedRisk.classList.remove('highlight-medio');
+            selectedRisk.classList.add('highlight-bajo');
+            selectedRisk.textContent = "Bajo";
+        } else if (desviacion > 5.1 && desviacion <= 9.99) {
+            selectedRisk.classList.remove('highlight-alto');
+            selectedRisk.classList.remove('highlight-bajo');
+            selectedRisk.classList.add('highlight-medio');
+            selectedRisk.textContent = "Medio";
+        } else {
+            selectedRisk.classList.remove('highlight-bajo');
+            selectedRisk.classList.remove('highlight-medio');
+            selectedRisk.classList.add('highlight-alto');
+            selectedRisk.textContent = "Alto";
+        }
+    }
+}
+
+
+
+
+
+
+
+
+const cuantitativaButton = document.getElementById('cuantitativa');
 const cualitativaButton = document.getElementById('cualitativa');
 
 cuantitativaButton.addEventListener('click', () => {
     cuantitativaButton.classList.add('active');
-cualitativaButton.classList.remove('active');
+    cualitativaButton.classList.remove('active');
 });
 
 cualitativaButton.addEventListener('click', () => {
     cualitativaButton.classList.add('active');
-cuantitativaButton.classList.remove('active');
+    cuantitativaButton.classList.remove('active');
 });
 
 document.querySelector('.upload-area').addEventListener('click', function () {
     document.getElementById('documentos').click();
 });
+
 
 let causaCount = 1; // Inicializar un contador
 
@@ -50,9 +148,14 @@ document.getElementById('btn_causa').addEventListener('click', function () {
     const container = document.getElementById('input_causa');
     container.appendChild(inputContainer);
 
+    //Agregar al array de objetos
+    const nuevasCausas = formularioData.causageneral;
+    nuevasCausas.push({ id: uniqueId, causa: "" });
     // Incrementar el contador
     causaCount++;
 });
+
+
 
 let efectoCount = 1; // Inicializar un contador
 
@@ -240,3 +343,4 @@ document.querySelectorAll('.risk-level-options .card').forEach(function (element
         document.getElementById('riskLevels').style.display = 'none';
     });
 });
+

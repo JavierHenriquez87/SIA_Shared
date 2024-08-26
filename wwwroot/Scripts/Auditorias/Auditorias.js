@@ -18,7 +18,13 @@ async function GeAuditoriasIntegrales() {
             "columns": [
                 {
                     "data": "codigO_AUDITORIA",
-                    "render": function (data, type, row, meta) { return row.codigO_AUDITORIA },
+                    "render": function (data, type, row, meta) {
+                        let buttons = "<a title='Ver Auditoría' style='cursor:pointer; color: blue;' onClick=\"AsignarNumAudInteSession("
+                            + row.numerO_AUDITORIA_INTEGRAL + "," + row.cantidaD_AUD_ESPEC + "," + row.aniO_AI + ");\">"
+                            + row.codigO_AUDITORIA + "</a>";
+
+                        return buttons;
+                    },
                     "name": "CODIGO",
                     "autoWidth": true,
                     "width": "20%"
@@ -104,14 +110,13 @@ async function GeAuditoriasIntegrales() {
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "numerO_AUDITORIA_INTEGRAL",
                     "render": function (data, type, row, meta) {
                         let buttons = "<div class='optiongrid'>";
 
                         buttons += "<a title='Ver Auditoría' style='cursor:pointer;' onClick=\"AsignarNumAudInteSession("
                             + row.numerO_AUDITORIA_INTEGRAL + "," + row.cantidaD_AUD_ESPEC + "," + row.aniO_AI + ");\">"
                             + "<i class='fas fa-eye' style='color: gray;'></i></a>";
-
 
                         buttons += "</div>";
 

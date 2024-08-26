@@ -77,7 +77,33 @@
         border: 1px solid;
     }
 
+.statusACT {
+    padding: 2px 5px;
+    border-radius: 3px;
+    background-color: #F8F9FC;
+    color: #155724;
+    width: fit-content !important;
+    height: 20px !important;
+    margin-right: 20px !important;
+}
 
+    .statusACT.create {
+        background-color: #F8F9FC;
+        color: #363F72;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #D5D9EB;
+        border: 1px solid;
+    }
+
+    .statusACT.pendingcreate {
+        background-color: #FEF6EE;
+        color: #B93815;
+        border-radius: 50px;
+        padding: 0px 10px;
+        border-color: #fecdca;
+        border: 1px solid;
+    }
 #tipoAuditoria {
     white-space: pre-wrap; /* Permite que el texto se ajuste y se quiebre en líneas nuevas */
     word-wrap: break-word; /* Rompe las palabras largas */

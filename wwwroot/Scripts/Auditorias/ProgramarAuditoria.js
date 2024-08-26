@@ -86,8 +86,6 @@ async function GuardarAuditoriaIntegral() {
 
 function ValidacionGuardarAudInteg() {
     var errorValidacion = false;
-    var errorFecha1 = false;
-    var errorFecha2 = false;
 
     var universoAuditable = $('#universoAuditable').val();
     var auditoriaProgramada = $('#auditoriaProgramada').val();

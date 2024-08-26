@@ -152,7 +152,7 @@ function CargarTiposAuditorias() {
         dataType: 'json',
         success: function (result) {
             let selectTiposAud = document.getElementById("tipoAuditoria");
-
+            
             if (result == "error") {
                 Swal.fire(
                     'Error!',
@@ -287,3 +287,50 @@ function CargarAuditoresEncargados() {
         }
     });
 }
+
+//FUNCION PARA CARGAR LOS AUDITORES QUE SON LOS ENCARGADOS DE UNA AUDITORIA
+//==========================================================================================
+function AuditoresEncargados() {
+    $.ajax({
+        type: 'GET',
+        url: '/Helpers/GetAuditoresAsignados',
+        dataType: 'json',
+        success: function (result) {
+            let SelectAuditores = document.getElementById("EquipoAuditoresAsignados");
+            let SelectAuditoreslst = document.getElementById("SelectEquipoAuditoresAsignados");
+
+            if (result == "error") {
+                Swal.fire(
+                    'Error!',
+                    'No se pudieron obtener los auditores',
+                    'error'
+                )
+            }
+            else {
+                result.forEach(function (data) {
+                    let opcion = document.createElement("option");
+                    opcion.value = data.codigO_USUARIO;
+                    opcion.text = data.mg_usuarios.nombrE_USUARIO;
+                    SelectAuditores.appendChild(opcion);
+                });
+
+                result.forEach(function (data) {
+                    let opcion = document.createElement("option");
+                    opcion.value = data.codigO_USUARIO;
+                    opcion.text = data.mg_usuarios.nombrE_USUARIO;
+                    SelectAuditoreslst.appendChild(opcion);
+                });
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            Swal.fire(
+                'Error!',
+                'No se pueden obtener los auditores ' + xhr.responseText,
+                'error'
+            )
+        }
+    });
+}
+
+//FUNCION PARA CARGAR LOS AUDITORES QUE SON LOS ENCARGADOS DE UNA AUDITORIA
+//==========================================================================================

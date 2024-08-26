@@ -5,7 +5,7 @@ let preguntasObj = [];
 // Cargamos las preguntas del cuestionario
 //==========================================================================================
 async function GetCuestionario() {
-
+    //Swal.showLoading();
     $.ajax({
         type: 'post',
         url: '../ObtenerRespuestasCuestionario',
@@ -21,97 +21,9 @@ async function GetCuestionario() {
                     'error'
                 )
             } else {
-                const contenedor = document.getElementById('contenedor-cuestionarios');
-                contenedor.innerHTML = ''; // Limpia el contenedor antes de llenarlo
-
                 result.forEach(function (seccion) {
-                    // Agrega el título de la sección
-                    const titulo = document.createElement('h3');
-                    titulo.textContent = seccion.DESCRIPCION_SECCION;
-                    titulo.classList.add('text-card-title');
-                    contenedor.appendChild(titulo);
-
                     seccion.sub_secciones.forEach(function (subSeccion) {
-                        // Agrega el título de la sub-sección
-                        const titulo2 = document.createElement('h5');
-                        titulo2.textContent = subSeccion.DESCRIPCION;
-                        titulo2.classList.add('text-card-subtitle');
-                        contenedor.appendChild(titulo2);
-
-                        // Crea una fila para las tarjetas
-                        let row = document.createElement('div');
-                        row.classList.add('column');
-                        contenedor.appendChild(row);
-
-                        let contador = 0;
-
                         subSeccion.Preguntas_Cuestionarios.forEach(function (pregunta) {
-                            // Crea un div para la tarjeta
-                            const card = document.createElement('div');
-                            card.classList.add('card-tarjet');
-                            var chk1 = '';
-                            var chk2 = '';
-                            var chk3 = '';
-                            var chk4 = '';
-                            var classradio = 'status create percentage';
-                            var percent = '0%';
-
-                            if (pregunta.RESPUESTA_PREGUNTA.CUMPLE === 1) {
-                                chk1 = 'checked';
-                                chk2 = '';
-                                chk3 = '';
-                                chk4 = '';
-                                classradio = 'status approved percentage';
-                                percent = '100%';
-                            } else if (pregunta.RESPUESTA_PREGUNTA.NO_CUMPLE === 1) {
-                                chk1 = '';
-                                chk2 = 'checked';
-                                chk3 = '';
-                                chk4 = '';
-                                classradio = 'status pending percentage';
-                                percent = '0%';
-                            } else if (pregunta.RESPUESTA_PREGUNTA.CUMPLE_PARCIALMENTE === 1) {
-                                chk1 = '';
-                                chk2 = '';
-                                chk3 = 'checked';
-                                chk4 = '';
-                                classradio = 'status partially percentage';
-                                percent = '50%';
-                            } else if (pregunta.RESPUESTA_PREGUNTA.NO_APLICA === 1) {
-                                chk1 = '';
-                                chk2 = '';
-                                chk3 = '';
-                                chk4 = 'checked';
-                                classradio = 'status create percentage';
-                                percent = '0%';
-                            }
-
-                            // Agrega el contenido HTML a la tarjeta
-                            card.innerHTML = `
-                                <div class="row">
-                                    <b for="question">${pregunta.DESCRIPCION}</b>
-                                </div>
-                                <div class="radio-group">
-                                    <input type="radio" id="cumple-${pregunta.CODIGO_PREGUNTA}" name="evaluacion-${pregunta.CODIGO_PREGUNTA}" value="cumple" data-codigo="${pregunta.CODIGO_PREGUNTA}" ${chk1}>
-                                    <label for="cumple-${pregunta.CODIGO_PREGUNTA}">Cumple</label>
-                                    <input type="radio" id="parcialmente-${pregunta.CODIGO_PREGUNTA}" name="evaluacion-${pregunta.CODIGO_PREGUNTA}" value="parcialmente" data-codigo="${pregunta.CODIGO_PREGUNTA}" ${chk3}>
-                                    <label for="parcialmente-${pregunta.CODIGO_PREGUNTA}">Cumple Parcialmente</label>
-                                    <input type="radio" id="no-cumple-${pregunta.CODIGO_PREGUNTA}" name="evaluacion-${pregunta.CODIGO_PREGUNTA}" value="no-cumple" data-codigo="${pregunta.CODIGO_PREGUNTA}" ${chk2}>
-                                    <label for="no-cumple-${pregunta.CODIGO_PREGUNTA}">No Cumple</label>
-                                    <input type="radio" id="na-${pregunta.CODIGO_PREGUNTA}" name="evaluacion-${pregunta.CODIGO_PREGUNTA}" value="na" data-codigo="${pregunta.CODIGO_PREGUNTA}" ${chk4}>
-                                    <label for="na-${pregunta.CODIGO_PREGUNTA}">N/A</label>
-                                </div>
-                                <div class="textarea-container">
-                                    <textarea id="textarea-${pregunta.CODIGO_PREGUNTA}" name="textarea-${pregunta.CODIGO_PREGUNTA}" data-codigo="${pregunta.CODIGO_PREGUNTA}">${pregunta.RESPUESTA_PREGUNTA.OBSERVACIONES}</textarea>
-                                </div>
-                                <div id="divPorcentaje-${pregunta.CODIGO_PREGUNTA}" class="${classradio}">
-                                    <b>Puntaje: </b><label id="porcentaje-${pregunta.CODIGO_PREGUNTA}">${percent}</label>
-                                </div>
-                            `;
-
-                            // Añade la tarjeta a la fila actual
-                            row.appendChild(card);
-
                             respuestasUsuario = {
                                 CODIGO_RESPUESTA: pregunta.RESPUESTA_PREGUNTA.CODIGO_RESPUESTA,
                                 CODIGO_PREGUNTA: pregunta.CODIGO_PREGUNTA,
@@ -126,22 +38,9 @@ async function GetCuestionario() {
 
                             preguntasObj.push(respuestasUsuario);
 
-                            // Incrementa el contador
-                            contador++;
-
-                            // Si el contador es 2, reinicia el contador y crea una nueva fila
-                            if (contador === 2) {
-                                row = document.createElement('div');
-                                row.classList.add('column');
-                                contenedor.appendChild(row);
-                                contador = 0;
-                            }
                         });
                     });
                 });
-                console.log(preguntasObj);
-                // Aquí agregas los listeners después de generar el contenido dinámico
-                attachEventListeners();
             }
         },
         error: function (xhr, textStatus, errorThrown) {
@@ -154,92 +53,96 @@ async function GetCuestionario() {
     });
 }
 
-// Función para manejar el cambio en los inputs y textareas
-//==========================================================================================
-function handleInputChange(event) {
-    const input = event.target;
-    const codigoPregunta = input.getAttribute('data-codigo');
-    const status = document.getElementById(`divPorcentaje-${codigoPregunta}`);
-    const porcentajeLabel = document.getElementById(`porcentaje-${codigoPregunta}`);
-
-    //Buscamos la pregunta para modificarla
-    var preguntaIndex = preguntasObj.findIndex(function (item) {
-        return item.CODIGO_PREGUNTA == parseInt(codigoPregunta, 10);
-    });
-    6
-    if (preguntaIndex !== -1) {
-        var preguntaExistente = preguntasObj[preguntaIndex];
-        if (input.type === 'radio') {
-
-            // Elimina todas las clases
-            status.className = '';
-            if (input.value === 'cumple') {
-                preguntaExistente.CUMPLE = 1;
-                preguntaExistente.NO_CUMPLE = 0;
-                preguntaExistente.CUMPLE_PARCIALMENTE = 0;
-                preguntaExistente.NO_APLICA = 0;
-                preguntaExistente.CALIFICACIONES = 'A';
-                preguntaExistente.PUNTAJE = 100;
-                status.classList.add('status', 'approved', 'percentage');
-                porcentajeLabel.textContent = '100%';
-            } else if (input.value === 'parcialmente') {
-                preguntaExistente.CUMPLE = 0;
-                preguntaExistente.NO_CUMPLE = 0;
-                preguntaExistente.CUMPLE_PARCIALMENTE = 1;
-                preguntaExistente.NO_APLICA = 0;
-                preguntaExistente.CALIFICACIONES = 'B';
-                preguntaExistente.PUNTAJE = 50;
-                status.classList.add('status', 'partially', 'percentage');
-                porcentajeLabel.textContent = '50%';
-            } else if (input.value === 'no-cumple') {
-                preguntaExistente.CUMPLE = 0;
-                preguntaExistente.NO_CUMPLE = 1;
-                preguntaExistente.CUMPLE_PARCIALMENTE = 0;
-                preguntaExistente.NO_APLICA = 0;
-                preguntaExistente.CALIFICACIONES = 'M';
-                preguntaExistente.PUNTAJE = 0;
-                status.classList.add('status', 'pending', 'percentage');
-                porcentajeLabel.textContent = '0%';
-            } else if (input.value === 'na') {
-                preguntaExistente.CUMPLE = 0;
-                preguntaExistente.NO_CUMPLE = 0;
-                preguntaExistente.CUMPLE_PARCIALMENTE = 0;
-                preguntaExistente.NO_APLICA = 1;
-                preguntaExistente.CALIFICACIONES = 'NA';
-                preguntaExistente.PUNTAJE = 0;
-                status.classList.add('status', 'create', 'percentage');
-                porcentajeLabel.textContent = '0%';
-            }
-        } else if (input.type === 'textarea') {
-            preguntaExistente.OBSERVACIONES = input.value;
-        }
-    }
-}
-
 // Función para agregar los event listeners
 //==========================================================================================
-function attachEventListeners() {
-    const radios = document.querySelectorAll('input[type="radio"]');
-    const textareas = document.querySelectorAll('textarea');
+document.addEventListener('DOMContentLoaded', function () {
+    // Función debounce para evitar que se ejecute en cada pulsación en el textarea
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            const context = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
 
-    radios.forEach(radio => {
+    // Función para manejar cambios en radio buttons y textarea
+    function handleInputChange(event) {
+        const input = event.target;
+        const codigoPregunta = input.getAttribute('data-codigo');
+        const status = document.getElementById(`divPorcentaje-${codigoPregunta}`);
+        const porcentajeLabel = document.getElementById(`porcentaje-${codigoPregunta}`);
+
+        //Buscamos la pregunta para modificarla
+        var preguntaIndex = preguntasObj.findIndex(function (item) {
+            return item.CODIGO_PREGUNTA == parseInt(codigoPregunta, 10);
+        });
+
+        if (preguntaIndex !== -1) {
+            var preguntaExistente = preguntasObj[preguntaIndex];
+            if (input.type === 'radio') {
+                // Elimina todas las clases
+                status.className = '';
+                if (input.value === 'cumple') {
+                    preguntaExistente.CUMPLE = 1;
+                    preguntaExistente.NO_CUMPLE = 0;
+                    preguntaExistente.CUMPLE_PARCIALMENTE = 0;
+                    preguntaExistente.NO_APLICA = 0;
+                    preguntaExistente.CALIFICACIONES = 'A';
+                    preguntaExistente.PUNTAJE = 100;
+                    status.classList.add('status', 'approved', 'percentage');
+                    porcentajeLabel.textContent = '100%';
+                } else if (input.value === 'parcialmente') {
+                    preguntaExistente.CUMPLE = 0;
+                    preguntaExistente.NO_CUMPLE = 0;
+                    preguntaExistente.CUMPLE_PARCIALMENTE = 1;
+                    preguntaExistente.NO_APLICA = 0;
+                    preguntaExistente.CALIFICACIONES = 'B';
+                    preguntaExistente.PUNTAJE = 50;
+                    status.classList.add('status', 'partially', 'percentage');
+                    porcentajeLabel.textContent = '50%';
+                } else if (input.value === 'no-cumple') {
+                    preguntaExistente.CUMPLE = 0;
+                    preguntaExistente.NO_CUMPLE = 1;
+                    preguntaExistente.CUMPLE_PARCIALMENTE = 0;
+                    preguntaExistente.NO_APLICA = 0;
+                    preguntaExistente.CALIFICACIONES = 'M';
+                    preguntaExistente.PUNTAJE = 0;
+                    status.classList.add('status', 'pending', 'percentage');
+                    porcentajeLabel.textContent = '0%';
+                } else if (input.value === 'na') {
+                    preguntaExistente.CUMPLE = 0;
+                    preguntaExistente.NO_CUMPLE = 0;
+                    preguntaExistente.CUMPLE_PARCIALMENTE = 0;
+                    preguntaExistente.NO_APLICA = 1;
+                    preguntaExistente.CALIFICACIONES = 'NA';
+                    preguntaExistente.PUNTAJE = 0;
+                    status.classList.add('status', 'create', 'percentage');
+                    porcentajeLabel.textContent = '0%';
+                }
+            } else if (input.type === 'textarea') {
+                preguntaExistente.OBSERVACIONES = input.value;
+            }
+        }
+    }
+
+
+
+    // Escuchar eventos de cambio en todos los radio buttons
+    const radioButtons = document.querySelectorAll('.radio-group input[type="radio"]');
+    radioButtons.forEach(function (radio) {
         radio.addEventListener('change', handleInputChange);
     });
 
-    textareas.forEach(textarea => {
-        textarea.addEventListener('input', debounce(handleInputChange, 2000)); // 2 segundos de espera
-    });
-}
 
-// Función debounce que evita que en cada pulsacion en el textarea se ejecute el cambio
-function debounce(func, delay) {
-    let timeout;
-    return function (...args) {
-        const context = this;
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(context, args), delay);
-    };
-}
+
+    // Escuchar eventos de cambio en todos los textarea con debounce
+    const textareas = document.querySelectorAll('.textarea-container textarea');
+    textareas.forEach(function (textarea) {
+        textarea.addEventListener('input', debounce(handleInputChange, 300)); // 300 ms de retraso
+    });
+});
+
 
 // Llama a GetCuestionario al cargar la página
 //==========================================================================================
@@ -250,45 +153,87 @@ document.addEventListener('DOMContentLoaded', function () {
 //GUARDAR LAS RESPUESTAS A LAS PREGUNTAS
 //==========================================================================================
 async function saveQuestion() {
-    Swal.showLoading();
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            method: 'POST',
-            url: '/Auditorias/Edit_Cuestionario',
-            data: JSON.stringify(preguntasObj),
-            contentType: 'application/json',
-            success: function (respuesta) {
-                if (respuesta == "error") {
-                    Swal.fire(
-                        'Error!',
-                        'Ocurrió un error al guardar el cuestionario.',
-                        'error'
-                    )
-                } else {
-                    Swal.fire({
-                        title: 'Guardado!',
-                        text: '¡Cuestionario modificado con exito!.',
-                        icon: 'success',
-                        didClose: () => {
-                            
-                        }
-                    });
 
-                }
-            },
-            error: function () {
-                // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
+    var DataAuditCuest = {
+        CODIGO_AUDITORIA_CUESTIONARIO: $('#codigo_cuest').val(),
+        FECHA_CUESTIONARIO: $('#fecha_cuestionario').val(),
+        AUDITOR_ASIGNADO: $('#EquipoAuditoresAsignados').val(),
+        RESPONSABLE: $('#responsable_cuestionario').val(),
+        REVISADO_POR: $('#cuest_revisado_por').val()
+    };
+
+    $.ajax({
+        method: 'POST',
+        url: '/Auditorias/Edit_Audi_Cuest',
+        data: JSON.stringify(DataAuditCuest),
+        contentType: 'application/json',
+        success: function (respuesta) {
+            if (respuesta == "error") {
+                Swal.fire(
+                    'Error!',
+                    'Ocurrió un error al guardar el cuestionario.',
+                    'error'
+                )
+            } else {
+                // Mostrar el loader antes de iniciar la solicitud AJAX
                 Swal.fire({
-                    title: 'Error!',
-                    text: 'Hubo un problema al procesar su solicitud.',
-                    icon: 'error',
-                    didClose: () => {
+                    title: "Guardando...",
+                    text: "Por favor, espere.",
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
 
+                $.ajax({
+                    method: 'POST',
+                    url: '/Auditorias/Edit_Cuestionario',
+                    data: JSON.stringify(preguntasObj),
+                    contentType: 'application/json',
+                    success: function (respuesta) {
+                        if (respuesta == "error") {
+                            Swal.fire(
+                                'Error!',
+                                'Ocurrió un error al guardar el cuestionario.',
+                                'error'
+                            )
+                        } else {
+                            Swal.fire({
+                                title: 'Guardado!',
+                                text: '¡Cuestionario modificado con exito!.',
+                                icon: 'success',
+                                didClose: () => {
+
+                                }
+                            });
+
+                        }
+                    },
+                    error: function () {
+                        // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Hubo un problema al procesar su solicitud.',
+                            icon: 'error',
+                            didClose: () => {
+
+                            }
+                        });
                     }
                 });
             }
-        });
-        resolve();
+        },
+        error: function () {
+            // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
+            Swal.fire({
+                title: 'Error!',
+                text: 'Hubo un problema al procesar su solicitud.',
+                icon: 'error',
+                didClose: () => {
+
+                }
+            });
+        }
     });
 }
 function VerCuestionario(codigo_cuestionario) {
@@ -364,3 +309,85 @@ function scrollToTop() {
         behavior: 'smooth' // Esto hará que el desplazamiento sea suave
     });
 }
+
+
+//Funcion que recalcula los porcentajes cuando se modifica un radio button
+function recalcularPromedio(codigoSubSeccion) {
+    // Selecciona todos los inputs de tipo radio en la subsección específica
+    const subseccionRadios = document.querySelectorAll(`.subseccion-${codigoSubSeccion} .radio-group input[type="radio"]`);
+    // Número de preguntas que no están marcadas como "na"
+    let numPreguntasValidas = 0; 
+
+    let totalPuntos = 0;
+
+
+    // Itera sobre los inputs de radio y calcula el total de puntos
+    subseccionRadios.forEach(radio => {
+        // Verifica si el radio está marcado
+        if (radio.checked) {
+            let puntaje = 0;
+
+            // Asigna el puntaje según el valor del radio seleccionado
+            switch (radio.value) {
+                case 'cumple':
+                    puntaje = 100;
+                    numPreguntasValidas++;
+                    break;
+                case 'parcialmente':
+                    puntaje = 50;
+                    numPreguntasValidas++;
+                    break;
+                case 'no-cumple':
+                    puntaje = 0;
+                    numPreguntasValidas++;
+                    break;
+                case 'na':
+                    // No sumar esta pregunta al total de puntos ni al número de preguntas válidas
+                    return;
+            }
+
+            totalPuntos += puntaje;
+        }
+    });
+
+    // Calcula el promedio
+    const promedio = numPreguntasValidas > 0 ? (totalPuntos / numPreguntasValidas) : 0;
+
+    let promedio_subseccion;
+    let stilo_percent;
+
+    if (promedio === 0) {
+        promedio_subseccion = "No calculado";
+        stilo_percent = "status_percent nocalculado";
+    }
+    else if (promedio < 50.90) {
+        promedio_subseccion = "Cumplimiento Bajo: " + promedio.toFixed(2) + "%";
+        stilo_percent = "status_percent bajo";
+    } else if (promedio < 65.90) {
+        promedio_subseccion = "Cumplimiento Medio-Bajo: " + promedio.toFixed(2) + "%";
+        stilo_percent = "status_percent mediobajo";
+    } else if (promedio < 85.90) {
+        promedio_subseccion = "Cumplimiento Medio: " + promedio.toFixed(2) + "%";
+        stilo_percent = "status_percent medio";
+    } else {
+        promedio_subseccion = "Cumplimiento Alto: " + promedio.toFixed(2) + "%";
+        stilo_percent = "status_percent alto";
+    }
+
+    // Actualiza el promedio en la interfaz
+    const elemento = document.getElementById(`cumplimiento-percent-${codigoSubSeccion}`);
+    if (elemento) {
+        elemento.textContent = promedio_subseccion;
+        elemento.className = '';  // Limpia todas las clases existentes
+        elemento.className = stilo_percent;  // Aplica el nuevo estilo
+    }
+}
+
+
+// Asigna un evento a cada radio button para recalcular el promedio cuando se seleccione una opción
+document.querySelectorAll('.radio-group input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', function () {
+        const codigoSubSeccion = this.closest('.col-md-6').classList[2].split('-')[1];
+        recalcularPromedio(codigoSubSeccion);
+    });
+});

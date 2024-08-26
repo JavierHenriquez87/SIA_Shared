@@ -23,6 +23,7 @@ namespace SIA.Context
             modelBuilder.Entity<Au_planificacion_de_auditoria>().HasKey(e => new { e.NUMERO_MDP, e.NUMERO_AUDITORIA_INTEGRAL });
             modelBuilder.Entity<Au_auditores_asignados>().HasKey(e => new { e.CODIGO_USUARIO, e.NUMERO_MDP, e.NUMERO_AUDITORIA_INTEGRAL });
             modelBuilder.Entity<Au_Planes_De_Trabajo>().HasKey(e => new { e.NUMERO_PDT, e.NUMERO_AUDITORIA_INTEGRAL, e.NUMERO_AUDITORIA });
+            modelBuilder.Entity<Au_detalle_plan_de_trabajo>().HasKey(e => new { e.CODIGO_ACTIVIDAD, e.NUMERO_PDT, e.NUMERO_AUDITORIA_INTEGRAL, e.NUMERO_AUDITORIA, e.ANIO_AI, e.CODIGO_USUARIO_ASIGNADO });
 
             modelBuilder.Entity<Mg_secciones>()
             .HasMany(s => s.sub_secciones)
@@ -33,7 +34,6 @@ namespace SIA.Context
             .HasMany(s => s.Preguntas_Cuestionarios)
             .WithOne(sub => sub.Sub_secciones)
             .HasForeignKey(sub => sub.CODIGO_SUB_SECCION);
-
         }
 
         public virtual DbSet<Mg_usuarios> MG_USUARIOS { get; set; }
@@ -62,5 +62,7 @@ namespace SIA.Context
         public virtual DbSet<Mg_respuestas_cuestionario> MG_RESPUESTAS_CUESTIONARIO { get; set; }
         public virtual DbSet<Mg_tipo_cuestionario> MG_TIPO_CUESTIONARIO { get; set; }
         public virtual DbSet<Mg_auditorias_cuestionarios> MG_AUDITORIAS_CUESTIONARIOS { get; set; }
+        public virtual DbSet<Au_detalle_plan_de_trabajo> AU_DETALLE_PLAN_DE_TRABAJO { get; set; }
+        public virtual DbSet<Mg_actividades> MG_ACTIVIDADES { get; set; }
     }
 }

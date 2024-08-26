@@ -1,4 +1,4 @@
-﻿<!-- Right Sidebar -->
+﻿            <!-- Right Sidebar -->
 <div id="sidebarEditObjRecMP" class="sidebarEditObjRecMP">
     <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">×</a>
     <div class="sidebar-content">
@@ -13,16 +13,43 @@
 
             <div class="form-group">
                 <label for="equipoTrabajoEdit">Equipo de Trabajo</label>
-                <textarea id="equipoTrabajoEdit" name="equipoTrabajoEdit" class="form-control" placeholder="Escribir..." rows="7">@ViewBag.AUDITORES_AUDITORIA</textarea>
+                <textarea id="equipoTrabajoEdit" name="equipoTrabajoEdit" class="form-control" placeholder="Escribir..." rows="7">@ViewBag.TEXTO_AUDITORES_AUDITORIA</textarea>
+                <div>
+                    <select id="selectequipoTrabajoEdit" name="selectequipoTrabajoEdit" class="select2 form-control select2-multiple"
+                            multiple="multiple" data-placeholder="Seleccionar ..." style="width: 100%;">
+                        <option value="">- Seleccione un auditor -</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="recursosEdit">Recursos de la Auditoría</label>
                 <textarea id="recursosEdit" name="recursosEdit" class="form-control" placeholder="Escribir..." rows="7">@ViewBag.RECURSOS_AUDITORIA</textarea>
             </div>
+
+            <div class="form-group">
+                <label for="tiempoEdit">Tiempo de la Auditoría</label>
+                <textarea id="tiempoEdit" name="tiempoEdit" class="form-control" placeholder="Escribir..." rows="4">@ViewBag.TEXTO_TIEMPO_AUDITORIA</textarea>
+            </div>
+
+            <div class="form-group">
+            <div class="row">
+                <div class="col-6">
+                        <input type="date" class="form-control" value="@ViewBag.TIEMPO_AUDITORIA_INICIO" id="fechaInicioEdit" />
+                </div>
+                <div class="col-6">
+                        <input type="date" class="form-control" value="@ViewBag.TIEMPO_AUDITORIA_FIN" id="fechaFinEdit"/>
+                </div>
+            </div>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-secondary" onclick="closeSidebarObjRecBtn()">Cancelar Edición</button>
+                <button class="btn btn-primary" onclick="closeSidebarObjRecBtnSave()">Guardar Cambios</button>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Right bar overlay-->
-<div id="overlayObjRec" class="overlay" onclick="closeSidebarObjRec()"></div>
+<div id="overlayObjRec" class="overlay" onclick="closeSidebarObjRecBtn()"></div>

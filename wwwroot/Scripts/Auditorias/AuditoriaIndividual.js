@@ -128,21 +128,14 @@ async function ConfirmarAuditoria() {
                     confirmButtonText: 'Ok'
                 })
             } else {
-                Swal.fire({
-                    title: 'Guardado!',
-                    text: 'Se confirmaron las auditorias con exito.',
-                    icon: 'success',
-                    didClose: () => {
-
-                    }
-                });
-
                 // Destruimos la tabla con la informacion cargada de las auditorias especificas
                 $('#tbAuditorias').dataTable().fnDestroy();
                 //Obtenemos nuevamente las auditorias especificas actualizadas
                 GeAuditoriasEspec();
                 //Limpiamos el select del tipo de auditoria que se selecciono
                 $('#tipoAuditoria').val("");
+
+                window.location.href = '/Auditorias/DetalleAuditoria';
             }
         },
         error: function () {
@@ -231,7 +224,7 @@ async function GeAuditoriasEspec() {
             "pagingType": "full_numbers",
             "iDisplayLength": 25,
             "lengthChange": false,
-            responsive: "true",
+            "responsive": true,
         });
     });
 

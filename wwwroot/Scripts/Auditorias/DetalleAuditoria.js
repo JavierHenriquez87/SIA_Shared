@@ -16,13 +16,13 @@ function validarMemoExiste() {
                 window.location.href = '/Auditorias/DetalleAuditoria/DetalleDocAuditoria';
             } else {
                 Swal.fire({
-                    title: 'Aun no se ha creado un Memorandum de Planificacion',
-                    text: 'Es necesario crear el Memorandum de Planificacion para habilitar las opciones de este apartado',
+                    title: 'Aún no se ha creado un Memorándum de Planificación',
+                    text: 'Es necesario crear el Memorándum de Planificación para habilitar las opciones de este apartado.',
                     icon: 'warning',
                     showCancelButton: true,
                     reverseButtons: true,
                     cancelButtonText: 'Cancelar',
-                    confirmButtonText: 'Crear Memorandum',
+                    confirmButtonText: 'Crear Memorándum',
                     buttonsStyling: true,
                     customClass: {
                         confirmButton: 'btn btn-primary',
