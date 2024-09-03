@@ -18,8 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
         calificacion: "",
         valor_muestra: "",
         muestra_inconsistente: "",
-        desviacion_muestra: "",
-        selectedRisk: "",
         condicion: "",
         criterio: "",
         causageneral: [
@@ -38,8 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
             { id: "acciones_requeridas", acciones_requeridas: "" }
         ]
     };
-
-    console.log(formularioData);
 
     // Seleccionar todos los inputs y agregar el evento de cambio
     const inputs = document.querySelectorAll('input, textarea');
@@ -62,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Función para manejar el cambio en los inputs
 function handleInputChange(event) {
     const { name, value } = event.target;
-    
+
     if (name.includes("causa")) {
         const causaId = name; // Asume que el nombre del campo es el mismo que el ID en el array
         const causaObj = formularioData.causageneral.find(obj => obj.id === causaId);
@@ -101,7 +97,6 @@ function handleInputChange(event) {
     else {
         formularioData[name] = value;
     }
-    console.log(formularioData);
 }
 
 function calculoMuestra() {
@@ -432,3 +427,67 @@ document.querySelectorAll('.risk-level-options .card').forEach(function (element
     });
 });
 
+async function GuardarActualizarHallazgo() {
+    console.log(formularioData);
+
+    var respuesta = ValidarObjeto(formularioData);
+
+    if (respuesta == false) {
+        Swal.fire(
+            'Advertencia',
+            'Por favor complete todos los campos del formulario',
+            'warning'
+        )
+    } else {
+        Swal.showLoading();
+
+        $.ajax({
+            method: 'POST',
+            url: '/Auditorias/GuardarHallazgos',
+            data: JSON.stringify(formularioData),
+            contentType: 'application/json',
+            success: function (resp) {
+                Swal.fire({
+                    title: "Se guardo el Hallazgo",
+                    text: "Desea agregar otro Hallazgo a la actividad",
+                    icon: "success",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si, Agregar otro!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    } else {
+                        window.location.href = 'Auditorias/AuditoriaResultados/AuditoriaHallazgo';
+                    }
+                });
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+}
+
+function ValidarObjeto(data) {
+    // Verificar que los campos simples (no arrays) no estén vacíos
+    for (const key in data) {
+        if (Array.isArray(data[key])) {
+            // Verificar los campos que son arrays
+            for (let item of data[key]) {
+                for (const subKey in item) {
+                    if (item[subKey] === "") {
+                        return false; // Si algún campo está vacío, retorna false
+                    }
+                }
+            }
+        } else {
+            if (data[key] === "") {
+                return false; // Si algún campo está vacío, retorna false
+            }
+        }
+    }
+    return true // Si todos los campos están llenos, retorna true
+}

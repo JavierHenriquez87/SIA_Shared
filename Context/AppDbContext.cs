@@ -16,7 +16,9 @@ namespace SIA.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Mg_menus_segun_rol>().HasKey(e => new { e.CODIGO_ROL, e.CODIGO_MENU });
+            modelBuilder.Entity<Mg_menus>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_MENU });
+            modelBuilder.Entity<Mg_opciones>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_MENU, e.CODIGO_OPCION });
+            modelBuilder.Entity<Mg_menus_segun_rol>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_MENU, e.CODIGO_ROL, });
             modelBuilder.Entity<Mg_permisos_submenus>().HasKey(e => new { e.CODIGO_ROL, e.CODIGO_SUB_MENU });
             modelBuilder.Entity<Au_auditorias_integrales>().HasKey(e => new { e.NUMERO_AUDITORIA_INTEGRAL, e.ANIO_AI });
             modelBuilder.Entity<Au_auditorias>().HasKey(e => new { e.NUMERO_AUDITORIA_INTEGRAL, e.NUMERO_AUDITORIA });
@@ -41,7 +43,7 @@ namespace SIA.Context
         public virtual DbSet<Mg_roles_del_sistema> MG_ROLES_DEL_SISTEMA { get; set; }
         public virtual DbSet<Mg_cargos> MG_CARGOS { get; set; }
         public virtual DbSet<Mg_menus> MG_MENUS { get; set; }
-        public virtual DbSet<Mg_sub_menus> MG_SUB_MENUS { get; set; }
+        public virtual DbSet<Mg_opciones> MG_OPCIONES { get; set; }
         public virtual DbSet<Mg_menus_segun_rol> MG_MENUS_SEGUN_ROL { get; set; }
         public virtual DbSet<Mg_permisos_submenus> MG_PERMISOS_SUBMENUS { get; set; }
         public virtual DbSet<Ag_auditorias> AG_AUDITORIAS { get; set; }
@@ -64,5 +66,7 @@ namespace SIA.Context
         public virtual DbSet<Mg_auditorias_cuestionarios> MG_AUDITORIAS_CUESTIONARIOS { get; set; }
         public virtual DbSet<Au_detalle_plan_de_trabajo> AU_DETALLE_PLAN_DE_TRABAJO { get; set; }
         public virtual DbSet<Mg_actividades> MG_ACTIVIDADES { get; set; }
+        public virtual DbSet<Mg_Hallazgos> MG_HALLAZGOS { get; set; }
+        
     }
 }

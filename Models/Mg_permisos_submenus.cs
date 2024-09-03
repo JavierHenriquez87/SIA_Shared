@@ -23,7 +23,7 @@ namespace SIA.Models
         public string? USUARIO_MODIFICA { get; set; }
 
         [ForeignKey("CODIGO_SUB_MENU")]
-        public virtual Mg_sub_menus? Submenus { get; set; }
+        public virtual Mg_opciones? Submenus { get; set; }
 
         [ForeignKey("CODIGO_ROL")]
         public virtual Mg_roles_del_sistema? roles { get; set; }

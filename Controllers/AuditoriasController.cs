@@ -2209,6 +2209,7 @@ namespace SIA.Controllers
             return View();
         }
 
+
         /// <summary>
         /// Metodo para decodificar los datos codificados de la URL
         /// </summary>
@@ -2220,7 +2221,59 @@ namespace SIA.Controllers
             return Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
+        /// <summary>
+        /// Guardar actividades asignadas a un usuario
+        /// </summary>
+        /// <param name="DataAI"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> GuardarHallazgos([FromBody] dynamic formularioData)
+        {
+            int nuevoIdHallazgo = 0;
 
+            try
+            {
+                int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+                int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+
+                //Obtenemos el codigo del siguiente registro segun el anio actual
+                int maxNumeroHallazgo = await _context.MG_HALLAZGOS
+                    .MaxAsync(a => (int?)a.CODIGO_HALLAZGO) ?? 0;
+
+                // Incrementar el valor máximo en 1
+                nuevoIdHallazgo = maxNumeroHallazgo + 1;
+
+                Mg_Hallazgos Hallazgo = new();
+                Hallazgo.CODIGO_HALLAZGO = nuevoIdHallazgo;
+                Hallazgo.HALLAZGO = formularioData.GetProperty("hallazgo").GetString();
+                Hallazgo.CALIFICACION = int.Parse((string)formularioData.GetProperty("calificacion").GetString());
+                Hallazgo.VALOR_MUESTRA = int.Parse((string)formularioData.GetProperty("valor_muestra").GetString());
+                Hallazgo.MUESTRA_INCONSISTENTE = int.Parse((string)formularioData.GetProperty("muestra_inconsistente").GetString());
+                Hallazgo.DESVIACION_MUESTRA = 0;
+                Hallazgo.NIVEL_RIESGO = 1;
+                Hallazgo.CONDICION = formularioData.GetProperty("condicion").GetString();
+                Hallazgo.CRITERIO = formularioData.GetProperty("criterio").GetString();
+                Hallazgo.CODIGO_ACTIVIDAD = 1;
+                Hallazgo.NUMERO_PDT = 1;
+                Hallazgo.NUMERO_AUDITORIA_INTEGRAL = 1;
+                Hallazgo.ANIO_AI = 1;
+                Hallazgo.NUMERO_AUDITORIA = 1;
+                Hallazgo.FECHA_CREACION = DateTime.Now;
+                Hallazgo.CREADO_POR = HttpContext.Session.GetString("user");
+
+                _context.Add(Hallazgo);
+
+                //Guardamos las actividades
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("Ok");
+        }
 
 
         //********************************************************************************

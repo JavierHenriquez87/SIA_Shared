@@ -70,7 +70,7 @@ namespace SIA.Controllers
 
                     //Obtenemos los menus y submenus a los que el usuario tiene acceso segun el rol
                     List<Mg_menus_segun_rol> menu = await _context.MG_MENUS_SEGUN_ROL
-                        .Where(x => x.CODIGO_ROL == userRolApp.CODIGO_ROL)
+                        .Where(x => x.CODIGO_ROL == Int32.Parse(userRolApp.CODIGO_ROL))
                         .Include(x => x.mg_Menus)
                         .ThenInclude(m => m.Mg_sub_menus)
                         .OrderBy(e => e.mg_Menus.ORDEN)
