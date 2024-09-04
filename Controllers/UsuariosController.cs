@@ -299,7 +299,6 @@ namespace SIA.Controllers
                 //Obtenemos todos los submenus para mostrarlos en el modal de agregar nuevo rol
                 List<Mg_permisos_submenus> menu = await _context.MG_PERMISOS_SUBMENUS
                     .Include(x => x.Submenus)
-                    .Include(e => e.roles)
                     .OrderBy(e => e.CODIGO_ROL)
                     .Where(x => x.CODIGO_ROL == idRol)
                     .ToListAsync();
@@ -374,7 +373,7 @@ namespace SIA.Controllers
                     Mg_permisos_submenus submenus = new()
                     {
                         CODIGO_ROL = CODIGO_ROL,
-                        CODIGO_SUB_MENU = item.CODIGO_SUB_MENU,
+                        CODIGO_OPCION = item.CODIGO_OPCION,
                         USUARIO_ADICIONA = HttpContext.Session.GetString("user"),
                         FECHA_ADICIONA = DateTime.Now,
                         LECTURA = item.LECTURA,
@@ -434,7 +433,7 @@ namespace SIA.Controllers
                     Mg_permisos_submenus submenus = new()
                     {
                         CODIGO_ROL = CODIGO_ROL,
-                        CODIGO_SUB_MENU = item.CODIGO_SUB_MENU,
+                        CODIGO_OPCION = item.CODIGO_OPCION,
                         USUARIO_ADICIONA = rolSubmenu == null ? HttpContext.Session.GetString("user") : rolSubmenu.USUARIO_ADICIONA,
                         FECHA_ADICIONA = rolSubmenu == null ? DateTime.Now : rolSubmenu.FECHA_ADICIONA,
                         USUARIO_MODIFICA = HttpContext.Session.GetString("user"),

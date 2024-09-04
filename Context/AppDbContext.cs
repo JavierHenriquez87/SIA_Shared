@@ -18,14 +18,15 @@ namespace SIA.Context
         {
             modelBuilder.Entity<Mg_menus>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_MENU });
             modelBuilder.Entity<Mg_opciones>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_MENU, e.CODIGO_OPCION });
-            modelBuilder.Entity<Mg_menus_segun_rol>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_MENU, e.CODIGO_ROL, });
-            modelBuilder.Entity<Mg_permisos_submenus>().HasKey(e => new { e.CODIGO_ROL, e.CODIGO_SUB_MENU });
+            modelBuilder.Entity<Mg_menus_segun_rol>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_MENU, e.CODIGO_ROL });
+            modelBuilder.Entity<Mg_permisos_submenus>().HasKey(p => new { p.CODIGO_APLICACION, p.CODIGO_OPCION, p.CODIGO_ROL });
             modelBuilder.Entity<Au_auditorias_integrales>().HasKey(e => new { e.NUMERO_AUDITORIA_INTEGRAL, e.ANIO_AI });
             modelBuilder.Entity<Au_auditorias>().HasKey(e => new { e.NUMERO_AUDITORIA_INTEGRAL, e.NUMERO_AUDITORIA });
             modelBuilder.Entity<Au_planificacion_de_auditoria>().HasKey(e => new { e.NUMERO_MDP, e.NUMERO_AUDITORIA_INTEGRAL });
             modelBuilder.Entity<Au_auditores_asignados>().HasKey(e => new { e.CODIGO_USUARIO, e.NUMERO_MDP, e.NUMERO_AUDITORIA_INTEGRAL });
             modelBuilder.Entity<Au_Planes_De_Trabajo>().HasKey(e => new { e.NUMERO_PDT, e.NUMERO_AUDITORIA_INTEGRAL, e.NUMERO_AUDITORIA });
             modelBuilder.Entity<Au_detalle_plan_de_trabajo>().HasKey(e => new { e.CODIGO_ACTIVIDAD, e.NUMERO_PDT, e.NUMERO_AUDITORIA_INTEGRAL, e.NUMERO_AUDITORIA, e.ANIO_AI, e.CODIGO_USUARIO_ASIGNADO });
+            modelBuilder.Entity<Mg_roles>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_ROL });
 
             modelBuilder.Entity<Mg_secciones>()
             .HasMany(s => s.sub_secciones)
@@ -36,8 +37,26 @@ namespace SIA.Context
             .HasMany(s => s.Preguntas_Cuestionarios)
             .WithOne(sub => sub.Sub_secciones)
             .HasForeignKey(sub => sub.CODIGO_SUB_SECCION);
+
+            modelBuilder.Entity<Mg_menus>()
+            .HasMany(m => m.Mg_opciones)
+            .WithOne()
+            .HasForeignKey(o => new { o.CODIGO_APLICACION, o.CODIGO_MENU });
+
+            modelBuilder.Entity<Mg_menus_segun_rol>()
+                .HasOne(m => m.Menu)
+                .WithMany()
+                .HasForeignKey(m => new { m.CODIGO_APLICACION, m.CODIGO_MENU });
+
+
+            //modelBuilder.Entity<Mg_permisos_submenus>()
+            //    .HasOne(p => p.roles)
+            //    .WithMany(r => r.PermisosSubmenus)
+            //    .HasForeignKey(p => new { p.CODIGO_APLICACION, p.CODIGO_ROL });
+
         }
 
+        public virtual DbSet<Mg_usuarios_segun_app> MG_USUARIOS_SEGUN_APP { get; set; }
         public virtual DbSet<Mg_usuarios> MG_USUARIOS { get; set; }
         public virtual DbSet<Mg_agencias> MG_AGENCIAS { get; set; }
         public virtual DbSet<Mg_roles_del_sistema> MG_ROLES_DEL_SISTEMA { get; set; }
@@ -67,6 +86,7 @@ namespace SIA.Context
         public virtual DbSet<Au_detalle_plan_de_trabajo> AU_DETALLE_PLAN_DE_TRABAJO { get; set; }
         public virtual DbSet<Mg_actividades> MG_ACTIVIDADES { get; set; }
         public virtual DbSet<Mg_Hallazgos> MG_HALLAZGOS { get; set; }
-        
+        public virtual DbSet<Mg_roles> MG_ROLES { get; set; }
+
     }
 }

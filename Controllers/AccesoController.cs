@@ -47,12 +47,14 @@ namespace SIA.Controllers
                 // Calcular el hash SHA-256
                 byte[] hashBytes = SHA256.HashData(bytes);
                 // Convertir el hash a una cadena base64
-                string hashString = Password_Login; //Convert.ToBase64String(hashBytes);
+                //string hashString = Password_Login;
+                string hashString = Convert.ToBase64String(hashBytes);
+
                 //Validamos si existe un usuario con las credenciales enviadas
-                var userRolApp = await _context.MG_USUARIOS
+                var userRolApp = await _context.MG_USUARIOS_SEGUN_APP
                                     .Where(user => user.CODIGO_USUARIO == User_Login)
-                                    .Where(user => user.CLAVE_USUARIO == hashString)
-                                    .Where(user => user.ESTADO == 1)
+                                    .Where(user => user.CLAVE_ACCESO == hashString)
+                                    .Where(user => user.CODIGO_ESTADO == 1)
                                     .FirstOrDefaultAsync();
 
                 if (userRolApp == null)
@@ -64,16 +66,15 @@ namespace SIA.Controllers
                     //Creamos variables de sesion con informacion del usuario que acaba de loguearse
                     HttpContext.Session.SetString("authenticated", "true");
                     HttpContext.Session.SetString("user", userRolApp.CODIGO_USUARIO);
-                    HttpContext.Session.SetString("userName", userRolApp.NOMBRE_USUARIO);
-                    HttpContext.Session.SetString("agencyCode", userRolApp.CODIGO_AGENCIA.ToString());
-                    HttpContext.Session.SetString("rolCode", userRolApp.CODIGO_ROL);
+                    HttpContext.Session.SetString("userName", userRolApp.NOMBRE);
+                    HttpContext.Session.SetString("agencyCode", "" /*userRolApp.CODIGO_AGENCIA.ToString()*/);
+                    HttpContext.Session.SetString("rolCode", userRolApp.CODIGO_ROL.ToString());
 
                     //Obtenemos los menus y submenus a los que el usuario tiene acceso segun el rol
                     List<Mg_menus_segun_rol> menu = await _context.MG_MENUS_SEGUN_ROL
-                        .Where(x => x.CODIGO_ROL == Int32.Parse(userRolApp.CODIGO_ROL))
-                        .Include(x => x.mg_Menus)
-                        .ThenInclude(m => m.Mg_sub_menus)
-                        .OrderBy(e => e.mg_Menus.ORDEN)
+                        .Where(x => x.CODIGO_ROL == userRolApp.CODIGO_ROL && x.CODIGO_APLICACION == "SIA")
+                        .Include(x => x.Menu).ThenInclude(m => m.Mg_opciones)
+                        .OrderBy(e => e.Menu.ORDEN)
                         .ToListAsync();
                     var options = new JsonSerializerOptions
                     {

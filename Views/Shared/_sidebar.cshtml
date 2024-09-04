@@ -30,22 +30,22 @@
                         foreach (var Menu in menu)
                         {
                             <li>
-                                @if (Menu.mg_Menus.POSEE_OPCIONES == "N")
+                                @if (Menu.Menu.POSEE_OPCIONES == "N")
                                 {
-                                    <a href="@Menu.mg_Menus.URL" class="waves-effect">
-                                        <i class="@Menu.mg_Menus.ICONO"></i>
-                                        <span key="@Menu.mg_Menus.NOMBRE">@Menu.mg_Menus.NOMBRE</span>
+                                    <a href="@Menu.Menu.URL" class="waves-effect">
+                                        <i class="@Menu.Menu.ICONO"></i>
+                                        <span key="@Menu.Menu.NOMBRE">@Menu.Menu.NOMBRE</span>
                                     </a>
                                 }
                                 else
                                 {
                                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                        <i class="@Menu.mg_Menus.ICONO"></i>
-                                        <span key="@Menu.mg_Menus.NOMBRE">@Menu.mg_Menus.NOMBRE</span>
+                                        <i class="@Menu.Menu.ICONO"></i>
+                                        <span key="@Menu.Menu.NOMBRE">@Menu.Menu.NOMBRE</span>
                                     </a>
                                 }
                                 <ul class="sub-menu" aria-expanded="false">
-                                    @foreach (var SubMenu in Menu.mg_Menus.Mg_sub_menus)
+                                    @foreach (var SubMenu in Menu.Menu.Mg_opciones)
                                     {
 
                                         <li><a href="@SubMenu.URL" key="@SubMenu.NOMBRE">@SubMenu.NOMBRE</a></li>

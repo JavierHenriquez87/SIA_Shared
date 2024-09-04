@@ -17,8 +17,5 @@ namespace SIA.Models
         public DateTime? FECHA_MODIFICACION { get; set; }
         public string? MODIFICADO_POR { get; set; }
 
-        [ForeignKey("CODIGO_MENU")]
-        public Mg_menus mg_Menus { get; set; }
-
     }
 }
