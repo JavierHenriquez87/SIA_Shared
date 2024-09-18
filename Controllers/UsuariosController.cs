@@ -326,7 +326,7 @@ namespace SIA.Controllers
             {
                 return new JsonResult("nombreRol");
             }
-            
+
             return new JsonResult("false");
         }
 

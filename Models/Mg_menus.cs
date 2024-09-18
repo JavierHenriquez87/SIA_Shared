@@ -18,6 +18,6 @@ namespace SIA.Models
         public DateTime? FECHA_MODIFICACION { get; set; }
         public string? MODIFICADO_POR { get; set; }
 
-        public virtual ICollection<Mg_opciones> Mg_opciones { get; set; }
+        public virtual ICollection<Mg_sub_menus> Mg_submenu { get; set; }
     }
 }

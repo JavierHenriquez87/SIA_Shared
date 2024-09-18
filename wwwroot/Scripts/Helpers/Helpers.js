@@ -200,7 +200,7 @@ function CargarAuditores() {
                 result.forEach(function (tipo) {
                     let opcion = document.createElement("option");
                     opcion.value = tipo.codigO_USUARIO;
-                    opcion.text = tipo.nombrE_USUARIO;
+                    opcion.text = tipo.nombre;
                     SelectAuditores.appendChild(opcion);
                 });
             }
@@ -273,7 +273,7 @@ function CargarAuditoresEncargados() {
                 result.forEach(function (tipo) {
                     let opcion = document.createElement("option");
                     opcion.value = tipo.codigO_USUARIO;
-                    opcion.text = tipo.nombrE_USUARIO;
+                    opcion.text = tipo.nombre;
                     SelectAuditores.appendChild(opcion);
                 });
             }

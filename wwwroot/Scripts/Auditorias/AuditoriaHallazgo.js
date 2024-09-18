@@ -31,11 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
         ],
         comentarios: [
             { id: "comentarios", comentarios: "" }
-        ],
-        acciones_requeridas: [
-            { id: "acciones_requeridas", acciones_requeridas: "" }
         ]
     };
+
 
     // Seleccionar todos los inputs y agregar el evento de cambio
     const inputs = document.querySelectorAll('input, textarea');
@@ -85,13 +83,6 @@ function handleInputChange(event) {
         const comentariosObj = formularioData.comentarios.find(obj => obj.id === comentariosId);
         if (comentariosObj) {
             comentariosObj.comentarios = value;
-        }
-    }
-    else if (name.includes("acciones_requeridas")) {
-        const acciones_requeridasId = name; // Asume que el nombre del campo es el mismo que el ID en el array
-        const acciones_requeridasObj = formularioData.acciones_requeridas.find(obj => obj.id === acciones_requeridasId);
-        if (acciones_requeridasObj) {
-            acciones_requeridasObj.acciones_requeridas = value;
         }
     }
     else {
@@ -351,52 +342,6 @@ document.getElementById('btn_comentarios').addEventListener('click', function ()
 
 let accionesRequeridasCount = 1; // Inicializar un contador
 
-document.getElementById('btn_acciones_requeridas').addEventListener('click', function () {
-    // Crear un contenedor div para el nuevo input y el botón de eliminar
-    const inputContainer = document.createElement('div');
-    inputContainer.classList.add('input-group');
-
-    // Crear un nuevo input
-    const newInput = document.createElement('input');
-    newInput.placeholder = 'Escribir...';
-    newInput.classList.add('additional-input');
-
-    // Asignar un ID único al nuevo input
-    const uniqueId = `acciones_requeridas-${accionesRequeridasCount}`;
-    newInput.id = uniqueId;
-    newInput.name = uniqueId;
-
-    // Crear un botón de eliminar
-    const removeButton = document.createElement('button');
-    removeButton.type = 'button';
-    removeButton.classList.add('remove-button');
-    removeButton.innerHTML = '<i class="bx bx-trash"></i>'; // Usar un ícono de basura si lo deseas
-
-    // Añadir evento para eliminar el input cuando se haga clic en el botón
-    removeButton.addEventListener('click', function () {
-        inputContainer.remove();
-        // Eliminar del array de objetos
-        formularioData.acciones_requeridas = formularioData.acciones_requeridas.filter(acciones_requeridas => acciones_requeridas.id !== uniqueId);
-    });
-
-    // Añadir el input y el botón de eliminar al contenedor div
-    inputContainer.appendChild(newInput);
-    inputContainer.appendChild(removeButton);
-
-    // Añadir el contenedor div al contenedor principal
-    const container = document.getElementById('input_acciones_requeridas');
-    container.appendChild(inputContainer);
-
-    //Agregar al array de objetos
-    formularioData.acciones_requeridas.push({ id: uniqueId, acciones_requeridas: "" });
-    // Vincular la función handleInputChange al evento input del nuevo input
-    newInput.addEventListener('change', handleInputChange);
-
-    // Incrementar el contador
-    accionesRequeridasCount++;
-});
-
-
 document.getElementById('selectedRisk').addEventListener('click', function () {
     const riskLevels = document.getElementById('riskLevels');
     riskLevels.style.display = riskLevels.style.display === 'none' ? 'block' : 'none';
@@ -429,13 +374,12 @@ document.querySelectorAll('.risk-level-options .card').forEach(function (element
 
 async function GuardarActualizarHallazgo() {
     console.log(formularioData);
-
     var respuesta = ValidarObjeto(formularioData);
 
     if (respuesta == false) {
         Swal.fire(
             'Advertencia',
-            'Por favor complete todos los campos del formulario',
+            'El campo Hallazgo no puede quedar vacio al guardar.',
             'warning'
         )
     } else {
@@ -448,18 +392,16 @@ async function GuardarActualizarHallazgo() {
             contentType: 'application/json',
             success: function (resp) {
                 Swal.fire({
-                    title: "Se guardo el Hallazgo",
-                    text: "Desea agregar otro Hallazgo a la actividad",
+                    title: "Guardado",
+                    text: "Se guardo la información con éxito",
                     icon: "success",
-                    showCancelButton: true,
+                    showCancelButton: false,
                     confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Si, Agregar otro!"
+                    confirmButtonText: "Aceptar!"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.reload();
-                    } else {
-                        window.location.href = 'Auditorias/AuditoriaResultados/AuditoriaHallazgo';
+                        var params_base = $("#paramsah_base64").val();
+                        window.location.href = '/Auditorias/AuditoriaResultados' + params_base;
                     }
                 });
             },
@@ -472,22 +414,11 @@ async function GuardarActualizarHallazgo() {
 }
 
 function ValidarObjeto(data) {
-    // Verificar que los campos simples (no arrays) no estén vacíos
-    for (const key in data) {
-        if (Array.isArray(data[key])) {
-            // Verificar los campos que son arrays
-            for (let item of data[key]) {
-                for (const subKey in item) {
-                    if (item[subKey] === "") {
-                        return false; // Si algún campo está vacío, retorna false
-                    }
-                }
-            }
-        } else {
-            if (data[key] === "") {
-                return false; // Si algún campo está vacío, retorna false
-            }
-        }
+    var hallazgo = $('#hallazgo').val();
+
+    if (hallazgo.length == 0) {
+        return false; // Si el campo de Hallazgo esta vacio devolvemos false
     }
-    return true // Si todos los campos están llenos, retorna true
+
+    return true // Si el campo de Hallazgo no esta vacio devolvemos true
 }

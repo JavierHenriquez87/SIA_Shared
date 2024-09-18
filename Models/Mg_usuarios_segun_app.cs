@@ -9,7 +9,6 @@ namespace SIA.Models
 {
     public class Mg_usuarios_segun_app
     {
-        [Key]
         public string? CODIGO_APLICACION { get; set; }
         public string? CODIGO_USUARIO { get; set; }
         public string? NOMBRE { get; set; }

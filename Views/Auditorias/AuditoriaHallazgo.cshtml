@@ -1,5 +1,6 @@
 ﻿@{
     var actividadConDetalles = ViewBag.DETALLES_ACTIVIDAD;
+    var params_base64 = ViewBag.PARAMS_BASE64;
 
     ViewBag.Title = "Resultados en Programa de Trabajo";
     ViewBag.pTitle = "RESULTADOS EN PROGRAMA DE TRABAJO";
@@ -23,7 +24,8 @@
 
     <div class="form-group" style="padding-top: 10px" id="divButtons">
         <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
-        <button type="button" onclick="GuardarActualizarHallazgo()" class="btn btn-primary">Guardar y Actualizar</button>
+        <button type="button" onclick="GuardarActualizarHallazgo()" class="btn btn-primary">Guardar borrador</button>
+        <button type="button" onclick="x()" class="btn btn-primary">Guardar y Confirmar</button>
     </div>
 </div>
 
@@ -32,6 +34,8 @@
     <div class="col-7">
         <div class="card">
             <div class="card-body">
+                @* Aqui estan los parametros encriptados de la url *@
+                <input type="hidden" value="@params_base64" id="paramsah_base64" />
                 <form>
                     <div class="form-group">
                         <label for="hallazgo">Hallazgo</label>
@@ -116,17 +120,6 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="form-group specific-style">
-                                <label for="efecto">Acciones Requeridas</label>
-                                <div class="input-button-group">
-                                    <div id="input_acciones_requeridas" style="width: 100%;">
-                                        <input id="acciones_requeridas" name="acciones_requeridas" placeholder="Escribir..." />
-                                    </div>
-                                    <button id="btn_acciones_requeridas" class="icon-button" type="button">
-                                        <i class="bx bx-list-plus font-size-24"></i>
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </form>
@@ -152,12 +145,6 @@
                 <div class="form-group">
                     <label for="proceso_asociado">Seleccione el Proceso Asociado</label>
                     <select id="proceso_asociado">
-                        <option>Seleccionar...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="cuenta_contable">Cuenta Contable</label>
-                    <select id="cuenta_contable">
                         <option>Seleccionar...</option>
                     </select>
                 </div>

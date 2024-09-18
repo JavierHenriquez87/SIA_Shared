@@ -231,14 +231,15 @@ namespace SIA.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Mg_usuarios>>> GetAuditores()
+        public async Task<ActionResult<List<Mg_usuarios_segun_app>>> GetAuditores()
         {
             try
             {
-                var Auditores = await _context.MG_USUARIOS
-                    .Where(i => i.ESTADO == 1)
-                    .Where(i => i.CODIGO_ROL == "AA")
-                    .OrderBy(i => i.NOMBRE_USUARIO)
+                var Auditores = await _context.MG_USUARIOS_SEGUN_APP
+                    .Where(i => i.CODIGO_ESTADO == 1)
+                    .Where(i => i.CODIGO_ROL == 2)
+                    .Where(i => i.CODIGO_APLICACION == HttpContext.Session.GetString("app"))
+                    .OrderBy(i => i.NOMBRE)
                     .ToListAsync();
 
                 if (Auditores == null)

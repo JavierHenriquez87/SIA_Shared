@@ -2071,47 +2071,18 @@ namespace SIA.Controllers
         [Route("Auditorias/AuditoriaResultados")]
         public async Task<IActionResult> AuditoriaResultados(string ca, string pdt, string us)
         {
+            //Obtenemos la informacion de la url y la decodificamos
             int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
             int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
             string codigoActividad = DecodeBase64(ca);
             string numeroPdt = DecodeBase64(pdt);
             string codigoUsuarioAsignado = DecodeBase64(us);
-
             int codigoActividadInt = int.Parse(codigoActividad);
             int numeroPdtInt = int.Parse(numeroPdt);
 
             HttpContext.Session.SetInt32("codigoActividadInt", codigoActividadInt);
             HttpContext.Session.SetInt32("numeroPdt", numeroPdtInt);
             HttpContext.Session.SetString("codigoUsuarioAsignado", codigoUsuarioAsignado);
-
-            //var detalles_actividad = await _context.MG_ACTIVIDADES
-            //    .Where(a => _context.AU_DETALLE_PLAN_DE_TRABAJO
-            //    .Where(a => a.CODIGO_ACTIVIDAD == codigoActividadInt)
-            //    .Any(d => d.CODIGO_ACTIVIDAD == a.CODIGO_ACTIVIDAD &&
-            //      d.NUMERO_PDT == numeroPdtInt &&
-            //      d.NUMERO_AUDITORIA_INTEGRAL == cod &&
-            //      d.ANIO_AI == anio))
-            //    .Select(a => new
-            //    {
-            //        Actividad = a,
-            //        Detalles = _context.AU_DETALLE_PLAN_DE_TRABAJO
-            //        .Where(d => d.CODIGO_ACTIVIDAD == a.CODIGO_ACTIVIDAD)
-            //        .Select(d => new
-            //        {
-            //            d.NUMERO_PDT,
-            //            d.NUMERO_AUDITORIA_INTEGRAL,
-            //            d.ANIO_AI,
-            //            d.NUMERO_AUDITORIA,
-            //            d.CODIGO_ESTADO,
-            //            d.CODIGO_USUARIO_ASIGNADO,
-            //            d.FECHA_CREACION,
-            //            d.CREADO_POR,
-            //            d.FECHA_ACTUALIZACION,
-            //            d.ACTUALIZADO_POR
-            //        })
-            //        .ToList()
-            //    })
-            //    .ToListAsync();
 
             var detalles_actividad = await _context.MG_ACTIVIDADES
                 .Where(a => a.au_detalle_plan_trabajo
@@ -2149,7 +2120,19 @@ namespace SIA.Controllers
                 ViewBag.DETALLES_ACTIVIDAD = null;
             }
 
+
+            var hallazgos = await _context.MG_HALLAZGOS
+                .Where(d => d.CODIGO_ACTIVIDAD == codigoActividadInt)
+                .Where(d => d.NUMERO_PDT == numeroPdtInt)
+                .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
+                .Where(d => d.ANIO_AI == anio)
+                .ToListAsync();
+
+
+            string queryParams = "?ca=" + Uri.EscapeDataString(ca) + "&pdt=" + Uri.EscapeDataString(pdt) + "&us=" + Uri.EscapeDataString(us);
+            HttpContext.Session.SetString("params_base64_hallazgos", queryParams);
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
+            ViewBag.HALLAZGOS = hallazgos;
 
             return View();
         }
@@ -2167,6 +2150,7 @@ namespace SIA.Controllers
             int codigoActividadInt = (int)HttpContext.Session.GetInt32("codigoActividadInt");
             int numeroPdtInt = (int)HttpContext.Session.GetInt32("numeroPdt");
             string codigoUsuarioAsignado = HttpContext.Session.GetString("codigoUsuarioAsignado");
+            string params_base64_hallazgos = HttpContext.Session.GetString("params_base64_hallazgos");
 
             var detalles_actividad = await _context.MG_ACTIVIDADES
                 .Where(a => a.au_detalle_plan_trabajo
@@ -2205,6 +2189,7 @@ namespace SIA.Controllers
             }
 
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
+            ViewBag.PARAMS_BASE64 = params_base64_hallazgos;
 
             return View();
         }
@@ -2235,6 +2220,8 @@ namespace SIA.Controllers
             {
                 int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
                 int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+                int numPDT = (int)HttpContext.Session.GetInt32("numeroPdt");
+                int codigoActividadInt = (int)HttpContext.Session.GetInt32("codigoActividadInt");
 
                 //Obtenemos el codigo del siguiente registro segun el anio actual
                 int maxNumeroHallazgo = await _context.MG_HALLAZGOS
@@ -2243,20 +2230,47 @@ namespace SIA.Controllers
                 // Incrementar el valor máximo en 1
                 nuevoIdHallazgo = maxNumeroHallazgo + 1;
 
+                var vm = string.IsNullOrEmpty(formularioData.GetProperty("valor_muestra").GetString()) ? (int?)null : int.Parse(formularioData.GetProperty("valor_muestra").GetString());
+                var mi = string.IsNullOrEmpty(formularioData.GetProperty("muestra_inconsistente").GetString()) ? (int?)null : int.Parse(formularioData.GetProperty("muestra_inconsistente").GetString());
+                int nivel_riesgo = 1;
+                var desviacion = 0;
+
+                if (vm == 0)
+                {
+                    nivel_riesgo = 1;
+                }
+                else
+                {
+                    desviacion = (mi / vm) * 100;
+
+                    if (desviacion <= 5.1)
+                    {
+                        nivel_riesgo = 1;
+                    }
+                    else if (desviacion > 5.1 && desviacion <= 9.99)
+                    {
+                        nivel_riesgo = 2;
+                    }
+                    else
+                    {
+                        nivel_riesgo = 3;
+                    }
+                }
+
                 Mg_Hallazgos Hallazgo = new();
                 Hallazgo.CODIGO_HALLAZGO = nuevoIdHallazgo;
                 Hallazgo.HALLAZGO = formularioData.GetProperty("hallazgo").GetString();
-                Hallazgo.CALIFICACION = int.Parse((string)formularioData.GetProperty("calificacion").GetString());
-                Hallazgo.VALOR_MUESTRA = int.Parse((string)formularioData.GetProperty("valor_muestra").GetString());
-                Hallazgo.MUESTRA_INCONSISTENTE = int.Parse((string)formularioData.GetProperty("muestra_inconsistente").GetString());
-                Hallazgo.DESVIACION_MUESTRA = 0;
-                Hallazgo.NIVEL_RIESGO = 1;
+                Hallazgo.CALIFICACION = string.IsNullOrEmpty(formularioData.GetProperty("calificacion").GetString()) ? (int?)null : int.Parse(formularioData.GetProperty("calificacion").GetString());
+                Hallazgo.VALOR_MUESTRA = vm;
+                Hallazgo.MUESTRA_INCONSISTENTE = mi;
+                Hallazgo.DESVIACION_MUESTRA = desviacion;
+                Hallazgo.NIVEL_RIESGO = nivel_riesgo;
                 Hallazgo.CONDICION = formularioData.GetProperty("condicion").GetString();
                 Hallazgo.CRITERIO = formularioData.GetProperty("criterio").GetString();
-                Hallazgo.CODIGO_ACTIVIDAD = 1;
-                Hallazgo.NUMERO_PDT = 1;
-                Hallazgo.NUMERO_AUDITORIA_INTEGRAL = 1;
-                Hallazgo.ANIO_AI = 1;
+                Hallazgo.CODIGO_ACTIVIDAD = codigoActividadInt;
+                Hallazgo.NUMERO_PDT = numPDT;
+                Hallazgo.NUMERO_AUDITORIA_INTEGRAL = cod;
+                Hallazgo.ANIO_AI = anio;
                 Hallazgo.NUMERO_AUDITORIA = 1;
                 Hallazgo.FECHA_CREACION = DateTime.Now;
                 Hallazgo.CREADO_POR = HttpContext.Session.GetString("user");

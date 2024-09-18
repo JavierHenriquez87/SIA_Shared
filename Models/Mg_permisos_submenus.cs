@@ -28,6 +28,6 @@ namespace SIA.Models
         //public virtual Mg_roles roles { get; set; }
 
         [ForeignKey("CODIGO_APLICACION, CODIGO_MENU, CODIGO_OPCION")]
-        public virtual Mg_opciones Submenus { get; set; }
+        public virtual Mg_sub_menus Submenus { get; set; }
     }
 }

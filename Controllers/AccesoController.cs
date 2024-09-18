@@ -69,11 +69,13 @@ namespace SIA.Controllers
                     HttpContext.Session.SetString("userName", userRolApp.NOMBRE);
                     HttpContext.Session.SetString("agencyCode", "" /*userRolApp.CODIGO_AGENCIA.ToString()*/);
                     HttpContext.Session.SetString("rolCode", userRolApp.CODIGO_ROL.ToString());
+                    HttpContext.Session.SetString("app", "SIA");
 
                     //Obtenemos los menus y submenus a los que el usuario tiene acceso segun el rol
                     List<Mg_menus_segun_rol> menu = await _context.MG_MENUS_SEGUN_ROL
                         .Where(x => x.CODIGO_ROL == userRolApp.CODIGO_ROL && x.CODIGO_APLICACION == "SIA")
-                        .Include(x => x.Menu).ThenInclude(m => m.Mg_opciones)
+                        .Include(x => x.Menu)
+                        .ThenInclude(m => m.Mg_submenu)
                         .OrderBy(e => e.Menu.ORDEN)
                         .ToListAsync();
                     var options = new JsonSerializerOptions

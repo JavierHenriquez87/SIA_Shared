@@ -16,8 +16,9 @@ namespace SIA.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Mg_usuarios_segun_app>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_USUARIO });
             modelBuilder.Entity<Mg_menus>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_MENU });
-            modelBuilder.Entity<Mg_opciones>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_MENU, e.CODIGO_OPCION });
+            modelBuilder.Entity<Mg_sub_menus>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_MENU, e.CODIGO_SUB_MENU });
             modelBuilder.Entity<Mg_menus_segun_rol>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_MENU, e.CODIGO_ROL });
             modelBuilder.Entity<Mg_permisos_submenus>().HasKey(p => new { p.CODIGO_APLICACION, p.CODIGO_OPCION, p.CODIGO_ROL });
             modelBuilder.Entity<Au_auditorias_integrales>().HasKey(e => new { e.NUMERO_AUDITORIA_INTEGRAL, e.ANIO_AI });
@@ -39,7 +40,7 @@ namespace SIA.Context
             .HasForeignKey(sub => sub.CODIGO_SUB_SECCION);
 
             modelBuilder.Entity<Mg_menus>()
-            .HasMany(m => m.Mg_opciones)
+            .HasMany(m => m.Mg_submenu)
             .WithOne()
             .HasForeignKey(o => new { o.CODIGO_APLICACION, o.CODIGO_MENU });
 
@@ -47,12 +48,6 @@ namespace SIA.Context
                 .HasOne(m => m.Menu)
                 .WithMany()
                 .HasForeignKey(m => new { m.CODIGO_APLICACION, m.CODIGO_MENU });
-
-
-            //modelBuilder.Entity<Mg_permisos_submenus>()
-            //    .HasOne(p => p.roles)
-            //    .WithMany(r => r.PermisosSubmenus)
-            //    .HasForeignKey(p => new { p.CODIGO_APLICACION, p.CODIGO_ROL });
 
         }
 
@@ -62,7 +57,7 @@ namespace SIA.Context
         public virtual DbSet<Mg_roles_del_sistema> MG_ROLES_DEL_SISTEMA { get; set; }
         public virtual DbSet<Mg_cargos> MG_CARGOS { get; set; }
         public virtual DbSet<Mg_menus> MG_MENUS { get; set; }
-        public virtual DbSet<Mg_opciones> MG_OPCIONES { get; set; }
+        public virtual DbSet<Mg_sub_menus> MG_SUB_MENUS { get; set; }
         public virtual DbSet<Mg_menus_segun_rol> MG_MENUS_SEGUN_ROL { get; set; }
         public virtual DbSet<Mg_permisos_submenus> MG_PERMISOS_SUBMENUS { get; set; }
         public virtual DbSet<Ag_auditorias> AG_AUDITORIAS { get; set; }
