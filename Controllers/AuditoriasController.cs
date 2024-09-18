@@ -2126,10 +2126,7 @@ namespace SIA.Controllers
                 .Where(d => d.NUMERO_PDT == numeroPdtInt)
                 .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
                 .Where(d => d.ANIO_AI == anio)
-                .ToListAsync();
-
-            var hallazgoDetalles = await _context.MG_HALLAZGOS_DETALLES
-                .Where(d => d.CODIGO_HALLAZGO == codigoActividadInt)
+                .Include(d => d.Detalles)
                 .ToListAsync();
 
             string queryParams = "?ca=" + Uri.EscapeDataString(ca) + "&pdt=" + Uri.EscapeDataString(pdt) + "&us=" + Uri.EscapeDataString(us);
@@ -2146,7 +2143,7 @@ namespace SIA.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("Auditorias/AuditoriaResultados/AuditoriaHallazgo")]
-        public async Task<IActionResult> AuditoriaHallazgo()
+        public async Task<IActionResult> AuditoriaHallazgo(int id = 0)
         {
             int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
             int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
@@ -2193,6 +2190,16 @@ namespace SIA.Controllers
 
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
             ViewBag.PARAMS_BASE64 = params_base64_hallazgos;
+
+            if(id > 0)
+            {
+                var hallazgos = await _context.MG_HALLAZGOS
+               .Where(d => d.CODIGO_HALLAZGO == id)
+               .Include(d => d.Detalles)
+               .ToListAsync();
+
+                ViewBag.HALLAZGOS = hallazgos;
+            }
 
             return View();
         }

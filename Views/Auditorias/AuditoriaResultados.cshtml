@@ -42,7 +42,7 @@
                     <div class="card-body">
                         <div class="row">
                             <h3 style="width: 87%">@hall.HALLAZGO</h3>
-                            <button type="button" onclick="EditarInexistencia()" style="width: 10%; height: 6%;" class="btn btn-primary" id="buttonEditar">Editar</button>
+                            <button type="button" onclick="EditarHallazgo('@hall.CODIGO_HALLAZGO')" style="width: 10%; height: 6%;" class="btn btn-primary" id="buttonEditar">Editar</button>
                         </div>
                         <h6>
                             @hall.CONDICION
@@ -77,45 +77,53 @@
                         <h5 style="font-weight: bold;">
                             Causas
                         </h5>
-                        @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "causa" || d.TIPO.StartsWith("causa-")))
+                        @if (hall.Detalles != null)
                         {
-
-                            <h6>
-                                ● @detalle.DESCRIPCION
-                            </h6>
+                            @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "causa" || d.TIPO.StartsWith("causa-")))
+                            {
+                                <h6>
+                                    ● @detalle.DESCRIPCION
+                                </h6>
+                            }
                         }
-                        
-                        <h5 style="font-weight: bold;">
+
+                        <h5 style="font-weight: bold; margin-top: 10px">
                             Efectos
                         </h5>
-                        @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "efecto" || d.TIPO.StartsWith("efecto-")))
+                        @if (hall.Detalles != null)
                         {
-
-                            <h6>
-                                ● @detalle.DESCRIPCION
-                            </h6>
+                            @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "efecto" || d.TIPO.StartsWith("efecto-")))
+                            {
+                                <h6>
+                                    ● @detalle.DESCRIPCION
+                                </h6>
+                            }
                         }
 
-                        <h5 style="font-weight: bold;">
+                        <h5 style="font-weight: bold; margin-top: 10px">
                             Recomendaciones
-                        </h5>
-                        @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "recomendaciones" || d.TIPO.StartsWith("recomendaciones-")))
+                            </h5>
+                        @if (hall.Detalles != null)
                         {
-
-                            <h6>
-                                ● @detalle.DESCRIPCION
-                            </h6>
+                            @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "recomendaciones" || d.TIPO.StartsWith("recomendaciones-")))
+                            {
+                                <h6>
+                                    ● @detalle.DESCRIPCION
+                                </h6>
+                            }
                         }
 
-                        <h5 style="font-weight: bold;">
+                        <h5 style="font-weight: bold; margin-top: 10px">
                             Comentarios
-                        </h5>
-                        @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "comentarios" || d.TIPO.StartsWith("comentarios-")))
-                        {
-
-                            <h6>
-                                ● @detalle.DESCRIPCION
-                            </h6>
+                                </h5>
+                                @if (hall.Detalles != null)
+                                {
+                            @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "comentarios" || d.TIPO.StartsWith("comentarios-")))
+                            {
+                                <h6>
+                                    ● @detalle.DESCRIPCION
+                                </h6>
+                            }
                         }
 
                         <h5 style="font-weight: bold; margin-top:40px">
