@@ -28,5 +28,7 @@ namespace SIA.Models
         public string CREADO_POR { get; set; }
         public DateTime? FECHA_MODIFICACION { get; set; }
         public string? MODIFICADO_POR { get; set; }
+
+        public ICollection<Mg_hallazgos_detalles> Detalles { get; set; }
     }
 }

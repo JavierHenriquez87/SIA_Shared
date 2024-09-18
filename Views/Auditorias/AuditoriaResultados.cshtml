@@ -77,45 +77,46 @@
                         <h5 style="font-weight: bold;">
                             Causas
                         </h5>
-                        <h6>
-                            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.<br />
-                            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
-                        </h6>
+                        @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "causa" || d.TIPO.StartsWith("causa-")))
+                        {
 
+                            <h6>
+                                ● @detalle.DESCRIPCION
+                            </h6>
+                        }
+                        
                         <h5 style="font-weight: bold;">
                             Efectos
                         </h5>
-                        <h6>
-                            PO14 - Control de Expedientes de Operaciones Saneadas
-                        </h6>
+                        @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "efecto" || d.TIPO.StartsWith("efecto-")))
+                        {
 
-                        <h5 style="font-weight: bold;">
-                            Proceso Asociado
-                        </h5>
-                        <h6>
-                            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
-                        </h6>
+                            <h6>
+                                ● @detalle.DESCRIPCION
+                            </h6>
+                        }
 
                         <h5 style="font-weight: bold;">
                             Recomendaciones
                         </h5>
-                        <h6>
-                            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
-                        </h6>
+                        @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "recomendaciones" || d.TIPO.StartsWith("recomendaciones-")))
+                        {
+
+                            <h6>
+                                ● @detalle.DESCRIPCION
+                            </h6>
+                        }
 
                         <h5 style="font-weight: bold;">
                             Comentarios
                         </h5>
-                        <h6>
-                            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
-                        </h6>
+                        @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "comentarios" || d.TIPO.StartsWith("comentarios-")))
+                        {
 
-                        <h5 style="font-weight: bold;">
-                            Acciones Requeridas
-                        </h5>
-                        <h6>
-                            ● It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
-                        </h6>
+                            <h6>
+                                ● @detalle.DESCRIPCION
+                            </h6>
+                        }
 
                         <h5 style="font-weight: bold; margin-top:40px">
                             Documentos Adjuntos

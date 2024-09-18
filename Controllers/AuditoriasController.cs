@@ -2128,6 +2128,9 @@ namespace SIA.Controllers
                 .Where(d => d.ANIO_AI == anio)
                 .ToListAsync();
 
+            var hallazgoDetalles = await _context.MG_HALLAZGOS_DETALLES
+                .Where(d => d.CODIGO_HALLAZGO == codigoActividadInt)
+                .ToListAsync();
 
             string queryParams = "?ca=" + Uri.EscapeDataString(ca) + "&pdt=" + Uri.EscapeDataString(pdt) + "&us=" + Uri.EscapeDataString(us);
             HttpContext.Session.SetString("params_base64_hallazgos", queryParams);
@@ -2278,8 +2281,85 @@ namespace SIA.Controllers
                 _context.Add(Hallazgo);
 
                 //Guardamos las actividades
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
+
+                JsonElement root;
+                try
+                {
+                    // Serializar dynamic a JSON y luego parsear a JsonElement
+                    var jsonString = JsonSerializer.Serialize(formularioData);
+                    root = JsonSerializer.Deserialize<JsonElement>(jsonString);
+                }
+                catch (JsonException ex)
+                {
+                    return BadRequest($"Error al procesar los datos JSON: {ex.Message}");
+                }
+
+                List<Mg_hallazgos_detalles> detalles = new List<Mg_hallazgos_detalles>();
+
+                if (formularioData.TryGetProperty("causageneral", out JsonElement causasElement) && causasElement.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (JsonElement causa in causasElement.EnumerateArray())
+                    {
+                        var causasObj = new Mg_hallazgos_detalles
+                        {
+                            CODIGO_HALLAZGO = nuevoIdHallazgo,
+                            DESCRIPCION = causa.GetProperty("causa").GetString(),
+                            TIPO = causa.GetProperty("id").GetString()
+                        };
+                        detalles.Add(causasObj);
+                    }
+                }
+
+                if (formularioData.TryGetProperty("recomendaciones", out JsonElement recomendacionesElement) && recomendacionesElement.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (JsonElement recomendacion in recomendacionesElement.EnumerateArray())
+                    {
+                        var recomendacionObj = new Mg_hallazgos_detalles
+                        {
+                            CODIGO_HALLAZGO = nuevoIdHallazgo,
+                            DESCRIPCION = recomendacion.GetProperty("recomendaciones").GetString(),
+                            TIPO = recomendacion.GetProperty("id").GetString()
+                        };
+                        detalles.Add(recomendacionObj);
+                    }
+                }
+
+                // Convertir 'efecto' a una lista de Efecto
+                if (formularioData.TryGetProperty("efecto", out JsonElement efectosElement) && efectosElement.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (JsonElement efecto in efectosElement.EnumerateArray())
+                    {
+                        var efectoObj = new Mg_hallazgos_detalles
+                        {
+                            CODIGO_HALLAZGO = nuevoIdHallazgo,
+                            DESCRIPCION = efecto.GetProperty("efecto").GetString(),
+                            TIPO = efecto.GetProperty("id").GetString()
+                        };
+                        detalles.Add(efectoObj);
+                    }
+                }
+                
+                // Convertir 'comentarios' a una lista de Comentario
+                if (formularioData.TryGetProperty("comentarios", out JsonElement comentariosElement) && comentariosElement.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (JsonElement comentario in comentariosElement.EnumerateArray())
+                    {
+                        var comentarioObj = new Mg_hallazgos_detalles
+                        {
+                            CODIGO_HALLAZGO = nuevoIdHallazgo,
+                            DESCRIPCION = comentario.GetProperty("comentarios").GetString(),
+                            TIPO = comentario.GetProperty("id").GetString()
+                        };
+                        detalles.Add(comentarioObj);
+                    }
+                }
+
+                _context.AddRange(detalles);
+
+                // Guardamos todos los cambios
+                await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {

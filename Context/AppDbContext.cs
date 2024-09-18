@@ -28,6 +28,12 @@ namespace SIA.Context
             modelBuilder.Entity<Au_Planes_De_Trabajo>().HasKey(e => new { e.NUMERO_PDT, e.NUMERO_AUDITORIA_INTEGRAL, e.NUMERO_AUDITORIA });
             modelBuilder.Entity<Au_detalle_plan_de_trabajo>().HasKey(e => new { e.CODIGO_ACTIVIDAD, e.NUMERO_PDT, e.NUMERO_AUDITORIA_INTEGRAL, e.NUMERO_AUDITORIA, e.ANIO_AI, e.CODIGO_USUARIO_ASIGNADO });
             modelBuilder.Entity<Mg_roles>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_ROL });
+            modelBuilder.Entity<Mg_hallazgos_detalles>().HasKey(e => new { e.CODIGO_HALLAZGO, e.TIPO });
+
+            modelBuilder.Entity<Mg_Hallazgos>()
+            .HasMany(h => h.Detalles)
+            .WithOne(d => d.Hallazgo)
+            .HasForeignKey(d => d.CODIGO_HALLAZGO);
 
             modelBuilder.Entity<Mg_secciones>()
             .HasMany(s => s.sub_secciones)
@@ -48,7 +54,6 @@ namespace SIA.Context
                 .HasOne(m => m.Menu)
                 .WithMany()
                 .HasForeignKey(m => new { m.CODIGO_APLICACION, m.CODIGO_MENU });
-
         }
 
         public virtual DbSet<Mg_usuarios_segun_app> MG_USUARIOS_SEGUN_APP { get; set; }
@@ -82,6 +87,7 @@ namespace SIA.Context
         public virtual DbSet<Mg_actividades> MG_ACTIVIDADES { get; set; }
         public virtual DbSet<Mg_Hallazgos> MG_HALLAZGOS { get; set; }
         public virtual DbSet<Mg_roles> MG_ROLES { get; set; }
+        public virtual DbSet<Mg_hallazgos_detalles> MG_HALLAZGOS_DETALLES { get; set; }
 
     }
 }
