@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         muestra_inconsistente: "",
         condicion: "",
         criterio: "",
+        desviacion_muestra: "",
         causageneral: [
             { id: "causa", causa: "" }
         ],
@@ -51,6 +52,100 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
         formularioData.calificacion = "2";  // Cualitativa es 2
     });
+
+    // Cargar la informacion si el registro sera editable
+    if (hallazgo !== null) {
+        document.getElementById('hallazgo').value = hallazgo.HALLAZGO;
+        formularioData.hallazgo = hallazgo.HALLAZGO;
+
+        document.getElementById('valor_muestra').value = hallazgo.VALOR_MUESTRA;
+        formularioData.valor_muestra = hallazgo.VALOR_MUESTRA;
+
+        document.getElementById('muestra_inconsistente').value = hallazgo.MUESTRA_INCONSISTENTE;
+        formularioData.muestra_inconsistente = hallazgo.MUESTRA_INCONSISTENTE;
+
+        document.getElementById('desviacion_muestra').value = hallazgo.DESVIACION_MUESTRA;
+        formularioData.desviacion_muestra = hallazgo.DESVIACION_MUESTRA;
+
+        calculoMuestra();
+
+        document.getElementById('condicion').value = hallazgo.CONDICION;
+        formularioData.condicion = hallazgo.CONDICION;
+
+        document.getElementById('criterio').value = hallazgo.CRITERIO;
+        formularioData.criterio = hallazgo.CRITERIO;
+
+
+        // Filtrar por tipo 'causa' y 'causa-1'
+        var causas = hallazgo.Detalles.filter(detalle => detalle.TIPO.startsWith("causa"));
+        var count = 1;
+        causas.forEach(causa => {
+            if (count > 1) {
+                document.getElementById("btn_causa").click();
+            }
+            document.getElementById(causa.TIPO).value = causa.DESCRIPCION;
+
+            const causaExistente = formularioData.causageneral.find(c => c.id === causa.TIPO);
+            if (causaExistente) {
+                causaExistente.causa = causa.DESCRIPCION;
+            }
+
+            count++;
+        });
+
+        // Filtrar por tipo 'efecto' y 'efecto-1'
+        var efectos = hallazgo.Detalles.filter(hallazgo => hallazgo.TIPO.startsWith("efecto"));
+        count = 1;
+        efectos.forEach(efecto => {
+            if (count > 1) {
+                document.getElementById("btn_efecto").click();
+            }
+            document.getElementById(efecto.TIPO).value = efecto.DESCRIPCION;
+
+            const efectoExistente = formularioData.efecto.find(e => e.id === efecto.TIPO);
+            if (efectoExistente) {
+                efectoExistente.efecto = efecto.DESCRIPCION;
+            }
+
+            count++;
+        });
+
+        // Filtrar por tipo 'recomendacion' y 'recomendaciones'
+        var recomendaciones = hallazgo.Detalles.filter(detalle => detalle.TIPO.startsWith("recomendaciones"));
+        count = 1;
+        recomendaciones.forEach(recomendacion => {
+            if (count > 1) {
+                document.getElementById("btn_recomendaciones").click();
+            }
+            document.getElementById(recomendacion.TIPO).value = recomendacion.DESCRIPCION;
+
+            const recomendacionExistente = formularioData.recomendaciones.find(r => r.id === recomendacion.TIPO);
+            if (recomendacionExistente) {
+                recomendacionExistente.recomendaciones = recomendacion.DESCRIPCION;
+            }
+
+            count++;
+        });
+
+        // Filtrar por tipo 'comentario' y 'comentarios'
+        var comentarios = hallazgo.Detalles.filter(hallazgo => hallazgo.TIPO.startsWith("comentarios"));
+        count = 1;
+        comentarios.forEach(comentario => {
+            if (count > 1) {
+                document.getElementById("btn_comentarios").click();
+            }
+            document.getElementById(comentario.TIPO).value = comentario.DESCRIPCION;
+
+            const comentarioExistente = formularioData.comentarios.find(r => r.id === comentario.TIPO);
+            if (comentarioExistente) {
+                comentarioExistente.comentarios = comentario.DESCRIPCION;
+            }
+
+            count++;
+        });
+
+        console.log(formularioData);
+    }
 });
 
 // Función para manejar el cambio en los inputs
@@ -123,11 +218,6 @@ function calculoMuestra() {
         }
     }
 }
-
-
-
-
-
 
 
 
@@ -422,3 +512,4 @@ function ValidarObjeto(data) {
 
     return true // Si el campo de Hallazgo no esta vacio devolvemos true
 }
+

@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Newtonsoft.Json;
+@{
     var actividadConDetalles = ViewBag.DETALLES_ACTIVIDAD;
     var params_base64 = ViewBag.PARAMS_BASE64;
 
@@ -8,8 +9,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var valor = "alto";
-}
 
+    string hallazgoJson = null;
+    if (ViewBag.HALLAZGO != null)
+    {
+        hallazgoJson = JsonConvert.SerializeObject(ViewBag.HALLAZGO, new JsonSerializerSettings
+        {
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects
+        });
+    }
+}
 <link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
 <link href="~/css/estiloAuditoriaHallazgo.css" rel="stylesheet" type="text/css" />
 
@@ -178,6 +187,9 @@
 
 
 @section scripts {
+    <script type="text/javascript">
+        var hallazgo = @Html.Raw(hallazgoJson ?? "null");
+    </script>
     <script src="~/Scripts/Helpers/Helpers.js"></script>
     <script src="~/Scripts/Auditorias/AuditoriaHallazgo.js"></script>
 }

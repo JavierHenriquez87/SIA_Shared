@@ -2193,12 +2193,12 @@ namespace SIA.Controllers
 
             if(id > 0)
             {
-                var hallazgos = await _context.MG_HALLAZGOS
+                var hallazgo = await _context.MG_HALLAZGOS
                .Where(d => d.CODIGO_HALLAZGO == id)
-               .Include(d => d.Detalles)
-               .ToListAsync();
+               .Include(d => d.Detalles.OrderBy(o => o.TIPO))
+               .FirstOrDefaultAsync();
 
-                ViewBag.HALLAZGOS = hallazgos;
+                ViewBag.HALLAZGO = hallazgo;
             }
 
             return View();
