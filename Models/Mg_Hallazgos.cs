@@ -15,7 +15,7 @@ namespace SIA.Models
         public int? CALIFICACION { get; set; }
         public int? VALOR_MUESTRA { get; set; }
         public int? MUESTRA_INCONSISTENTE { get; set; }
-        public int? DESVIACION_MUESTRA { get; set; }
+        public double? DESVIACION_MUESTRA { get; set; }
         public int? NIVEL_RIESGO { get; set; }
         public string? CONDICION { get; set; }
         public string? CRITERIO { get; set; }

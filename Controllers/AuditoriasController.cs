@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Newtonsoft.Json;
 
 namespace SIA.Controllers
 {
@@ -2129,6 +2130,11 @@ namespace SIA.Controllers
                 .Include(d => d.Detalles)
                 .ToListAsync();
 
+            var hallazgoDetalles = await _context.MG_HALLAZGOS_DETALLES
+                .Where(d => d.CODIGO_HALLAZGO == codigoActividadInt)
+                .ToListAsync();
+
+
             string queryParams = "?ca=" + Uri.EscapeDataString(ca) + "&pdt=" + Uri.EscapeDataString(pdt) + "&us=" + Uri.EscapeDataString(us);
             HttpContext.Session.SetString("params_base64_hallazgos", queryParams);
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
@@ -2191,7 +2197,7 @@ namespace SIA.Controllers
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
             ViewBag.PARAMS_BASE64 = params_base64_hallazgos;
 
-            if(id > 0)
+            if (id > 0)
             {
                 var hallazgo = await _context.MG_HALLAZGOS
                .Where(d => d.CODIGO_HALLAZGO == id)
@@ -2222,7 +2228,7 @@ namespace SIA.Controllers
         /// <param name="DataAI"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> GuardarHallazgos([FromBody] dynamic formularioData)
+        public async Task<IActionResult> GuardarHallazgos(IFormCollection formularioData)
         {
             int nuevoIdHallazgo = 0;
 
@@ -2240,43 +2246,60 @@ namespace SIA.Controllers
                 // Incrementar el valor máximo en 1
                 nuevoIdHallazgo = maxNumeroHallazgo + 1;
 
-                var vm = string.IsNullOrEmpty(formularioData.GetProperty("valor_muestra").GetString()) ? (int?)null : int.Parse(formularioData.GetProperty("valor_muestra").GetString());
-                var mi = string.IsNullOrEmpty(formularioData.GetProperty("muestra_inconsistente").GetString()) ? (int?)null : int.Parse(formularioData.GetProperty("muestra_inconsistente").GetString());
                 int nivel_riesgo = 1;
-                var desviacion = 0;
+                int vm = 0;
+                int mi = 0;
+                double desviacion = 0;
+                // Obtener calificación
+                string calificacionStr = formularioData["calificacion"];
+                int? calificacion = string.IsNullOrEmpty(calificacionStr) ? (int?)null : int.Parse(calificacionStr);
 
-                if (vm == 0)
+                if (calificacion == 1)
                 {
-                    nivel_riesgo = 1;
-                }
-                else
-                {
-                    desviacion = (mi / vm) * 100;
+                    string valorMuestraStr = formularioData["valor_muestra"];
+                    vm = string.IsNullOrEmpty(valorMuestraStr) ? 0 : int.Parse(valorMuestraStr);
+                    string muestraInconsistenteStr = formularioData["muestra_inconsistente"];
+                    mi = string.IsNullOrEmpty(muestraInconsistenteStr) ? 0 : int.Parse(muestraInconsistenteStr);
 
-                    if (desviacion <= 5.1)
+                    if (vm == 0)
                     {
                         nivel_riesgo = 1;
                     }
-                    else if (desviacion > 5.1 && desviacion <= 9.99)
-                    {
-                        nivel_riesgo = 2;
-                    }
                     else
                     {
-                        nivel_riesgo = 3;
+                        desviacion = Math.Round(((double)mi / vm) * 100, 2); // Redondea a 2 decimales
+
+                        if (desviacion <= 5.1)
+                        {
+                            nivel_riesgo = 1;
+                        }
+                        else if (desviacion > 5.1 && desviacion <= 9.99)
+                        {
+                            nivel_riesgo = 2;
+                        }
+                        else
+                        {
+                            nivel_riesgo = 3;
+                        }
                     }
                 }
+                else
+                {
+                    string nivelRiesgoStr = formularioData["nivel_riesgo"];
+                    nivel_riesgo = string.IsNullOrEmpty(nivelRiesgoStr) ? 1 : int.Parse(nivelRiesgoStr);
+                }
+
 
                 Mg_Hallazgos Hallazgo = new();
                 Hallazgo.CODIGO_HALLAZGO = nuevoIdHallazgo;
-                Hallazgo.HALLAZGO = formularioData.GetProperty("hallazgo").GetString();
-                Hallazgo.CALIFICACION = string.IsNullOrEmpty(formularioData.GetProperty("calificacion").GetString()) ? (int?)null : int.Parse(formularioData.GetProperty("calificacion").GetString());
+                Hallazgo.HALLAZGO = formularioData["hallazgo"];
+                Hallazgo.CALIFICACION = calificacion;
                 Hallazgo.VALOR_MUESTRA = vm;
                 Hallazgo.MUESTRA_INCONSISTENTE = mi;
                 Hallazgo.DESVIACION_MUESTRA = desviacion;
                 Hallazgo.NIVEL_RIESGO = nivel_riesgo;
-                Hallazgo.CONDICION = formularioData.GetProperty("condicion").GetString();
-                Hallazgo.CRITERIO = formularioData.GetProperty("criterio").GetString();
+                Hallazgo.CONDICION = formularioData["condicion"];
+                Hallazgo.CRITERIO = formularioData["criterio"];
                 Hallazgo.CODIGO_ACTIVIDAD = codigoActividadInt;
                 Hallazgo.NUMERO_PDT = numPDT;
                 Hallazgo.NUMERO_AUDITORIA_INTEGRAL = cod;
@@ -2287,86 +2310,131 @@ namespace SIA.Controllers
 
                 _context.Add(Hallazgo);
 
-                //Guardamos las actividades
-                //await _context.SaveChangesAsync();
 
-
-                JsonElement root;
-                try
-                {
-                    // Serializar dynamic a JSON y luego parsear a JsonElement
-                    var jsonString = JsonSerializer.Serialize(formularioData);
-                    root = JsonSerializer.Deserialize<JsonElement>(jsonString);
-                }
-                catch (JsonException ex)
-                {
-                    return BadRequest($"Error al procesar los datos JSON: {ex.Message}");
-                }
-
+                // Crear la lista de detalles
                 List<Mg_hallazgos_detalles> detalles = new List<Mg_hallazgos_detalles>();
 
-                if (formularioData.TryGetProperty("causageneral", out JsonElement causasElement) && causasElement.ValueKind == JsonValueKind.Array)
+
+                //**************************************************************************************
+
+                // Obtener el JSON que representa el array 'causageneral'
+                string causageneralJson = formularioData["causageneral"];
+
+                // Deserializar el JSON a una lista de diccionarios
+                var causageneral = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(causageneralJson);
+
+                foreach (var causa in causageneral)
                 {
-                    foreach (JsonElement causa in causasElement.EnumerateArray())
+                    var causasObj = new Mg_hallazgos_detalles
                     {
-                        var causasObj = new Mg_hallazgos_detalles
-                        {
-                            CODIGO_HALLAZGO = nuevoIdHallazgo,
-                            DESCRIPCION = causa.GetProperty("causa").GetString(),
-                            TIPO = causa.GetProperty("id").GetString()
-                        };
-                        detalles.Add(causasObj);
-                    }
+                        CODIGO_HALLAZGO = nuevoIdHallazgo,
+                        DESCRIPCION = causa["causa"], // Acceder al campo 'causa'
+                        TIPO = causa["id"]            // Acceder al campo 'id'
+                    };
+                    detalles.Add(causasObj);
                 }
 
-                if (formularioData.TryGetProperty("recomendaciones", out JsonElement recomendacionesElement) && recomendacionesElement.ValueKind == JsonValueKind.Array)
+                //**************************************************************************************
+                // Obtener el JSON que representa el array 'recomendaciones'
+                string recomendacionesJson = formularioData["recomendaciones"];
+
+                // Deserializar el JSON a una lista de diccionarios
+                var recomendaciones = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(recomendacionesJson);
+
+                foreach (var recom in recomendaciones)
                 {
-                    foreach (JsonElement recomendacion in recomendacionesElement.EnumerateArray())
+                    var recomendacionObj = new Mg_hallazgos_detalles
                     {
-                        var recomendacionObj = new Mg_hallazgos_detalles
-                        {
-                            CODIGO_HALLAZGO = nuevoIdHallazgo,
-                            DESCRIPCION = recomendacion.GetProperty("recomendaciones").GetString(),
-                            TIPO = recomendacion.GetProperty("id").GetString()
-                        };
-                        detalles.Add(recomendacionObj);
-                    }
+                        CODIGO_HALLAZGO = nuevoIdHallazgo,
+                        DESCRIPCION = recom["recomendaciones"], // Acceder al campo 'recomendaciones'
+                        TIPO = recom["id"]            // Acceder al campo 'id'
+                    };
+                    detalles.Add(recomendacionObj);
                 }
 
-                // Convertir 'efecto' a una lista de Efecto
-                if (formularioData.TryGetProperty("efecto", out JsonElement efectosElement) && efectosElement.ValueKind == JsonValueKind.Array)
+                //**************************************************************************************
+                // Obtener el JSON que representa el array 'efecto'
+                string efectoJson = formularioData["efecto"];
+
+                // Deserializar el JSON a una lista de diccionarios
+                var efecto = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(efectoJson);
+
+                foreach (var efect in efecto)
                 {
-                    foreach (JsonElement efecto in efectosElement.EnumerateArray())
+                    var efectoObj = new Mg_hallazgos_detalles
                     {
-                        var efectoObj = new Mg_hallazgos_detalles
-                        {
-                            CODIGO_HALLAZGO = nuevoIdHallazgo,
-                            DESCRIPCION = efecto.GetProperty("efecto").GetString(),
-                            TIPO = efecto.GetProperty("id").GetString()
-                        };
-                        detalles.Add(efectoObj);
-                    }
+                        CODIGO_HALLAZGO = nuevoIdHallazgo,
+                        DESCRIPCION = efect["efecto"], // Acceder al campo 'efecto'
+                        TIPO = efect["id"]            // Acceder al campo 'id'
+                    };
+                    detalles.Add(efectoObj);
                 }
-                
-                // Convertir 'comentarios' a una lista de Comentario
-                if (formularioData.TryGetProperty("comentarios", out JsonElement comentariosElement) && comentariosElement.ValueKind == JsonValueKind.Array)
+
+
+                //**************************************************************************************
+                // Obtener el JSON que representa el array 'efecto'
+                string comentariosJson = formularioData["comentarios"];
+
+                // Deserializar el JSON a una lista de diccionarios
+                var comentarios = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(comentariosJson);
+
+                foreach (var coment in comentarios)
                 {
-                    foreach (JsonElement comentario in comentariosElement.EnumerateArray())
+                    var comentariosObj = new Mg_hallazgos_detalles
                     {
-                        var comentarioObj = new Mg_hallazgos_detalles
-                        {
-                            CODIGO_HALLAZGO = nuevoIdHallazgo,
-                            DESCRIPCION = comentario.GetProperty("comentarios").GetString(),
-                            TIPO = comentario.GetProperty("id").GetString()
-                        };
-                        detalles.Add(comentarioObj);
-                    }
+                        CODIGO_HALLAZGO = nuevoIdHallazgo,
+                        DESCRIPCION = coment["comentarios"], // Acceder al campo 'comentarios'
+                        TIPO = coment["id"]            // Acceder al campo 'id'
+                    };
+                    detalles.Add(comentariosObj);
                 }
 
                 _context.AddRange(detalles);
 
+
+                //**************************************************************************************
+                // Guardar archivos adjuntos si se han enviado
+                var archivosAdjuntos = formularioData.Files;
+                var directorio = Path.Combine("wwwroot", "Archivos", "Auditorias", "Documentos");
+
+                // Verificar si el directorio existe, si no, crearlo
+                if (!Directory.Exists(directorio))
+                {
+                    Directory.CreateDirectory(directorio);
+                }
+
+                foreach (var archivo in archivosAdjuntos)
+                {
+                    if (archivo.Length > 0)
+                    {
+                        // Generar un número aleatorio de 5 dígitos
+                        var random = new Random();
+                        var randomNumber = random.Next(10000, 99999);
+                        //Nombre del archivo que con el que se guarda
+                        var FileName = randomNumber + "_" + archivo.FileName;
+
+                        var filePath = Path.Combine(directorio, FileName);
+
+                        try
+                        {
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await archivo.CopyToAsync(stream);
+
+                                //AQUI SE DEBE IR LLENANDO EL LISTADO DE LOS ARCHIVOS QUE SE VAN A GUARDAR
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error al guardar el archivo: {ex.Message}"); // Registro de error
+                        }
+                    }
+                }
+
+
                 // Guardamos todos los cambios
                 await _context.SaveChangesAsync();
+
             }
             catch (Exception ex)
             {

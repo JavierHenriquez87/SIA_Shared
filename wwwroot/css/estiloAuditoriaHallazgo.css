@@ -204,7 +204,8 @@
         transition: background-color 0.3s, border-color 0.3s;
     }
 
-#selectedRisk {
+#selectedRisk,
+#selectedRisk2 {
     padding: 10px 20px;
     cursor: pointer;
     border: 1px solid #ccc;

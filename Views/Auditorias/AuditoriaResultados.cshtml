@@ -6,8 +6,9 @@
     ViewBag.pTitle = "RESULTADOS EN PROGRAMA DE TRABAJO";
     ViewBag.pageTitle = "Auditorías";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
-    var valor = "alto";
+    string textNivel = "Bajo";
+    string textClassNivel = "bajo";
+    string tipocalificacion = "";
 }
 
 <link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
@@ -47,22 +48,53 @@
                         <h6>
                             @hall.CONDICION
                         </h6>
-
+                        <br>
+                        @if (hall.CALIFICACION == 1)
+                        {
+                            tipocalificacion = "Cuantitativa";
+                        }
+                        else
+                        {
+                            tipocalificacion = "Cualitativa";
+                        }
+                        <label style="width: 87%"><b style="font-size:16px">Tipo Calificación: </b>@tipocalificacion</label>
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Valor de Muestra</th>
-                                    <th>Muestra con Hallazgos</th>
-                                    <th>Desviación de Muestra</th>
+                                    @if (hall.CALIFICACION == 1)
+                                    {
+                                        <th>Valor de Muestra</th>
+                                        <th>Muestra con Hallazgos</th>
+                                        <th>Desviación de Muestra</th>
+                                    }else{
+                                        <th>Orientación de Calificación</th>
+                                    }
                                     <th>Nivel de Riesgo</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>@hall.VALOR_MUESTRA</td>
-                                    <td>@hall.MUESTRA_INCONSISTENTE</td>
-                                    <td>@hall.DESVIACION_MUESTRA %</td>
-                                    <td class="highlight-@valor">Alto</td>
+                                    @if (hall.CALIFICACION == 1)
+                                    {
+                                        <td>@hall.VALOR_MUESTRA</td>
+                                        <td>@hall.MUESTRA_INCONSISTENTE</td>
+                                        <td>@hall.DESVIACION_MUESTRA %</td>
+                                    }
+                                    else{
+                                    <td>asdadadad adsas dasdasd as da da dadad </td>
+                                    }
+
+                                    @if (hall.NIVEL_RIESGO == 2)
+                                    {
+                                        textNivel = "Medio";
+                                        textClassNivel = "medio";
+                                    }
+                                    else if (hall.NIVEL_RIESGO == 3)
+                                    {
+                                        textNivel = "Alto";
+                                        textClassNivel = "alto";
+                                    }
+                                    <td class="highlight-@textClassNivel">@textNivel</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -102,7 +134,7 @@
 
                         <h5 style="font-weight: bold; margin-top: 10px">
                             Recomendaciones
-                            </h5>
+                        </h5>
                         @if (hall.Detalles != null)
                         {
                             @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "recomendaciones" || d.TIPO.StartsWith("recomendaciones-")))
@@ -115,9 +147,9 @@
 
                         <h5 style="font-weight: bold; margin-top: 10px">
                             Comentarios
-                                </h5>
-                                @if (hall.Detalles != null)
-                                {
+                        </h5>
+                        @if (hall.Detalles != null)
+                        {
                             @foreach (var detalle in hall.Detalles.Where(d => d.TIPO == "comentarios" || d.TIPO.StartsWith("comentarios-")))
                             {
                                 <h6>

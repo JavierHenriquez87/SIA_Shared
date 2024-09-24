@@ -54,6 +54,7 @@ namespace SIA.Context
                 .HasOne(m => m.Menu)
                 .WithMany()
                 .HasForeignKey(m => new { m.CODIGO_APLICACION, m.CODIGO_MENU });
+
         }
 
         public virtual DbSet<Mg_usuarios_segun_app> MG_USUARIOS_SEGUN_APP { get; set; }
@@ -88,6 +89,6 @@ namespace SIA.Context
         public virtual DbSet<Mg_Hallazgos> MG_HALLAZGOS { get; set; }
         public virtual DbSet<Mg_roles> MG_ROLES { get; set; }
         public virtual DbSet<Mg_hallazgos_detalles> MG_HALLAZGOS_DETALLES { get; set; }
-
+        public virtual DbSet<Mg_hallazgos_documentos> MG_HALLAZGOS_DOCUMENTOS{ get; set; }
     }
 }

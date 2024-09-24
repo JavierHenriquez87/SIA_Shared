@@ -41,6 +41,9 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\assets\images\firmas_usuarios\" />
+    <Folder Include="wwwroot\Archivos\Auditorias\Documentos\" />
+    <Folder Include="wwwroot\Archivos\Usuarios\Firmas_Usuarios\" />
+    <Folder Include="wwwroot\Archivos\Usuarios\" />
   </ItemGroup>
 
   <ItemGroup>

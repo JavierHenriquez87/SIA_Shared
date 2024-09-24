@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
         calificacion: "",
         valor_muestra: "",
         muestra_inconsistente: "",
+        nivel_riesgo: "1",
         condicion: "",
         criterio: "",
         desviacion_muestra: "",
@@ -32,6 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
         ],
         comentarios: [
             { id: "comentarios", comentarios: "" }
+        ],
+        adjuntos: [
         ]
     };
 
@@ -432,7 +435,7 @@ document.getElementById('btn_comentarios').addEventListener('click', function ()
 
 let accionesRequeridasCount = 1; // Inicializar un contador
 
-document.getElementById('selectedRisk').addEventListener('click', function () {
+document.getElementById('selectedRisk2').addEventListener('click', function () {
     const riskLevels = document.getElementById('riskLevels');
     riskLevels.style.display = riskLevels.style.display === 'none' ? 'block' : 'none';
 });
@@ -449,23 +452,49 @@ document.querySelectorAll('.risk-level-options .card').forEach(function (element
         this.classList.add(`highlight-${riskLevel}`);
 
         // Actualizar el elemento que muestra el nivel seleccionado
-        const selectedRisk = document.getElementById('selectedRisk');
+        const selectedRisk = document.getElementById('selectedRisk2');
         selectedRisk.innerText = this.innerText;
         selectedRisk.className = `card highlight-${riskLevel}`;
         selectedRisk.setAttribute('data-risk', riskLevel);
 
         // Actualizar el valor del input oculto
-        document.getElementById('nivel_riesgo').value = riskLevel;
+        formularioData.nivel_riesgo = riskLevel === 'alto' ? "3" : (riskLevel === 'medio' ? "2" : "1");
 
         // Ocultar las opciones de nivel de riesgo
         document.getElementById('riskLevels').style.display = 'none';
+
+        console.log(formularioData);
     });
 });
 
-async function GuardarActualizarHallazgo() {
+async function GuardarActualizarHallazgoo() {
     console.log(formularioData);
     var respuesta = ValidarObjeto(formularioData);
 
+    // Crear un objeto FormData
+    let formData = new FormData();
+
+    // Agregar los campos al FormData
+    formData.append("hallazgo", formularioData.hallazgo);
+    formData.append("calificacion", formularioData.calificacion);
+    formData.append("valor_muestra", formularioData.valor_muestra);
+    formData.append("muestra_inconsistente", formularioData.muestra_inconsistente);
+    formData.append("nivel_riesgo", formularioData.nivel_riesgo);
+    formData.append("condicion", formularioData.condicion);
+    formData.append("criterio", formularioData.criterio);
+    formData.append("desviacion_muestra", formularioData.desviacion_muestra);
+
+    // Agregar los arreglos (como 'causageneral', 'efecto', etc.)
+    formData.append("causageneral", JSON.stringify(formularioData.causageneral));
+    formData.append("efecto", JSON.stringify(formularioData.efecto));
+    formData.append("recomendaciones", JSON.stringify(formularioData.recomendaciones));
+    formData.append("comentarios", JSON.stringify(formularioData.comentarios));
+
+    // Agregar los archivos al FormData
+    formularioData.adjuntos.forEach(function (archivo, index) {
+        formData.append(`adjuntos[${index}]`, archivo.archivo); // Aquí usamos el archivo original
+    });
+    console.log(formularioData);
     if (respuesta == false) {
         Swal.fire(
             'Advertencia',
@@ -478,9 +507,64 @@ async function GuardarActualizarHallazgo() {
         $.ajax({
             method: 'POST',
             url: '/Auditorias/GuardarHallazgos',
-            data: JSON.stringify(formularioData),
-            contentType: 'application/json',
+            body: formData,
             success: function (resp) {
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+}
+
+
+// Función para enviar el formulario con FormData
+const guardarBtn = document.getElementById('guardar-btn');
+guardarBtn.addEventListener('click', function () {
+    var respuesta = ValidarObjeto(formularioData);
+
+    if (respuesta == false) {
+        Swal.fire(
+            'Advertencia',
+            'El campo Hallazgo no puede quedar vacio al guardar.',
+            'warning'
+        )
+    } else {
+        Swal.showLoading();
+        // Crear un objeto FormData
+        let formData = new FormData();
+
+        // Agregar los campos al FormData
+        formData.append("hallazgo", formularioData.hallazgo);
+        formData.append("calificacion", formularioData.calificacion);
+        formData.append("valor_muestra", formularioData.valor_muestra);
+        formData.append("muestra_inconsistente", formularioData.muestra_inconsistente);
+        formData.append("nivel_riesgo", formularioData.nivel_riesgo);
+        formData.append("condicion", formularioData.condicion);
+        formData.append("criterio", formularioData.criterio);
+        formData.append("desviacion_muestra", formularioData.desviacion_muestra);
+
+        // Agregar los arreglos (como 'causageneral', 'efecto', etc.)
+        formData.append("causageneral", JSON.stringify(formularioData.causageneral));
+        formData.append("efecto", JSON.stringify(formularioData.efecto));
+        formData.append("recomendaciones", JSON.stringify(formularioData.recomendaciones));
+        formData.append("comentarios", JSON.stringify(formularioData.comentarios));
+
+        // Agregar los archivos al FormData
+        formularioData.adjuntos.forEach(function (archivo, index) {
+            formData.append(`adjuntos[${index}]`, archivo.archivo); // Aquí usamos el archivo original
+        });
+
+
+        // Realizar la solicitud de envío de los datos con fetch
+        fetch('/Auditorias/GuardarHallazgos', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
                 Swal.fire({
                     title: "Guardado",
                     text: "Se guardo la información con éxito",
@@ -491,25 +575,171 @@ async function GuardarActualizarHallazgo() {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var params_base = $("#paramsah_base64").val();
-                        window.location.href = '/Auditorias/AuditoriaResultados' + params_base;
+                        //window.location.href = '/Auditorias/AuditoriaResultados' + params_base;
                     }
                 });
-            },
-            error: function () {
-
-            }
-        });
+            })
+            .catch(error => {
+                console.error('Error al enviar los datos:', error);
+            });
     }
-
-}
+});
 
 function ValidarObjeto(data) {
     var hallazgo = $('#hallazgo').val();
+    var valor_muestra = $('#valor_muestra').val();
+    var muestra_inconsistente = $('#muestra_inconsistente').val();
 
     if (hallazgo.length == 0) {
-        return false; // Si el campo de Hallazgo esta vacio devolvemos false
+        return "hallazgo"; // Si el campo de Hallazgo esta vacio devolvemos false
+    }
+
+    // Verificar la relación entre valor_muestra y muestra_inconsistente
+    if (valor_muestra.length == 0 && muestra_inconsistente.length != 0) {
+        return "muestras"; // Si valor_muestra está vacío y muestra_inconsistente no, devolvemos false
+    }
+
+    if (valor_muestra.length != 0 && muestra_inconsistente.length == 0) {
+        return "muestras"; // Si valor_muestra tiene un valor y muestra_inconsistente está vacío, devolvemos false
     }
 
     return true // Si el campo de Hallazgo no esta vacio devolvemos true
 }
+
+
+
+// Extensiones de archivos permitidos
+const tiposPermitidos = [
+    'application/pdf',  // PDF
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // Word (DOCX)
+    'application/msword', // Word (DOC)
+    'application/vnd.ms-excel', // Excel (XLS)
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Excel (XLSX)
+    'image/jpeg', // Imagen JPEG
+    'image/png', // Imagen PNG
+    'image/gif'  // Imagen GIF
+];
+
+// Cuando un archivo es seleccionado desde el input o se arrastra
+function agregarArchivo() {
+    var input = document.getElementById('documentos');
+    var archivo = input.files[0]; // Obtener el archivo seleccionado
+
+    if (archivo) {
+        // Validar el tipo de archivo
+        if (tiposPermitidos.includes(archivo.type)) {
+            // Agregar el archivo al objeto formularioData
+            formularioData.adjuntos.push({
+                nombre: archivo.name,
+                tipo: archivo.type,
+                tamaño: archivo.size,
+                archivo: archivo
+            });
+
+            // Actualizar la lista de archivos visualmente
+            actualizarListaDeArchivos();
+
+            // Limpiar el input para permitir otra selección
+            input.value = ""; // Limpiar el campo input
+            document.getElementById('uploadText').textContent = 'Click para subir documento o arrastre y suelte el archivo aquí';
+        } else {
+            Swal.fire(
+                'Advertencia',
+                'Tipo de archivo no permitido. Solo se permiten PDF, Word, Excel e imágenes.',
+                'warning'
+            )
+        }
+    } else {
+        Swal.fire(
+            'Advertencia',
+            'No se ha seleccionado ningún archivo.',
+            'warning'
+        )
+    }
+}
+
+// Manejador para arrastrar y soltar archivos
+function dropHandler(event) {
+    event.preventDefault(); // Prevenir la acción por defecto del navegador
+    var input = document.getElementById('documentos');
+    var archivo = event.dataTransfer.files[0]; // Obtener el archivo arrastrado
+
+    if (archivo) {
+        // Agregar el archivo al array y actualizar lista
+        formularioData.adjuntos.push({
+            nombre: archivo.name,
+            tipo: archivo.type,
+            tamaño: archivo.size,
+            archivo: archivo
+        });
+        actualizarListaDeArchivos();
+        document.getElementById('uploadText').textContent = 'Archivo arrastrado: ' + archivo.name;
+    }
+}
+
+// Función para actualizar visualmente la lista de archivos agregados
+function actualizarListaDeArchivos() {
+    var lista = document.getElementById('archivosAgregados');
+    lista.innerHTML = ""; // Limpiar la lista antes de renderizar
+
+    formularioData.adjuntos.forEach(function (archivo, index) {
+        var li = document.createElement('li');
+        var icono = obtenerIcono(archivo.tipo); // Obtener el ícono según el tipo de archivo
+
+        // Crear el contenido del archivo con nombre, ícono y botón para eliminar
+        li.innerHTML = `
+            ${icono} ${archivo.nombre} 
+            <i style="color:red; cursor: pointer;" title="Eliminar archivo" class="fa fa-trash" onclick="eliminarArchivo(${index})"></i>
+        `;
+
+        lista.appendChild(li);
+    });
+}
+
+// Evitar que el navegador abra el archivo cuando es arrastrado
+function dragOverHandler(event) {
+    event.preventDefault();
+}
+
+// Eliminar archivo del array y actualizar la lista
+function eliminarArchivo(index) {
+    formularioData.adjuntos.splice(index, 1); // Eliminar el archivo del array
+    actualizarListaDeArchivos(); // Actualizar la lista visual
+}
+
+// Función para determinar el ícono basado en el tipo de archivo
+function obtenerIcono(tipo) {
+    if (tipo.includes('image')) {
+        return '🖼️'; // Ícono para imágenes
+    } else if (tipo.includes('pdf')) {
+        return '📄'; // Ícono para PDF
+    } else if (tipo.includes('word') || tipo.includes('wordprocessingml.document')) {
+        return '📝'; // Ícono para documentos de Word
+    } else if (tipo.includes('excel') || tipo.includes('spreadsheet')) {
+        return '📊'; // Ícono para Excel
+    } else {
+        return '📁'; // Ícono genérico
+    }
+}
+
+
+function MostrarCualitativo() {
+
+    $('#divcuantitativo').hide();
+    //$('#valor_muestra').val("");
+    //$('#muestra_inconsistente').val("");
+    //$('#desviacion_muestra').val("");
+
+    $('#divcualitativo').show();
+}
+
+function MostrarCuantitativo() {
+
+    $('#divcuantitativo').show();
+    //$('#valor_muestra').val("0");
+    //$('#muestra_inconsistente').val("0");
+    //$('#desviacion_muestra').val("0%");
+    $('#divcualitativo').hide();
+}
+
 

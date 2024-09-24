@@ -1,4 +1,5 @@
 ﻿@using Newtonsoft.Json;
+
 @{
     var actividadConDetalles = ViewBag.DETALLES_ACTIVIDAD;
     var params_base64 = ViewBag.PARAMS_BASE64;
@@ -9,16 +10,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var valor = "alto";
+    string styleCuantitativa = "";
+    string styleCualitativa = "display: none;";
+
 
     string hallazgoJson = null;
     if (ViewBag.HALLAZGO != null)
     {
         hallazgoJson = JsonConvert.SerializeObject(ViewBag.HALLAZGO, new JsonSerializerSettings
-        {
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects
-        });
+                {
+                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                });
     }
 }
+
 <link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
 <link href="~/css/estiloAuditoriaHallazgo.css" rel="stylesheet" type="text/css" />
 
@@ -34,7 +39,7 @@
     <div class="form-group" style="padding-top: 10px" id="divButtons">
         <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
         <button type="button" onclick="GuardarActualizarHallazgo()" class="btn btn-primary">Guardar borrador</button>
-        <button type="button" onclick="x()" class="btn btn-primary">Guardar y Confirmar</button>
+        <button type="button" id="guardar-btn" class="btn btn-primary">Guardar y Confirmar</button>
     </div>
 </div>
 
@@ -48,15 +53,15 @@
                 <form>
                     <div class="form-group">
                         <label for="hallazgo">Hallazgo</label>
-                        <textarea id="hallazgo" name="hallazgo" rows="2" placeholder="Escribir..."></textarea>
+                        <textarea id="hallazgo" name="hallazgo" rows="3" placeholder="Escribir..."></textarea>
                     </div>
 
                     <div class="toggle-buttons">
-                        <button id="cuantitativa">Calificación Cuantitativa</button>
-                        <button id="cualitativa">Calificación Cualitativa</button>
+                        <button id="cuantitativa" onclick="MostrarCuantitativo()" class="active">Calificación Cuantitativa</button>
+                        <button id="cualitativa" onclick="MostrarCualitativo()">Calificación Cualitativa</button>
                     </div>
 
-                    <div class="row">
+                    <div class="row" style="@styleCuantitativa" id="divcuantitativo">
                         <div class="form-group calificacion">
                             <label for="valor_muestra">Valor de Muestra</label>
                             <input type="number" id="valor_muestra" name="valor_muestra" value="0" onchange="calculoMuestra()">
@@ -74,16 +79,32 @@
                             <div id="selectedRisk" class="card highlight-bajo">Bajo</div>
                         </div>
                     </div>
+                    <div class="row" style="@styleCualitativa" id="divcualitativo">
+                        <div class="col-8 d-flex flex-column">
+                            <label for="orientacion_calificacion">Orientación para la calificación</label>
+                            <textarea id="orientacion_calificacion" name="orientacion_calificacion" disabled>AQUI VAN A ESTAR LAS CALIFICACIONES</textarea>
+                        </div>
+                        <div class="col-3 d-flex flex-column">
+                            <label for="nivel_riesgo">Nivel de Riesgo</label>
+                            <div id="selectedRisk2" class="card highlight-bajo" data-risk="bajo">Bajo</div>
+                            <div id="riskLevels" class="risk-level-options" style="display: none;">
+                                <span class="card" data-risk="bajo" style="width: 100%;">Bajo</span>
+                                <span class="card" data-risk="medio" style="width: 100%;">Medio</span>
+                                <span class="card" data-risk="alto" style="width: 100%;">Alto</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="nivel_riesgo" name="nivel_riesgo" value="bajo" />
+                    </div>
                     <div class="columns">
 
                         <div class="column">
                             <div class="form-group">
                                 <label for="condicion">Condición</label>
-                                <textarea id="condicion" name="condicion" rows="2" placeholder="Escribir..."></textarea>
+                                <textarea id="condicion" name="condicion" rows="3" placeholder="Escribir..."></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="criterio">Criterio</label>
-                                <textarea id="criterio" name="criterio" rows="2" placeholder="Escribir..."></textarea>
+                                <textarea id="criterio" name="criterio" rows="3" placeholder="Escribir..."></textarea>
                             </div>
                             <div class="form-group specific-style">
                                 <label for="efecto">Causa</label>
@@ -171,13 +192,23 @@
                 </div>
                 <div class="form-group">
                     <label for="documentos">Documentos</label>
-                    <div class="upload-area">
-                        <input type="file" id="documentos" style="display:none;">
+                    <div class="upload-area" id="uploadArea"
+                         ondrop="dropHandler(event);"
+                         ondragover="dragOverHandler(event);">
+                        <input type="file" id="documentos" style="display:none;" onchange="agregarArchivo()"> <!-- Aquí se llama agregarArchivo directamente -->
                         <i class='bx bx-info-circle font-size-24' style="color: #186040; border: 2px solid #ddd; padding: 5px; border-radius: 20%; margin-bottom: 10px"></i>
                         <p>
-                            <span style="color: #186040;">Click para subir documento</span> o arrastre y suelte el archivo aquí
+                            <span id="uploadText" style="color: #186040;">Click para subir documento</span> o arrastre y suelte el archivo aquí
                         </p>
                         <p><small>PDF (máx. 4MB)</small></p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <!-- Lista de archivos seleccionados -->
+                    <div id="listaArchivos" style="margin-top: 15px;">
+                        <h5>Archivos agregados:</h5>
+                        <ul id="archivosAgregados" class="file-list"></ul>
                     </div>
                 </div>
             </div>
