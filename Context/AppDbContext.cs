@@ -36,9 +36,10 @@ namespace SIA.Context
             .HasForeignKey(d => d.CODIGO_HALLAZGO);
 
             modelBuilder.Entity<Mg_Hallazgos>()
-            .HasMany(h => h.Documentos)
-            .WithOne(d => d.Hallazgo)
-            .HasForeignKey(d => d.CODIGO_HALLAZGO);
+                .HasMany(h => h.Documentos)
+                .WithOne(d => d.Hallazgo)
+                .HasForeignKey(d => d.CODIGO_HALLAZGO);
+
 
             modelBuilder.Entity<Mg_secciones>()
             .HasMany(s => s.sub_secciones)
@@ -94,6 +95,6 @@ namespace SIA.Context
         public virtual DbSet<Mg_Hallazgos> MG_HALLAZGOS { get; set; }
         public virtual DbSet<Mg_roles> MG_ROLES { get; set; }
         public virtual DbSet<Mg_hallazgos_detalles> MG_HALLAZGOS_DETALLES { get; set; }
-        public virtual DbSet<Mg_hallazgos_documentos> MG_HALLAZGOS_DOCUMENTOS{ get; set; }
+        public virtual DbSet<Mg_hallazgos_documentos> MG_HALLAZGOS_DOCUMENTOS { get; set; }
     }
 }

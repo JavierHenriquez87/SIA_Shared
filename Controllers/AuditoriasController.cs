@@ -2392,6 +2392,9 @@ namespace SIA.Controllers
 
                 _context.AddRange(detalles);
 
+                // Guardamos todos los cambios
+                await _context.SaveChangesAsync();
+
 
                 //**************************************************************************************
                 // Guardar archivos adjuntos si se han enviado
@@ -2404,15 +2407,15 @@ namespace SIA.Controllers
                     Directory.CreateDirectory(directorio);
                 }
 
-                int mayorCodigoHallazgo = await _context.MG_HALLAZGOS_DOCUMENTOS
-                      .MaxAsync(o => (int?)o.CODIGO_HALLAZGO) ?? 1;
-
                 List<Mg_hallazgos_documentos> listadoDocumentos = new List<Mg_hallazgos_documentos>();
 
                 foreach (var archivo in archivosAdjuntos)
                 {
                     if (archivo.Length > 0)
                     {
+                        int mayorCodigoHallazgo = await _context.MG_HALLAZGOS_DOCUMENTOS
+                      .MaxAsync(o => (int?)o.CODIGO_HALLAZGO_DOCUMENTO) ?? 0;
+
                         // Generar un número aleatorio de 5 dígitos
                         var random = new Random();
                         var randomNumber = random.Next(10000, 99999);
@@ -2424,7 +2427,7 @@ namespace SIA.Controllers
 
                         var documento = new Mg_hallazgos_documentos
                         {
-                            CODIGO_HALLAZGO_DOCUMENTO = mayorCodigoHallazgo,
+                            CODIGO_HALLAZGO_DOCUMENTO = mayorCodigoHallazgo + 1,
                             NOMBRE_DOCUMENTO = FileName,
                             CODIGO_HALLAZGO = nuevoIdHallazgo,
                             PESO = fileSizeInKB + " KB",
@@ -2432,15 +2435,17 @@ namespace SIA.Controllers
                             CREADO_POR = HttpContext.Session.GetString("user")
                         };
 
-                        listadoDocumentos.Add(documento);
+                        //listadoDocumentos.Add(documento);
+                        _context.Add(documento);
+
+                        //Guardamos el rol editado
+                        await _context.SaveChangesAsync();
 
                         try
                         {
                             using (var stream = new FileStream(filePath, FileMode.Create))
                             {
                                 await archivo.CopyToAsync(stream);
-
-                                //AQUI SE DEBE IR LLENANDO EL LISTADO DE LOS ARCHIVOS QUE SE VAN A GUARDAR
                             }
                         }
                         catch (Exception ex)
@@ -2452,8 +2457,7 @@ namespace SIA.Controllers
 
                 _context.MG_HALLAZGOS_DOCUMENTOS.AddRange(listadoDocumentos);
 
-                // Guardamos todos los cambios
-                await _context.SaveChangesAsync();
+
 
             }
             catch (Exception ex)
@@ -2463,6 +2467,7 @@ namespace SIA.Controllers
 
             return new JsonResult("Ok");
         }
+
 
         //********************************************************************************
         // PAGES NEWS

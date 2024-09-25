@@ -165,7 +165,7 @@
                         @foreach (var documento in hall.Documentos)
                         {
                             <div class="pdf-item">
-                                <img src="/assets/images/pdf-ico.png" alt="@documento.NOMBRE_DOCUMENTO">
+                                <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank"><img src="/assets/images/pdf-ico.png" alt="@documento.NOMBRE_DOCUMENTO"></a>
                                 <div>
                                     <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank">@documento.NOMBRE_DOCUMENTO</a>
                                     <p style="margin: 5px 0;">Creado Por: @documento.CREADO_POR</p>
@@ -173,7 +173,7 @@
                                 </div>
                             </div>
                         }
-                        
+
                         @*<div id="pdf-container"></div>*@
                     </div>
                 </div>

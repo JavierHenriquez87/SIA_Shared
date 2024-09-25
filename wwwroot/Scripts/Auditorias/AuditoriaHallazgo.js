@@ -575,7 +575,7 @@ guardarBtn.addEventListener('click', function () {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var params_base = $("#paramsah_base64").val();
-                        //window.location.href = '/Auditorias/AuditoriaResultados' + params_base;
+                        window.location.href = '/Auditorias/AuditoriaResultados' + params_base;
                     }
                 });
             })
