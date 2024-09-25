@@ -13,8 +13,10 @@ namespace SIA.Models
         public int CODIGO_HALLAZGO_DOCUMENTO { get; set; }
         public string NOMBRE_DOCUMENTO { get; set; }
         public int CODIGO_HALLAZGO { get; set; }
+        public string PESO { get; set; }
         public string CREADO_POR { get; set; }
         public DateTime FECHA_CREACION { get; set; }
 
+        public Mg_Hallazgos Hallazgo { get; set; }
     }
 }

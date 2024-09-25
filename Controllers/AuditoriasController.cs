@@ -2128,6 +2128,7 @@ namespace SIA.Controllers
                 .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
                 .Where(d => d.ANIO_AI == anio)
                 .Include(d => d.Detalles)
+                .Include(d => d.Documentos)
                 .ToListAsync();
 
             var hallazgoDetalles = await _context.MG_HALLAZGOS_DETALLES
@@ -2403,6 +2404,11 @@ namespace SIA.Controllers
                     Directory.CreateDirectory(directorio);
                 }
 
+                int mayorCodigoHallazgo = await _context.MG_HALLAZGOS_DOCUMENTOS
+                      .MaxAsync(o => (int?)o.CODIGO_HALLAZGO) ?? 1;
+
+                List<Mg_hallazgos_documentos> listadoDocumentos = new List<Mg_hallazgos_documentos>();
+
                 foreach (var archivo in archivosAdjuntos)
                 {
                     if (archivo.Length > 0)
@@ -2414,6 +2420,19 @@ namespace SIA.Controllers
                         var FileName = randomNumber + "_" + archivo.FileName;
 
                         var filePath = Path.Combine(directorio, FileName);
+                        long fileSizeInKB = archivo.Length / 1024;
+
+                        var documento = new Mg_hallazgos_documentos
+                        {
+                            CODIGO_HALLAZGO_DOCUMENTO = mayorCodigoHallazgo,
+                            NOMBRE_DOCUMENTO = FileName,
+                            CODIGO_HALLAZGO = nuevoIdHallazgo,
+                            PESO = fileSizeInKB + " KB",
+                            FECHA_CREACION = DateTime.Now,
+                            CREADO_POR = HttpContext.Session.GetString("user")
+                        };
+
+                        listadoDocumentos.Add(documento);
 
                         try
                         {
@@ -2431,6 +2450,7 @@ namespace SIA.Controllers
                     }
                 }
 
+                _context.MG_HALLAZGOS_DOCUMENTOS.AddRange(listadoDocumentos);
 
                 // Guardamos todos los cambios
                 await _context.SaveChangesAsync();
@@ -2443,7 +2463,6 @@ namespace SIA.Controllers
 
             return new JsonResult("Ok");
         }
-
 
         //********************************************************************************
         // PAGES NEWS

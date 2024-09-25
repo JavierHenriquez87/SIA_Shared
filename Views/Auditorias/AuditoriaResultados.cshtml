@@ -162,7 +162,19 @@
                             Documentos Adjuntos
                         </h5>
 
-                        <div id="pdf-container"></div>
+                        @foreach (var documento in hall.Documentos)
+                        {
+                            <div class="pdf-item">
+                                <img src="/assets/images/pdf-ico.png" alt="@documento.NOMBRE_DOCUMENTO">
+                                <div>
+                                    <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank">@documento.NOMBRE_DOCUMENTO</a>
+                                    <p style="margin: 5px 0;">Creado Por: @documento.CREADO_POR</p>
+                                    <p style="margin: 5px 0;">Tamaño del PDF: @documento.PESO</p>
+                                </div>
+                            </div>
+                        }
+                        
+                        @*<div id="pdf-container"></div>*@
                     </div>
                 </div>
             }

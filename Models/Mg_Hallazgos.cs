@@ -30,5 +30,6 @@ namespace SIA.Models
         public string? MODIFICADO_POR { get; set; }
 
         public ICollection<Mg_hallazgos_detalles> Detalles { get; set; }
+        public ICollection<Mg_hallazgos_documentos> Documentos { get; set; }
     }
 }

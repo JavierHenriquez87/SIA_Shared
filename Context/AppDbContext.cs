@@ -35,6 +35,11 @@ namespace SIA.Context
             .WithOne(d => d.Hallazgo)
             .HasForeignKey(d => d.CODIGO_HALLAZGO);
 
+            modelBuilder.Entity<Mg_Hallazgos>()
+            .HasMany(h => h.Documentos)
+            .WithOne(d => d.Hallazgo)
+            .HasForeignKey(d => d.CODIGO_HALLAZGO);
+
             modelBuilder.Entity<Mg_secciones>()
             .HasMany(s => s.sub_secciones)
             .WithOne(sub => sub.Seccion)
