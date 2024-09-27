@@ -18,9 +18,9 @@
     if (ViewBag.HALLAZGO != null)
     {
         hallazgoJson = JsonConvert.SerializeObject(ViewBag.HALLAZGO, new JsonSerializerSettings
-                {
-                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
-                });
+        {
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects
+        });
     }
 }
 
@@ -81,7 +81,7 @@
                     <div class="row" style="@styleCualitativa" id="divcualitativo">
                         <div class="col-8 d-flex flex-column">
                             <label for="orientacion_calificacion">Orientación para la calificación</label>
-                            <textarea id="orientacion_calificacion" name="orientacion_calificacion" disabled>AQUI VAN A ESTAR LAS CALIFICACIONES</textarea>
+                            <textarea id="orientacion_calificacion" style="height: 110px; margin-bottom: 10px;" name="orientacion_calificacion" disabled></textarea>
                         </div>
                         <div class="col-3 d-flex flex-column">
                             <label for="nivel_riesgo">Nivel de Riesgo</label>
@@ -209,6 +209,26 @@
                         <ul id="archivosAgregados" class="file-list"></ul>
                     </div>
                 </div>
+
+                @if (ViewBag.DOCUMENTOS != null && ViewBag.DOCUMENTOS.Count > 0)
+                {
+                    @foreach (var documento in ViewBag.DOCUMENTOS)
+                    {
+                        var extensionDocumento = System.IO.Path.GetExtension(documento.NOMBRE_DOCUMENTO);
+                        var ico = extensionDocumento?.ToLower() == ".pdf" ? "pdf-ico.png" : (extensionDocumento?.ToLower() == ".jpeg" || extensionDocumento?.ToLower() == ".jpg" || extensionDocumento?.ToLower() == ".png") ? "pic-ico.png" : (extensionDocumento?.ToLower() == ".doc" || extensionDocumento?.ToLower() == ".docx") ? "doc-ico.png" : "excel-ico.png";
+                        <div class="pdf-item" id="documento-@documento.CODIGO_HALLAZGO_DOCUMENTO">
+                            <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank"><img src="/assets/images/@ico" alt="@documento.NOMBRE_DOCUMENTO"></a>
+                            <div style="width: 80%;">
+                                <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank">@documento.NOMBRE_DOCUMENTO</a>
+                                <p style="margin: 5px 0;">Creado Por: @documento.CREADO_POR</p>
+                                <p style="margin: 5px 0;">Tamaño del PDF: @documento.PESO</p>
+                            </div>
+                            <button onclick="EliminarDocumento('@documento.CODIGO_HALLAZGO_DOCUMENTO')" class="btn btn-danger" style="margin-left: 10px;">
+                                <i class="bi bi-trash"></i> X
+                            </button>
+                        </div>
+                    }
+                }
             </div>
         </div>
     </div>

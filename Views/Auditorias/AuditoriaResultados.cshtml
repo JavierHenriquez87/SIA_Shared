@@ -80,11 +80,27 @@
                                         <td>@hall.MUESTRA_INCONSISTENTE</td>
                                         <td>@hall.DESVIACION_MUESTRA %</td>
                                     }
-                                    else{
-                                    <td>asdadadad adsas dasdasd as da da dadad </td>
+                                    else
+                                    {
+                                        <td style="text-align: justify;">
+                                            @foreach (var orientacion in hall.OrientacionCalificacion)
+                                            {
+                                                @orientacion.ORIENTACION
+
+                                                if (orientacion != hall.OrientacionCalificacion.Last())
+                                                {
+                                                    <br /><br />
+                                                }
+                                            }
+                                        </td>
                                     }
 
-                                    @if (hall.NIVEL_RIESGO == 2)
+                                    @if (hall.NIVEL_RIESGO == 1)
+                                    {
+                                        textNivel = "Bajo";
+                                        textClassNivel = "bajo";
+                                    }
+                                    else if (hall.NIVEL_RIESGO == 2)
                                     {
                                         textNivel = "Medio";
                                         textClassNivel = "medio";
@@ -164,8 +180,10 @@
 
                         @foreach (var documento in hall.Documentos)
                         {
+                            var extensionDocumento = System.IO.Path.GetExtension(documento.NOMBRE_DOCUMENTO);
+                            var ico = extensionDocumento?.ToLower() == ".pdf" ? "pdf-ico.png" : (extensionDocumento?.ToLower() == ".jpeg" || extensionDocumento?.ToLower() == ".jpg" || extensionDocumento?.ToLower() == ".png") ? "pic-ico.png" : (extensionDocumento?.ToLower() == ".doc" || extensionDocumento?.ToLower() == ".docx") ? "doc-ico.png" : "excel-ico.png";
                             <div class="pdf-item">
-                                <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank"><img src="/assets/images/pdf-ico.png" alt="@documento.NOMBRE_DOCUMENTO"></a>
+                                <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank"><img src="/assets/images/@ico" alt="@documento.NOMBRE_DOCUMENTO"></a>
                                 <div>
                                     <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank">@documento.NOMBRE_DOCUMENTO</a>
                                     <p style="margin: 5px 0;">Creado Por: @documento.CREADO_POR</p>

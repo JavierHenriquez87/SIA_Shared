@@ -2128,6 +2128,7 @@ namespace SIA.Controllers
                 .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
                 .Where(d => d.ANIO_AI == anio)
                 .Include(d => d.Detalles)
+                .Include(d => d.OrientacionCalificacion.Where(s => s.ESTADO == "A"))
                 .Include(d => d.Documentos)
                 .ToListAsync();
 
@@ -2203,14 +2204,36 @@ namespace SIA.Controllers
                 var hallazgo = await _context.MG_HALLAZGOS
                .Where(d => d.CODIGO_HALLAZGO == id)
                .Include(d => d.Detalles.OrderBy(o => o.TIPO))
+               .Include(d => d.OrientacionCalificacion.Where(o => o.ESTADO == "A"))
+               .Include(d => d.Documentos)
                .FirstOrDefaultAsync();
-
+                ViewBag.DOCUMENTOS = hallazgo.Documentos;
                 ViewBag.HALLAZGO = hallazgo;
             }
 
             return View();
         }
 
+        [HttpPost]
+        public async Task<JsonResult> EliminarDocumento(int codigo)
+        {
+            try
+            {
+                // Lógica para eliminar el documento de la base de datos usando el código proporcionado
+                var documento = await _context.MG_HALLAZGOS_DOCUMENTOS.FindAsync(codigo);
+                if (documento != null)
+                {
+                    _context.MG_HALLAZGOS_DOCUMENTOS.Remove(documento);
+                    await _context.SaveChangesAsync();
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Documento no encontrado." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
 
         /// <summary>
         /// Metodo para decodificar los datos codificados de la URL

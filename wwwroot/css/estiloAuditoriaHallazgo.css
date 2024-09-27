@@ -234,3 +234,26 @@
     border-color: #842029;
     color: #842029;
 }
+
+
+.pdf-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+    .pdf-item img {
+        width: auto;
+        height: 50px;
+        margin-right: 20px;
+    }
+
+    .pdf-item a {
+        text-decoration: none;
+        color: black;
+    }
+
+        .pdf-item a:hover {
+            text-decoration: underline;
+        }

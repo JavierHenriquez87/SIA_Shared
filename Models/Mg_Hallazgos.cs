@@ -31,5 +31,6 @@ namespace SIA.Models
 
         public ICollection<Mg_hallazgos_detalles> Detalles { get; set; }
         public ICollection<Mg_hallazgos_documentos> Documentos { get; set; }
+        public ICollection<Mg_orientacion_calificacion> OrientacionCalificacion { get; set; }
     }
 }

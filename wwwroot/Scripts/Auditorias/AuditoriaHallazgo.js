@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Objeto JavaScript para almacenar los valores del formulario
     formularioData = {
         hallazgo: "",
-        calificacion: "",
+        calificacion: "1",
         valor_muestra: "",
         muestra_inconsistente: "",
         nivel_riesgo: "1",
@@ -78,6 +78,25 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('criterio').value = hallazgo.CRITERIO;
         formularioData.criterio = hallazgo.CRITERIO;
 
+        if (hallazgo.CALIFICACION == 1) {
+            document.getElementById('cuantitativa').click();
+        }
+        else if (hallazgo.CALIFICACION == 2)
+        {
+            document.getElementById('cualitativa').click();
+            var riesgo = hallazgo.NIVEL_RIESGO == 1 ? "bajo" : hallazgo.NIVEL_RIESGO == 2 ? "medio" : "alto";
+            document.querySelector('#riskLevels .card[data-risk="' + riesgo + '"]').click();
+            var textoOrientacion = "";
+            hallazgo.OrientacionCalificacion.forEach((orientacion, index) => {
+                textoOrientacion += orientacion.ORIENTACION;
+
+                // Agregar salto de línea solo si no es el último elemento
+                if (index < hallazgo.OrientacionCalificacion.length - 1) {
+                    textoOrientacion += " \n \n";
+                }
+            });
+            document.getElementById('orientacion_calificacion').value = textoOrientacion;
+        }
 
         // Filtrar por tipo 'causa' y 'causa-1'
         var causas = hallazgo.Detalles.filter(detalle => detalle.TIPO.startsWith("causa"));
@@ -742,4 +761,50 @@ function MostrarCuantitativo() {
     $('#divcualitativo').hide();
 }
 
-
+function EliminarDocumento(codigoHallazgoDocumento) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminarlo!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/Auditorias/EliminarDocumento',
+                type: 'POST',
+                data: {
+                    codigo: codigoHallazgoDocumento
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Mostrar el mensaje de éxito
+                        Swal.fire(
+                            '¡Eliminado!',
+                            'Documento eliminado con éxito.',
+                            'success'
+                        );
+                        $('#documento-' + codigoHallazgoDocumento).hide(); // Ocultar el documento
+                    } else {
+                        // Mostrar un mensaje de error
+                        Swal.fire(
+                            'Error',
+                            'Error al eliminar el documento: ' + response.message,
+                            'error'
+                        );
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire(
+                        'Error',
+                        'Error en la solicitud: ' + error,
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+}
