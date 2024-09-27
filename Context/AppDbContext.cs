@@ -43,7 +43,7 @@ namespace SIA.Context
             modelBuilder.Entity<Mg_Hallazgos>()
                 .HasMany(h => h.OrientacionCalificacion)
                 .WithOne(d => d.Hallazgo)
-                .HasForeignKey(d => d.NIVEL_RIESGO) 
+                .HasForeignKey(d => d.NIVEL_RIESGO)
                 .HasPrincipalKey(h => h.NIVEL_RIESGO);
 
             modelBuilder.Entity<Mg_secciones>()
@@ -102,5 +102,6 @@ namespace SIA.Context
         public virtual DbSet<Mg_hallazgos_detalles> MG_HALLAZGOS_DETALLES { get; set; }
         public virtual DbSet<Mg_hallazgos_documentos> MG_HALLAZGOS_DOCUMENTOS { get; set; }
         public virtual DbSet<Mg_orientacion_calificacion> MG_ORIENTACION_CALIFICACION { get; set; }
+        public virtual DbSet<Mg_objetivos_internos> MG_OBJETIVOS_INTERNOS { get; set; }
     }
 }

@@ -3,6 +3,7 @@
 @{
     var actividadConDetalles = ViewBag.DETALLES_ACTIVIDAD;
     var params_base64 = ViewBag.PARAMS_BASE64;
+    var objetivos_internos = ViewBag.OBJETIVOSINTERNOS as List<SIA.Models.Mg_objetivos_internos>;
 
     ViewBag.Title = "Resultados en Programa de Trabajo";
     ViewBag.pTitle = "RESULTADOS EN PROGRAMA DE TRABAJO";
@@ -13,14 +14,14 @@
     string styleCuantitativa = "";
     string styleCualitativa = "display: none;";
 
-
     string hallazgoJson = null;
+
     if (ViewBag.HALLAZGO != null)
     {
         hallazgoJson = JsonConvert.SerializeObject(ViewBag.HALLAZGO, new JsonSerializerSettings
-        {
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects
-        });
+                {
+                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                });
     }
 }
 
@@ -50,6 +51,7 @@
                 @* Aqui estan los parametros encriptados de la url *@
                 <input type="hidden" value="@params_base64" id="paramsah_base64" />
                 <form>
+                    <input type="hidden" id="codigo_hallazgo" name="codigo_hallazgo" />
                     <div class="form-group">
                         <label for="hallazgo">Hallazgo</label>
                         <textarea id="hallazgo" name="hallazgo" rows="3" placeholder="Escribir..."></textarea>
@@ -162,7 +164,11 @@
                 <div class="form-group">
                     <label for="objetivo_control_interno">Objetivo de Control Interno</label>
                     <select id="objetivo_control_interno">
-                        <option>Seleccionar...</option>
+                        <option value="">- Seleccionar -</option>
+                        @foreach (var item in objetivos_internos)
+                        {
+                            <option value="@item.CODIGO_OBJINT">@item.DESCRIPCION</option>
+                        }
                     </select>
                 </div>
                 <div class="form-group">

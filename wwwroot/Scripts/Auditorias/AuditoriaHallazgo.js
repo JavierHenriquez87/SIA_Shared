@@ -14,6 +14,7 @@ let formularioData = {};
 document.addEventListener("DOMContentLoaded", function () {
     // Objeto JavaScript para almacenar los valores del formulario
     formularioData = {
+        codigo_hallazgo: "0",
         hallazgo: "",
         calificacion: "1",
         valor_muestra: "",
@@ -58,6 +59,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Cargar la informacion si el registro sera editable
     if (hallazgo !== null) {
+        document.getElementById('codigo_hallazgo').value = hallazgo.CODIGO_HALLAZGO;
+        formularioData.codigo_hallazgo = hallazgo.CODIGO_HALLAZGO;
+
         document.getElementById('hallazgo').value = hallazgo.HALLAZGO;
         formularioData.hallazgo = hallazgo.HALLAZGO;
 
@@ -81,8 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (hallazgo.CALIFICACION == 1) {
             document.getElementById('cuantitativa').click();
         }
-        else if (hallazgo.CALIFICACION == 2)
-        {
+        else if (hallazgo.CALIFICACION == 2) {
             document.getElementById('cualitativa').click();
             var riesgo = hallazgo.NIVEL_RIESGO == 1 ? "bajo" : hallazgo.NIVEL_RIESGO == 2 ? "medio" : "alto";
             document.querySelector('#riskLevels .card[data-risk="' + riesgo + '"]').click();
@@ -101,15 +104,13 @@ document.addEventListener("DOMContentLoaded", function () {
         // Filtrar por tipo 'causa' y 'causa-1'
         var causas = hallazgo.Detalles.filter(detalle => detalle.TIPO.startsWith("causa"));
         var count = 1;
-        causas.forEach(causa => {
-            if (count > 1) {
-                document.getElementById("btn_causa").click();
-            }
-            document.getElementById(causa.TIPO).value = causa.DESCRIPCION;
 
-            const causaExistente = formularioData.causageneral.find(c => c.id === causa.TIPO);
-            if (causaExistente) {
-                causaExistente.causa = causa.DESCRIPCION;
+
+        causas.forEach(causa => {
+            if (count == 1) {
+                document.getElementById("causa").value = causa.DESCRIPCION;
+            } else {
+                agregarInputCausa(causa);
             }
 
             count++;
@@ -166,8 +167,9 @@ document.addEventListener("DOMContentLoaded", function () {
             count++;
         });
 
-        console.log(formularioData);
     }
+
+    console.log(formularioData);
 });
 
 // Función para manejar el cambio en los inputs
@@ -264,6 +266,20 @@ document.querySelector('.upload-area').addEventListener('click', function () {
 let causaCount = 1; // Inicializar un contador
 
 document.getElementById('btn_causa').addEventListener('click', function () {
+    // Antes de crear un nuevo input, busca el último ID "causa-x" existente en el DOM
+    const existingInputs = document.querySelectorAll('[id^="causa-"]'); // Selecciona todos los inputs con id que empiezan con "causa-"
+
+    if (existingInputs.length > 0) {
+        // Obtener el mayor número de los IDs existentes
+        existingInputs.forEach(input => {
+            const idParts = input.id.split('-'); // Dividir el ID por el guion
+            const numberPart = parseInt(idParts[1], 10); // Obtener el número
+            if (numberPart >= causaCount) {
+                causaCount = numberPart + 1; // Aumentar el contador para evitar duplicados
+            }
+        });
+    }
+
     // Crear un contenedor div para el nuevo input y el botón de eliminar
     const inputContainer = document.createElement('div');
     inputContainer.classList.add('input-group');
@@ -299,21 +315,34 @@ document.getElementById('btn_causa').addEventListener('click', function () {
     const container = document.getElementById('input_causa');
     container.appendChild(inputContainer);
 
-    //Agregar al array de objetos
+    // Agregar al array de objetos
     formularioData.causageneral.push({ id: uniqueId, causa: "" });
 
     // Vincular la función handleInputChange al evento input del nuevo input
     newInput.addEventListener('change', handleInputChange);
 
-    // Incrementar el contador
+    // Incrementar el contador para el próximo input
     causaCount++;
 });
-
 
 
 let efectoCount = 1; // Inicializar un contador
 
 document.getElementById('btn_efecto').addEventListener('click', function () {
+    // Antes de crear un nuevo input, busca el último ID "efecto-x" existente en el DOM
+    const existingInputs = document.querySelectorAll('[id^="efecto-"]'); // Selecciona todos los inputs con id que empiezan con "efecto-"
+
+    if (existingInputs.length > 0) {
+        // Obtener el mayor número de los IDs existentes
+        existingInputs.forEach(input => {
+            const idParts = input.id.split('-'); // Dividir el ID por el guion
+            const numberPart = parseInt(idParts[1], 10); // Obtener el número
+            if (numberPart >= efectoCount) {
+                efectoCount = numberPart + 1; // Aumentar el contador para evitar duplicados
+            }
+        });
+    }
+
     // Crear un contenedor div para el nuevo input y el botón de eliminar
     const inputContainer = document.createElement('div');
     inputContainer.classList.add('input-group');
@@ -351,6 +380,7 @@ document.getElementById('btn_efecto').addEventListener('click', function () {
 
     //Agregar al array de objetos
     formularioData.efecto.push({ id: uniqueId, efecto: "" });
+
     // Vincular la función handleInputChange al evento input del nuevo input
     newInput.addEventListener('change', handleInputChange);
 
@@ -358,9 +388,24 @@ document.getElementById('btn_efecto').addEventListener('click', function () {
     efectoCount++;
 });
 
+
 let recomendacionesCount = 1; // Inicializar un contador
 
 document.getElementById('btn_recomendaciones').addEventListener('click', function () {
+    // Antes de crear un nuevo input, busca el último ID "recomendaciones-x" existente en el DOM
+    const existingInputs = document.querySelectorAll('[id^="recomendaciones-"]'); // Selecciona todos los inputs con id que empiezan con "recomendaciones-"
+
+    if (existingInputs.length > 0) {
+        // Obtener el mayor número de los IDs existentes
+        existingInputs.forEach(input => {
+            const idParts = input.id.split('-'); // Dividir el ID por el guion
+            const numberPart = parseInt(idParts[1], 10); // Obtener el número
+            if (numberPart >= recomendacionesCount) {
+                recomendacionesCount = numberPart + 1; // Aumentar el contador para evitar duplicados
+            }
+        });
+    }
+
     // Crear un contenedor div para el nuevo input y el botón de eliminar
     const inputContainer = document.createElement('div');
     inputContainer.classList.add('input-group');
@@ -398,6 +443,7 @@ document.getElementById('btn_recomendaciones').addEventListener('click', functio
 
     //Agregar al array de objetos
     formularioData.recomendaciones.push({ id: uniqueId, recomendaciones: "" });
+
     // Vincular la función handleInputChange al evento input del nuevo input
     newInput.addEventListener('change', handleInputChange);
 
@@ -405,9 +451,24 @@ document.getElementById('btn_recomendaciones').addEventListener('click', functio
     recomendacionesCount++;
 });
 
+
 let comentariosCount = 1; // Inicializar un contador
 
 document.getElementById('btn_comentarios').addEventListener('click', function () {
+    // Antes de crear un nuevo input, busca el último ID "comentarios-x" existente en el DOM
+    const existingInputs = document.querySelectorAll('[id^="comentarios-"]'); // Selecciona todos los inputs con id que empiezan con "comentarios-"
+
+    if (existingInputs.length > 0) {
+        // Obtener el mayor número de los IDs existentes
+        existingInputs.forEach(input => {
+            const idParts = input.id.split('-'); // Dividir el ID por el guion
+            const numberPart = parseInt(idParts[1], 10); // Obtener el número
+            if (numberPart >= comentariosCount) {
+                comentariosCount = numberPart + 1; // Aumentar el contador para evitar duplicados
+            }
+        });
+    }
+
     // Crear un contenedor div para el nuevo input y el botón de eliminar
     const inputContainer = document.createElement('div');
     inputContainer.classList.add('input-group');
@@ -445,12 +506,14 @@ document.getElementById('btn_comentarios').addEventListener('click', function ()
 
     //Agregar al array de objetos
     formularioData.comentarios.push({ id: uniqueId, comentarios: "" });
+
     // Vincular la función handleInputChange al evento input del nuevo input
     newInput.addEventListener('change', handleInputChange);
 
     // Incrementar el contador
     comentariosCount++;
 });
+
 
 let accionesRequeridasCount = 1; // Inicializar un contador
 
@@ -486,63 +549,13 @@ document.querySelectorAll('.risk-level-options .card').forEach(function (element
     });
 });
 
-async function GuardarActualizarHallazgoo() {
-    console.log(formularioData);
-    var respuesta = ValidarObjeto(formularioData);
-
-    // Crear un objeto FormData
-    let formData = new FormData();
-
-    // Agregar los campos al FormData
-    formData.append("hallazgo", formularioData.hallazgo);
-    formData.append("calificacion", formularioData.calificacion);
-    formData.append("valor_muestra", formularioData.valor_muestra);
-    formData.append("muestra_inconsistente", formularioData.muestra_inconsistente);
-    formData.append("nivel_riesgo", formularioData.nivel_riesgo);
-    formData.append("condicion", formularioData.condicion);
-    formData.append("criterio", formularioData.criterio);
-    formData.append("desviacion_muestra", formularioData.desviacion_muestra);
-
-    // Agregar los arreglos (como 'causageneral', 'efecto', etc.)
-    formData.append("causageneral", JSON.stringify(formularioData.causageneral));
-    formData.append("efecto", JSON.stringify(formularioData.efecto));
-    formData.append("recomendaciones", JSON.stringify(formularioData.recomendaciones));
-    formData.append("comentarios", JSON.stringify(formularioData.comentarios));
-
-    // Agregar los archivos al FormData
-    formularioData.adjuntos.forEach(function (archivo, index) {
-        formData.append(`adjuntos[${index}]`, archivo.archivo); // Aquí usamos el archivo original
-    });
-    console.log(formularioData);
-    if (respuesta == false) {
-        Swal.fire(
-            'Advertencia',
-            'El campo Hallazgo no puede quedar vacio al guardar.',
-            'warning'
-        )
-    } else {
-        Swal.showLoading();
-
-        $.ajax({
-            method: 'POST',
-            url: '/Auditorias/GuardarHallazgos',
-            body: formData,
-            success: function (resp) {
-
-            },
-            error: function () {
-
-            }
-        });
-    }
-
-}
 
 
 // Función para enviar el formulario con FormData
 const guardarBtn = document.getElementById('guardar-btn');
 guardarBtn.addEventListener('click', function () {
     var respuesta = ValidarObjeto(formularioData);
+    var pathSave = '';
 
     if (respuesta == false) {
         Swal.fire(
@@ -556,6 +569,7 @@ guardarBtn.addEventListener('click', function () {
         let formData = new FormData();
 
         // Agregar los campos al FormData
+        formData.append("codigo_hallazgo", formularioData.codigo_hallazgo);
         formData.append("hallazgo", formularioData.hallazgo);
         formData.append("calificacion", formularioData.calificacion);
         formData.append("valor_muestra", formularioData.valor_muestra);
@@ -576,9 +590,14 @@ guardarBtn.addEventListener('click', function () {
             formData.append(`adjuntos[${index}]`, archivo.archivo); // Aquí usamos el archivo original
         });
 
+        if (formularioData.codigo_hallazgo == "0") {
+            pathSave = '/Auditorias/GuardarHallazgos';
+        } else {
+            pathSave = '/Auditorias/EditarHallazgo';
+        }
 
         // Realizar la solicitud de envío de los datos con fetch
-        fetch('/Auditorias/GuardarHallazgos', {
+        fetch(pathSave, {
             method: 'POST',
             body: formData
         })
@@ -807,4 +826,54 @@ function EliminarDocumento(codigoHallazgoDocumento) {
             });
         }
     });
+}
+
+
+// Función para agregar un input basado en causa.TIPO
+function agregarInputCausa(causa) {
+    // Crear un contenedor div para el nuevo input y el botón de eliminar
+    const inputContainer = document.createElement('div');
+    inputContainer.classList.add('input-group');
+
+    // Crear un nuevo input
+    const newInput = document.createElement('input');
+    newInput.placeholder = 'Escribir...';
+    newInput.classList.add('additional-input');
+
+    // Usar el id de causa.TIPO para el nuevo input
+    newInput.id = causa.TIPO; // Usar el id del objeto `causa`
+    newInput.name = causa.TIPO; // Asignar el mismo valor al atributo name
+
+    // Asignar el valor si ya existe una descripción
+    newInput.value = causa.DESCRIPCION || '';
+
+    // Crear un botón de eliminar
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.classList.add('remove-button');
+    removeButton.innerHTML = '<i class="bx bx-trash"></i>'; // Usar un ícono de basura si lo deseas
+
+    // Añadir evento para eliminar el input cuando se haga clic en el botón
+    removeButton.addEventListener('click', function () {
+        inputContainer.remove();
+        // Eliminar del array de objetos
+        formularioData.causageneral = formularioData.causageneral.filter(c => c.id !== causa.TIPO);
+    });
+
+    // Añadir el input y el botón de eliminar al contenedor div
+    inputContainer.appendChild(newInput);
+    inputContainer.appendChild(removeButton);
+
+    // Añadir el contenedor div al contenedor principal
+    const container = document.getElementById('input_causa');
+    container.appendChild(inputContainer);
+
+    // Verificar si ya existe la causa en el array, sino, agregarla
+    const causaExistente = formularioData.causageneral.find(c => c.id === causa.TIPO);
+    if (!causaExistente) {
+        formularioData.causageneral.push({ id: causa.TIPO, causa: newInput.value });
+    }
+
+    // Vincular la función handleInputChange al evento input del nuevo input
+    newInput.addEventListener('change', handleInputChange);
 }

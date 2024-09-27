@@ -217,23 +217,23 @@
     margin-bottom: 10px !important;
 }
 
-.card.highlight-bajo {
-    background-color: #d1e7dd; /* Verde claro para "Bajo" */
-    border-color: #0f5132;
-    color: #0f5132;
-}
+    .card.highlight-bajo {
+        background-color: #d1e7dd; /* Verde claro para "Bajo" */
+        border-color: #0f5132;
+        color: #0f5132;
+    }
 
-.card.highlight-medio {
-    background-color: #fff3cd; /* Amarillo claro para "Medio" */
-    border-color: #856404;
-    color: #856404;
-}
+    .card.highlight-medio {
+        background-color: #fff3cd; /* Amarillo claro para "Medio" */
+        border-color: #856404;
+        color: #856404;
+    }
 
-.card.highlight-alto {
-    background-color: #f8d7da; /* Rojo claro para "Alto" */
-    border-color: #842029;
-    color: #842029;
-}
+    .card.highlight-alto {
+        background-color: #f8d7da; /* Rojo claro para "Alto" */
+        border-color: #842029;
+        color: #842029;
+    }
 
 
 .pdf-item {

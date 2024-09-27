@@ -2172,6 +2172,11 @@ namespace SIA.Controllers
                     d.ANIO_AI == anio))
                 .ToListAsync();
 
+
+            var objetivosinternos = await _context.MG_OBJETIVOS_INTERNOS
+                .Where(a => a.ESTADO == "A")
+                .ToListAsync();
+
             // Ejemplo de uso
             if (detalles_actividad != null)
             {
@@ -2198,42 +2203,24 @@ namespace SIA.Controllers
 
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
             ViewBag.PARAMS_BASE64 = params_base64_hallazgos;
+            ViewBag.OBJETIVOSINTERNOS = objetivosinternos;
 
             if (id > 0)
             {
                 var hallazgo = await _context.MG_HALLAZGOS
-               .Where(d => d.CODIGO_HALLAZGO == id)
-               .Include(d => d.Detalles.OrderBy(o => o.TIPO))
-               .Include(d => d.OrientacionCalificacion.Where(o => o.ESTADO == "A"))
-               .Include(d => d.Documentos)
-               .FirstOrDefaultAsync();
+                               .Where(d => d.CODIGO_HALLAZGO == id)
+                               .Include(d => d.Detalles.OrderBy(o => o.TIPO))
+                               .Include(d => d.OrientacionCalificacion.Where(o => o.ESTADO == "A"))
+                               .Include(d => d.Documentos)
+                               .FirstOrDefaultAsync();
                 ViewBag.DOCUMENTOS = hallazgo.Documentos;
+
                 ViewBag.HALLAZGO = hallazgo;
             }
 
             return View();
         }
 
-        [HttpPost]
-        public async Task<JsonResult> EliminarDocumento(int codigo)
-        {
-            try
-            {
-                // Lógica para eliminar el documento de la base de datos usando el código proporcionado
-                var documento = await _context.MG_HALLAZGOS_DOCUMENTOS.FindAsync(codigo);
-                if (documento != null)
-                {
-                    _context.MG_HALLAZGOS_DOCUMENTOS.Remove(documento);
-                    await _context.SaveChangesAsync();
-                    return Json(new { success = true });
-                }
-                return Json(new { success = false, message = "Documento no encontrado." });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
 
         /// <summary>
         /// Metodo para decodificar los datos codificados de la URL
@@ -2247,7 +2234,7 @@ namespace SIA.Controllers
         }
 
         /// <summary>
-        /// Guardar actividades asignadas a un usuario
+        /// Guardar Hallazgo
         /// </summary>
         /// <param name="DataAI"></param>
         /// <returns></returns>
@@ -2490,6 +2477,461 @@ namespace SIA.Controllers
 
             return new JsonResult("Ok");
         }
+
+
+        /// <summary>
+        /// Editar un hallazgo
+        /// </summary>
+        /// <param name="DataAI"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> EditarHallazgo(IFormCollection formularioData)
+        {
+            try
+            {
+                int codigo_hallazgo = int.Parse(formularioData["codigo_hallazgo"].ToString());
+                int nivel_riesgo = 1;
+                int vm = 0;
+                int mi = 0;
+                double desviacion = 0;
+                // Obtener calificación
+                string calificacionStr = formularioData["calificacion"];
+                int? calificacion = string.IsNullOrEmpty(calificacionStr) ? (int?)null : int.Parse(calificacionStr);
+
+                if (calificacion == 1)
+                {
+                    string valorMuestraStr = formularioData["valor_muestra"];
+                    vm = string.IsNullOrEmpty(valorMuestraStr) ? 0 : int.Parse(valorMuestraStr);
+                    string muestraInconsistenteStr = formularioData["muestra_inconsistente"];
+                    mi = string.IsNullOrEmpty(muestraInconsistenteStr) ? 0 : int.Parse(muestraInconsistenteStr);
+
+                    if (vm == 0)
+                    {
+                        nivel_riesgo = 1;
+                    }
+                    else
+                    {
+                        desviacion = Math.Round(((double)mi / vm) * 100, 2); // Redondea a 2 decimales
+
+                        if (desviacion <= 5.1)
+                        {
+                            nivel_riesgo = 1;
+                        }
+                        else if (desviacion > 5.1 && desviacion <= 9.99)
+                        {
+                            nivel_riesgo = 2;
+                        }
+                        else
+                        {
+                            nivel_riesgo = 3;
+                        }
+                    }
+                }
+                else
+                {
+                    string nivelRiesgoStr = formularioData["nivel_riesgo"];
+                    nivel_riesgo = string.IsNullOrEmpty(nivelRiesgoStr) ? 1 : int.Parse(nivelRiesgoStr);
+                }
+
+                var Hallazgo = await _context.MG_HALLAZGOS
+                                    .Where(u => u.CODIGO_HALLAZGO == codigo_hallazgo)
+                                    .FirstOrDefaultAsync();
+
+                Hallazgo.HALLAZGO = formularioData["hallazgo"];
+                Hallazgo.CALIFICACION = calificacion;
+                Hallazgo.VALOR_MUESTRA = vm;
+                Hallazgo.MUESTRA_INCONSISTENTE = mi;
+                Hallazgo.DESVIACION_MUESTRA = desviacion;
+                Hallazgo.NIVEL_RIESGO = nivel_riesgo;
+                Hallazgo.CONDICION = formularioData["condicion"];
+                Hallazgo.CRITERIO = formularioData["criterio"];
+                Hallazgo.FECHA_MODIFICACION = DateTime.Now;
+                Hallazgo.MODIFICADO_POR = HttpContext.Session.GetString("user");
+
+                _context.Update(Hallazgo);
+
+                //Guardamos cambios en la tabla de Hallazgos
+                await _context.SaveChangesAsync();
+
+
+                // Crear la lista de detalles
+                List<Mg_hallazgos_detalles> detalles = new List<Mg_hallazgos_detalles>();
+
+
+                //**************************************************************************************
+                //Borramos las causas actuales y luego las agregamos nuevamente
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        // Primero, obtener los registros que deben eliminarse
+                        var causasAEliminar = await _context.MG_HALLAZGOS_DETALLES
+                            .Where(d => d.CODIGO_HALLAZGO == codigo_hallazgo && d.TIPO.StartsWith("causa-"))
+                            .ToListAsync();
+
+                        // Eliminar esos registros
+                        _context.MG_HALLAZGOS_DETALLES.RemoveRange(causasAEliminar);
+
+                        // Guardar los cambios en la base de datos para completar la eliminación
+                        await _context.SaveChangesAsync();
+
+                        // Confirmar la transacción solo para esta eliminación
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        // Si ocurre un error, deshacer la transacción
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+
+                // Obtener el JSON que representa el array 'causageneral'
+                string causageneralJson = formularioData["causageneral"];
+
+                // Deserializar el JSON a una lista de diccionarios
+                var causageneral = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(causageneralJson);
+
+                foreach (var causa in causageneral)
+                {
+                    var causasObj = await _context.MG_HALLAZGOS_DETALLES
+                        .Where(u => u.CODIGO_HALLAZGO == codigo_hallazgo)
+                        .Where(u => u.TIPO == causa["id"])
+                        .FirstOrDefaultAsync();
+
+                    if (causasObj != null)
+                    {
+                        // Actualiza el registro existente
+                        causasObj.DESCRIPCION = causa["causa"];
+
+                        _context.Update(causasObj);
+                    }
+                    else
+                    {
+                        // Crea un nuevo registro si no existe
+                        causasObj = new Mg_hallazgos_detalles
+                        {
+                            CODIGO_HALLAZGO = codigo_hallazgo,
+                            TIPO = causa["id"],
+                            DESCRIPCION = causa["causa"]
+                        };
+
+                        _context.Add(causasObj);
+                    }
+
+                    //Guardamos cambios en la tabla
+                    await _context.SaveChangesAsync();
+                }
+
+
+                //**************************************************************************************
+                //Borramos las recomendaciones actuales y luego las agregamos nuevamente
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        // Primero, obtener los registros que deben eliminarse
+                        var recomendacionesAEliminar = await _context.MG_HALLAZGOS_DETALLES
+                            .Where(d => d.CODIGO_HALLAZGO == codigo_hallazgo && d.TIPO.StartsWith("recomendaciones-"))
+                            .ToListAsync();
+
+                        // Eliminar esos registros
+                        _context.MG_HALLAZGOS_DETALLES.RemoveRange(recomendacionesAEliminar);
+
+                        // Guardar los cambios en la base de datos para completar la eliminación
+                        await _context.SaveChangesAsync();
+
+                        // Confirmar la transacción solo para esta eliminación
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        // Si ocurre un error, deshacer la transacción
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+
+                // Obtener el JSON que representa el array 'recomendaciones'
+                string recomendacionesJson = formularioData["recomendaciones"];
+
+                // Deserializar el JSON a una lista de diccionarios
+                var recomendaciones = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(recomendacionesJson);
+
+                foreach (var recom in recomendaciones)
+                {
+                    var recomendacionObj = await _context.MG_HALLAZGOS_DETALLES
+                        .Where(u => u.CODIGO_HALLAZGO == codigo_hallazgo)
+                        .Where(u => u.TIPO == recom["id"])
+                        .FirstOrDefaultAsync();
+
+                    if (recomendacionObj != null)
+                    {
+                        // Actualiza el registro existente
+                        recomendacionObj.DESCRIPCION = recom["recomendaciones"];
+
+                        _context.Update(recomendacionObj);
+                    }
+                    else
+                    {
+                        // Crea un nuevo registro si no existe
+                        recomendacionObj = new Mg_hallazgos_detalles
+                        {
+                            CODIGO_HALLAZGO = codigo_hallazgo,
+                            TIPO = recom["id"],
+                            DESCRIPCION = recom["recomendaciones"]
+                        };
+
+                        _context.Add(recomendacionObj);
+                    }
+
+                    //Guardamos cambios en la tabla
+                    await _context.SaveChangesAsync();
+                }
+
+
+                //**************************************************************************************
+                //Borramos las efecto actuales y luego las agregamos nuevamente
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        // Primero, obtener los registros que deben eliminarse
+                        var efectoAEliminar = await _context.MG_HALLAZGOS_DETALLES
+                            .Where(d => d.CODIGO_HALLAZGO == codigo_hallazgo && d.TIPO.StartsWith("efecto-"))
+                            .ToListAsync();
+
+                        // Eliminar esos registros
+                        _context.MG_HALLAZGOS_DETALLES.RemoveRange(efectoAEliminar);
+
+                        // Guardar los cambios en la base de datos para completar la eliminación
+                        await _context.SaveChangesAsync();
+
+                        // Confirmar la transacción solo para esta eliminación
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        // Si ocurre un error, deshacer la transacción
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+
+                // Obtener el JSON que representa el array 'efecto'
+                string efectoJson = formularioData["efecto"];
+
+                // Deserializar el JSON a una lista de diccionarios
+                var efecto = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(efectoJson);
+
+                foreach (var efect in efecto)
+                {
+                    var efectoObj = await _context.MG_HALLAZGOS_DETALLES
+                        .Where(u => u.CODIGO_HALLAZGO == codigo_hallazgo)
+                        .Where(u => u.TIPO == efect["id"])
+                        .FirstOrDefaultAsync();
+
+                    if (efectoObj != null)
+                    {
+                        // Actualiza el registro existente
+                        efectoObj.DESCRIPCION = efect["efecto"];
+
+                        _context.Update(efectoObj);
+                    }
+                    else
+                    {
+                        // Crea un nuevo registro si no existe
+                        efectoObj = new Mg_hallazgos_detalles
+                        {
+                            CODIGO_HALLAZGO = codigo_hallazgo,
+                            TIPO = efect["id"],
+                            DESCRIPCION = efect["efecto"]
+                        };
+
+                        _context.Add(efectoObj);
+                    }
+
+                    //Guardamos cambios en la tabla
+                    await _context.SaveChangesAsync();
+                }
+
+
+
+                //**************************************************************************************
+                //Borramos las comentarios actuales y luego las agregamos nuevamente
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        // Primero, obtener los registros que deben eliminarse
+                        var comentariosAEliminar = await _context.MG_HALLAZGOS_DETALLES
+                            .Where(d => d.CODIGO_HALLAZGO == codigo_hallazgo && d.TIPO.StartsWith("comentarios-"))
+                            .ToListAsync();
+
+                        // Eliminar esos registros
+                        _context.MG_HALLAZGOS_DETALLES.RemoveRange(comentariosAEliminar);
+
+                        // Guardar los cambios en la base de datos para completar la eliminación
+                        await _context.SaveChangesAsync();
+
+                        // Confirmar la transacción solo para esta eliminación
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception)
+                    {
+                        // Si ocurre un error, deshacer la transacción
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+
+                // Obtener el JSON que representa el array 'efecto'
+                string comentariosJson = formularioData["comentarios"];
+
+                // Deserializar el JSON a una lista de diccionarios
+                var comentarios = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(comentariosJson);
+
+                foreach (var coment in comentarios)
+                {
+                    var comentariosObj = await _context.MG_HALLAZGOS_DETALLES
+                        .Where(u => u.CODIGO_HALLAZGO == codigo_hallazgo)
+                        .Where(u => u.TIPO == coment["id"])
+                        .FirstOrDefaultAsync();
+
+                    if (comentariosObj != null)
+                    {
+                        // Actualiza el registro existente
+                        comentariosObj.DESCRIPCION = coment["comentarios"];
+
+                        _context.Update(comentariosObj);
+                    }
+                    else
+                    {
+                        // Crea un nuevo registro si no existe
+                        comentariosObj = new Mg_hallazgos_detalles
+                        {
+                            CODIGO_HALLAZGO = codigo_hallazgo,
+                            TIPO = coment["id"],
+                            DESCRIPCION = coment["comentarios"]
+                        };
+
+                        _context.Add(comentariosObj);
+                    }
+
+                    //Guardamos cambios en la tabla
+                    await _context.SaveChangesAsync();
+                }
+
+
+                _context.AddRange(detalles);
+
+                // Guardamos todos los cambios
+                await _context.SaveChangesAsync();
+
+
+                //**************************************************************************************
+                // Guardar archivos adjuntos si se han enviado
+                var archivosAdjuntos = formularioData.Files;
+                var directorio = Path.Combine("wwwroot", "Archivos", "Auditorias", "Documentos");
+
+                // Verificar si el directorio existe, si no, crearlo
+                if (!Directory.Exists(directorio))
+                {
+                    Directory.CreateDirectory(directorio);
+                }
+
+                List<Mg_hallazgos_documentos> listadoDocumentos = new List<Mg_hallazgos_documentos>();
+
+                foreach (var archivo in archivosAdjuntos)
+                {
+                    if (archivo.Length > 0)
+                    {
+                        int mayorCodigoHallazgo = await _context.MG_HALLAZGOS_DOCUMENTOS
+                      .MaxAsync(o => (int?)o.CODIGO_HALLAZGO_DOCUMENTO) ?? 0;
+
+                        // Generar un número aleatorio de 5 dígitos
+                        var random = new Random();
+                        var randomNumber = random.Next(10000, 99999);
+                        //Nombre del archivo que con el que se guarda
+                        var FileName = randomNumber + "_" + archivo.FileName;
+
+                        var filePath = Path.Combine(directorio, FileName);
+                        long fileSizeInKB = archivo.Length / 1024;
+
+                        var documento = new Mg_hallazgos_documentos
+                        {
+                            CODIGO_HALLAZGO_DOCUMENTO = mayorCodigoHallazgo + 1,
+                            NOMBRE_DOCUMENTO = FileName,
+                            CODIGO_HALLAZGO = codigo_hallazgo,
+                            PESO = fileSizeInKB + " KB",
+                            FECHA_CREACION = DateTime.Now,
+                            CREADO_POR = HttpContext.Session.GetString("user")
+                        };
+
+                        //listadoDocumentos.Add(documento);
+                        _context.Add(documento);
+
+                        //Guardamos el rol editado
+                        await _context.SaveChangesAsync();
+
+                        try
+                        {
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await archivo.CopyToAsync(stream);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error al guardar el archivo: {ex.Message}"); // Registro de error
+                        }
+                    }
+                }
+
+                _context.MG_HALLAZGOS_DOCUMENTOS.AddRange(listadoDocumentos);
+
+
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("Ok");
+        }
+
+
+        /// <summary>
+        /// Eliminar un documento de un Hallazgo
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> EliminarDocumento(int codigo)
+        {
+            try
+            {
+                // Lógica para eliminar el documento de la base de datos usando el código proporcionado
+                var documento = await _context.MG_HALLAZGOS_DOCUMENTOS.FindAsync(codigo);
+                if (documento != null)
+                {
+                    _context.MG_HALLAZGOS_DOCUMENTOS.Remove(documento);
+                    await _context.SaveChangesAsync();
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Documento no encontrado." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+
+
+
+
 
 
         //********************************************************************************
