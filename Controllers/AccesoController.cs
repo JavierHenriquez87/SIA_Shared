@@ -53,7 +53,7 @@ namespace SIA.Controllers
                 //Validamos si existe un usuario con las credenciales enviadas
                 var userRolApp = await _context.MG_USUARIOS_SEGUN_APP
                                     .Where(user => user.CODIGO_USUARIO == User_Login)
-                                    .Where(user => user.CLAVE_ACCESO == hashString)
+                                    //.Where(user => user.CLAVE_ACCESO == hashString)
                                     .Where(user => user.CODIGO_ESTADO == 1)
                                     .FirstOrDefaultAsync();
 

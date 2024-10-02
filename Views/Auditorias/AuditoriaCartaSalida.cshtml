@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Carta de Salida";
+    ViewBag.pTitle = "CARTA DE SALIDA";
+    ViewBag.pageTitle = "Auditorías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string base64PDF = TempData["Base64PDF"] as string;
+    TempData.Remove("Base64PDF");
+    var pdfGenerate = "data:application/pdf;base64," + base64PDF + "#navpanes=0&filename=doc.pdf";
+}
+<style type="text/css">
+    iframe {
+        width: 100%;
+        height: 700px;
+        border: none;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+    }
+</style>
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="row" style="display: flex; justify-content: space-between; align-items: center;">
+                    @*<h5 style="flex: 1;">@ViewBag.TITULO_AUDITORIA</h5>*@
+                    <div class="form-group" style="padding-top: 10px; display: flex; align-items: center;" id="divButtons">
+                        <button type="button" onclick="history.go(-1)" class="btn btn-primary" style="margin-right: 6px">Regresar</button>
+                        <button type="button" onclick="ModificarFecha('@ViewBag.id', 'visita')" class="btn btn-primary" style="margin-right: 6px">Modificar Fecha</button>
+                    </div>
+                </div>
+
+                <iframe src="@pdfGenerate" frameborder="0"></iframe>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/Helpers/Helpers.js"></script>
+    <script src="~/Scripts/Auditorias/AuditoriaCartaIngreso.js"></script>
+}

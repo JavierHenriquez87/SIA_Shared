@@ -9,6 +9,8 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
+using SIA.Print;
 
 namespace SIA.Controllers
 {
@@ -2550,41 +2552,24 @@ namespace SIA.Controllers
 
                 _context.Update(Hallazgo);
 
-                //Guardamos cambios en la tabla de Hallazgos
-                await _context.SaveChangesAsync();
+                var detallesAEliminar = await _context.MG_HALLAZGOS_DETALLES
+                                      .Where(d => d.CODIGO_HALLAZGO == codigo_hallazgo)
+                                      .ToListAsync();
 
+
+                //Guardamos cambios en la tabla de Hallazgos
+                if (detallesAEliminar.Any())
+                {
+                    _context.MG_HALLAZGOS_DETALLES.RemoveRange(detallesAEliminar);
+                }
+
+                // Guardamos los cambios en la base de datos
+                await _context.SaveChangesAsync();
 
                 // Crear la lista de detalles
                 List<Mg_hallazgos_detalles> detalles = new List<Mg_hallazgos_detalles>();
 
-
                 //**************************************************************************************
-                //Borramos las causas actuales y luego las agregamos nuevamente
-                using (var transaction = await _context.Database.BeginTransactionAsync())
-                {
-                    try
-                    {
-                        // Primero, obtener los registros que deben eliminarse
-                        var causasAEliminar = await _context.MG_HALLAZGOS_DETALLES
-                            .Where(d => d.CODIGO_HALLAZGO == codigo_hallazgo && d.TIPO.StartsWith("causa-"))
-                            .ToListAsync();
-
-                        // Eliminar esos registros
-                        _context.MG_HALLAZGOS_DETALLES.RemoveRange(causasAEliminar);
-
-                        // Guardar los cambios en la base de datos para completar la eliminación
-                        await _context.SaveChangesAsync();
-
-                        // Confirmar la transacción solo para esta eliminación
-                        await transaction.CommitAsync();
-                    }
-                    catch (Exception)
-                    {
-                        // Si ocurre un error, deshacer la transacción
-                        await transaction.RollbackAsync();
-                        throw;
-                    }
-                }
 
                 // Obtener el JSON que representa el array 'causageneral'
                 string causageneralJson = formularioData["causageneral"];
@@ -2594,64 +2579,16 @@ namespace SIA.Controllers
 
                 foreach (var causa in causageneral)
                 {
-                    var causasObj = await _context.MG_HALLAZGOS_DETALLES
-                        .Where(u => u.CODIGO_HALLAZGO == codigo_hallazgo)
-                        .Where(u => u.TIPO == causa["id"])
-                        .FirstOrDefaultAsync();
-
-                    if (causasObj != null)
+                    var causasObj = new Mg_hallazgos_detalles
                     {
-                        // Actualiza el registro existente
-                        causasObj.DESCRIPCION = causa["causa"];
-
-                        _context.Update(causasObj);
-                    }
-                    else
-                    {
-                        // Crea un nuevo registro si no existe
-                        causasObj = new Mg_hallazgos_detalles
-                        {
-                            CODIGO_HALLAZGO = codigo_hallazgo,
-                            TIPO = causa["id"],
-                            DESCRIPCION = causa["causa"]
-                        };
-
-                        _context.Add(causasObj);
-                    }
-
-                    //Guardamos cambios en la tabla
-                    await _context.SaveChangesAsync();
+                        CODIGO_HALLAZGO = codigo_hallazgo,
+                        DESCRIPCION = causa["causa"], // Acceder al campo 'causa'
+                        TIPO = causa["id"]            // Acceder al campo 'id'
+                    };
+                    detalles.Add(causasObj);
                 }
-
 
                 //**************************************************************************************
-                //Borramos las recomendaciones actuales y luego las agregamos nuevamente
-                using (var transaction = await _context.Database.BeginTransactionAsync())
-                {
-                    try
-                    {
-                        // Primero, obtener los registros que deben eliminarse
-                        var recomendacionesAEliminar = await _context.MG_HALLAZGOS_DETALLES
-                            .Where(d => d.CODIGO_HALLAZGO == codigo_hallazgo && d.TIPO.StartsWith("recomendaciones-"))
-                            .ToListAsync();
-
-                        // Eliminar esos registros
-                        _context.MG_HALLAZGOS_DETALLES.RemoveRange(recomendacionesAEliminar);
-
-                        // Guardar los cambios en la base de datos para completar la eliminación
-                        await _context.SaveChangesAsync();
-
-                        // Confirmar la transacción solo para esta eliminación
-                        await transaction.CommitAsync();
-                    }
-                    catch (Exception)
-                    {
-                        // Si ocurre un error, deshacer la transacción
-                        await transaction.RollbackAsync();
-                        throw;
-                    }
-                }
-
                 // Obtener el JSON que representa el array 'recomendaciones'
                 string recomendacionesJson = formularioData["recomendaciones"];
 
@@ -2660,64 +2597,16 @@ namespace SIA.Controllers
 
                 foreach (var recom in recomendaciones)
                 {
-                    var recomendacionObj = await _context.MG_HALLAZGOS_DETALLES
-                        .Where(u => u.CODIGO_HALLAZGO == codigo_hallazgo)
-                        .Where(u => u.TIPO == recom["id"])
-                        .FirstOrDefaultAsync();
-
-                    if (recomendacionObj != null)
+                    var recomendacionObj = new Mg_hallazgos_detalles
                     {
-                        // Actualiza el registro existente
-                        recomendacionObj.DESCRIPCION = recom["recomendaciones"];
-
-                        _context.Update(recomendacionObj);
-                    }
-                    else
-                    {
-                        // Crea un nuevo registro si no existe
-                        recomendacionObj = new Mg_hallazgos_detalles
-                        {
-                            CODIGO_HALLAZGO = codigo_hallazgo,
-                            TIPO = recom["id"],
-                            DESCRIPCION = recom["recomendaciones"]
-                        };
-
-                        _context.Add(recomendacionObj);
-                    }
-
-                    //Guardamos cambios en la tabla
-                    await _context.SaveChangesAsync();
+                        CODIGO_HALLAZGO = codigo_hallazgo,
+                        DESCRIPCION = recom["recomendaciones"], // Acceder al campo 'recomendaciones'
+                        TIPO = recom["id"]            // Acceder al campo 'id'
+                    };
+                    detalles.Add(recomendacionObj);
                 }
-
 
                 //**************************************************************************************
-                //Borramos las efecto actuales y luego las agregamos nuevamente
-                using (var transaction = await _context.Database.BeginTransactionAsync())
-                {
-                    try
-                    {
-                        // Primero, obtener los registros que deben eliminarse
-                        var efectoAEliminar = await _context.MG_HALLAZGOS_DETALLES
-                            .Where(d => d.CODIGO_HALLAZGO == codigo_hallazgo && d.TIPO.StartsWith("efecto-"))
-                            .ToListAsync();
-
-                        // Eliminar esos registros
-                        _context.MG_HALLAZGOS_DETALLES.RemoveRange(efectoAEliminar);
-
-                        // Guardar los cambios en la base de datos para completar la eliminación
-                        await _context.SaveChangesAsync();
-
-                        // Confirmar la transacción solo para esta eliminación
-                        await transaction.CommitAsync();
-                    }
-                    catch (Exception)
-                    {
-                        // Si ocurre un error, deshacer la transacción
-                        await transaction.RollbackAsync();
-                        throw;
-                    }
-                }
-
                 // Obtener el JSON que representa el array 'efecto'
                 string efectoJson = formularioData["efecto"];
 
@@ -2726,65 +2615,17 @@ namespace SIA.Controllers
 
                 foreach (var efect in efecto)
                 {
-                    var efectoObj = await _context.MG_HALLAZGOS_DETALLES
-                        .Where(u => u.CODIGO_HALLAZGO == codigo_hallazgo)
-                        .Where(u => u.TIPO == efect["id"])
-                        .FirstOrDefaultAsync();
-
-                    if (efectoObj != null)
+                    var efectoObj = new Mg_hallazgos_detalles
                     {
-                        // Actualiza el registro existente
-                        efectoObj.DESCRIPCION = efect["efecto"];
-
-                        _context.Update(efectoObj);
-                    }
-                    else
-                    {
-                        // Crea un nuevo registro si no existe
-                        efectoObj = new Mg_hallazgos_detalles
-                        {
-                            CODIGO_HALLAZGO = codigo_hallazgo,
-                            TIPO = efect["id"],
-                            DESCRIPCION = efect["efecto"]
-                        };
-
-                        _context.Add(efectoObj);
-                    }
-
-                    //Guardamos cambios en la tabla
-                    await _context.SaveChangesAsync();
+                        CODIGO_HALLAZGO = codigo_hallazgo,
+                        DESCRIPCION = efect["efecto"], // Acceder al campo 'efecto'
+                        TIPO = efect["id"]            // Acceder al campo 'id'
+                    };
+                    detalles.Add(efectoObj);
                 }
-
 
 
                 //**************************************************************************************
-                //Borramos las comentarios actuales y luego las agregamos nuevamente
-                using (var transaction = await _context.Database.BeginTransactionAsync())
-                {
-                    try
-                    {
-                        // Primero, obtener los registros que deben eliminarse
-                        var comentariosAEliminar = await _context.MG_HALLAZGOS_DETALLES
-                            .Where(d => d.CODIGO_HALLAZGO == codigo_hallazgo && d.TIPO.StartsWith("comentarios-"))
-                            .ToListAsync();
-
-                        // Eliminar esos registros
-                        _context.MG_HALLAZGOS_DETALLES.RemoveRange(comentariosAEliminar);
-
-                        // Guardar los cambios en la base de datos para completar la eliminación
-                        await _context.SaveChangesAsync();
-
-                        // Confirmar la transacción solo para esta eliminación
-                        await transaction.CommitAsync();
-                    }
-                    catch (Exception)
-                    {
-                        // Si ocurre un error, deshacer la transacción
-                        await transaction.RollbackAsync();
-                        throw;
-                    }
-                }
-
                 // Obtener el JSON que representa el array 'efecto'
                 string comentariosJson = formularioData["comentarios"];
 
@@ -2793,35 +2634,14 @@ namespace SIA.Controllers
 
                 foreach (var coment in comentarios)
                 {
-                    var comentariosObj = await _context.MG_HALLAZGOS_DETALLES
-                        .Where(u => u.CODIGO_HALLAZGO == codigo_hallazgo)
-                        .Where(u => u.TIPO == coment["id"])
-                        .FirstOrDefaultAsync();
-
-                    if (comentariosObj != null)
+                    var comentariosObj = new Mg_hallazgos_detalles
                     {
-                        // Actualiza el registro existente
-                        comentariosObj.DESCRIPCION = coment["comentarios"];
-
-                        _context.Update(comentariosObj);
-                    }
-                    else
-                    {
-                        // Crea un nuevo registro si no existe
-                        comentariosObj = new Mg_hallazgos_detalles
-                        {
-                            CODIGO_HALLAZGO = codigo_hallazgo,
-                            TIPO = coment["id"],
-                            DESCRIPCION = coment["comentarios"]
-                        };
-
-                        _context.Add(comentariosObj);
-                    }
-
-                    //Guardamos cambios en la tabla
-                    await _context.SaveChangesAsync();
+                        CODIGO_HALLAZGO = codigo_hallazgo,
+                        DESCRIPCION = coment["comentarios"], // Acceder al campo 'comentarios'
+                        TIPO = coment["id"]            // Acceder al campo 'id'
+                    };
+                    detalles.Add(comentariosObj);
                 }
-
 
                 _context.AddRange(detalles);
 
@@ -2970,6 +2790,119 @@ namespace SIA.Controllers
         [Route("Auditorias/AuditoriaResultados/AuditoriaResultadosInforme")]
         public IActionResult AuditoriaResultadosInforme()
         {
+            return View();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// Mostrar la carta de ingreso
+        /// </summary>
+        /// <returns></returns>
+        [Route("Auditorias/AuditoriaCartaIngreso/")]
+        public async Task<IActionResult> AuditoriaCartaIngresoAsync(string id)
+        {
+            ViewBag.id = id;
+
+            MemoryStream workStream = new MemoryStream();
+            byte[] pdfGenerateMemoryStream;
+            ErrorPDF errorPDF = new ErrorPDF(_context, _config, _contextAccessor);
+
+            CartaDeIngreso cartaDeIngreso = new CartaDeIngreso(_context, _config, _contextAccessor);
+            pdfGenerateMemoryStream = await cartaDeIngreso.CreateCartaDeIngreso(id);
+
+            if (pdfGenerateMemoryStream.Length == 0)
+            {
+                errorPDF = new ErrorPDF(_context, _config, _contextAccessor);
+                pdfGenerateMemoryStream = await errorPDF.createErrorPDF();
+            }
+
+            var documentoBase64 = Convert.ToBase64String(pdfGenerateMemoryStream);
+            TempData["Base64PDF"] = documentoBase64;
+
+            return View();
+        }
+
+        /// <summary>
+        /// Modificar fecha de inicio y fin de la auditoria integral
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> ModificarFechaIntegral(string id, DateTime inicio, DateTime fin, string tipo)
+        {
+            try
+            {
+                var auditoria = await _context.AU_AUDITORIAS_INTEGRALES
+                                    .FirstOrDefaultAsync(a => a.CODIGO_AUDITORIA == id);
+
+                // Modificar las fechas de inicio y fin por tipo de fecha
+                if (tipo == "visita")
+                {
+                    auditoria.FECHA_INICIO_VISITA = inicio;
+                    auditoria.FECHA_FIN_VISITA = fin;
+                }
+                else
+                {
+                    auditoria.PERIODO_INICIO_REVISION = inicio;
+                    auditoria.PERIODO_FIN_REVISION = fin;
+                }
+
+                // Guardar los cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// Mostrar la carta de salida
+        /// </summary>
+        /// <returns></returns>
+        [Route("Auditorias/AuditoriaCartaSalida")]
+        public async Task<IActionResult> AuditoriaCartaSalida(string id)
+        {
+            ViewBag.id = id;
+
+            MemoryStream workStream = new MemoryStream();
+            byte[] pdfGenerateMemoryStream;
+            ErrorPDF errorPDF = new ErrorPDF(_context, _config, _contextAccessor);
+
+            CartaDeSalida cartaDeSalida = new CartaDeSalida(_context, _config, _contextAccessor);
+            pdfGenerateMemoryStream = await cartaDeSalida.CreateCartaDeSalida(id);
+
+            if (pdfGenerateMemoryStream.Length == 0)
+            {
+                errorPDF = new ErrorPDF(_context, _config, _contextAccessor);
+                pdfGenerateMemoryStream = await errorPDF.createErrorPDF();
+            }
+
+            var documentoBase64 = Convert.ToBase64String(pdfGenerateMemoryStream);
+            TempData["Base64PDF"] = documentoBase64;
+
             return View();
         }
     }

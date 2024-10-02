@@ -103,29 +103,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Filtrar por tipo 'causa' y 'causa-1'
         var causas = hallazgo.Detalles.filter(detalle => detalle.TIPO.startsWith("causa"));
-        var count = 1;
-
+        var count = 0;
+        var id = "causa";
 
         causas.forEach(causa => {
-            if (count == 1) {
-                document.getElementById("causa").value = causa.DESCRIPCION;
-            } else {
-                agregarInputCausa(causa);
+            if (count > 0) {
+                id = "causa-" + count;
+                document.getElementById("btn_causa").click();
             }
 
+            document.getElementById(id).value = causa.DESCRIPCION ?? "";
+            var causaExistente = formularioData.causageneral.find(e => e.id === id);
+            if (causaExistente) {
+                causaExistente.causa = causa.DESCRIPCION;
+            }
             count++;
         });
 
         // Filtrar por tipo 'efecto' y 'efecto-1'
         var efectos = hallazgo.Detalles.filter(hallazgo => hallazgo.TIPO.startsWith("efecto"));
-        count = 1;
+        var count = 0;
+        var id = "efecto";
+
         efectos.forEach(efecto => {
-            if (count > 1) {
+            if (count > 0) {
+                id = "efecto-" + count;
                 document.getElementById("btn_efecto").click();
             }
-            document.getElementById(efecto.TIPO).value = efecto.DESCRIPCION;
 
-            const efectoExistente = formularioData.efecto.find(e => e.id === efecto.TIPO);
+            document.getElementById(id).value = efecto.DESCRIPCION ?? "";
+            var efectoExistente = formularioData.efecto.find(e => e.id === id);
             if (efectoExistente) {
                 efectoExistente.efecto = efecto.DESCRIPCION;
             }
@@ -135,14 +142,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Filtrar por tipo 'recomendacion' y 'recomendaciones'
         var recomendaciones = hallazgo.Detalles.filter(detalle => detalle.TIPO.startsWith("recomendaciones"));
-        count = 1;
+        var count = 0;
+        var id = "recomendaciones";
+
         recomendaciones.forEach(recomendacion => {
-            if (count > 1) {
+            if (count > 0) {
+                id = "recomendaciones-" + count;
                 document.getElementById("btn_recomendaciones").click();
             }
-            document.getElementById(recomendacion.TIPO).value = recomendacion.DESCRIPCION;
 
-            const recomendacionExistente = formularioData.recomendaciones.find(r => r.id === recomendacion.TIPO);
+            document.getElementById(id).value = recomendacion.DESCRIPCION ?? "";
+            const recomendacionExistente = formularioData.recomendaciones.find(r => r.id === id);
             if (recomendacionExistente) {
                 recomendacionExistente.recomendaciones = recomendacion.DESCRIPCION;
             }
@@ -152,14 +162,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Filtrar por tipo 'comentario' y 'comentarios'
         var comentarios = hallazgo.Detalles.filter(hallazgo => hallazgo.TIPO.startsWith("comentarios"));
-        count = 1;
+        var count = 0;
+        var id = "comentarios";
+
         comentarios.forEach(comentario => {
-            if (count > 1) {
+            if (count > 0) {
+                id = "comentarios-" + count;
                 document.getElementById("btn_comentarios").click();
             }
-            document.getElementById(comentario.TIPO).value = comentario.DESCRIPCION;
 
-            const comentarioExistente = formularioData.comentarios.find(r => r.id === comentario.TIPO);
+            document.getElementById(id).value = comentario.DESCRIPCION ?? "";
+
+            const comentarioExistente = formularioData.comentarios.find(r => r.id === id);
             if (comentarioExistente) {
                 comentarioExistente.comentarios = comentario.DESCRIPCION;
             }
@@ -242,8 +256,6 @@ function calculoMuestra() {
         }
     }
 }
-
-
 
 const cuantitativaButton = document.getElementById('cuantitativa');
 const cualitativaButton = document.getElementById('cualitativa');
@@ -388,7 +400,6 @@ document.getElementById('btn_efecto').addEventListener('click', function () {
     efectoCount++;
 });
 
-
 let recomendacionesCount = 1; // Inicializar un contador
 
 document.getElementById('btn_recomendaciones').addEventListener('click', function () {
@@ -450,7 +461,6 @@ document.getElementById('btn_recomendaciones').addEventListener('click', functio
     // Incrementar el contador
     recomendacionesCount++;
 });
-
 
 let comentariosCount = 1; // Inicializar un contador
 

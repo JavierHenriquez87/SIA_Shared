@@ -52,6 +52,18 @@ namespace SIA.Print
             return color;
         }
 
+        public Color ColorGris()
+        {
+            Color color = new DeviceRgb(73, 79, 87);
+            return color;
+        }
+
+        public Color ColorGrisOscuro()
+        {
+            Color color = new DeviceRgb(52, 56, 61);
+            return color;
+        }
+
         public Text CreateTextFormat(string texto, PdfFont font, int size)
         {
             Text textParagraph;
