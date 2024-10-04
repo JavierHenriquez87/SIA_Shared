@@ -185,7 +185,7 @@ namespace SIA.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();//Limpiar la sesión
-            return Redirect(_config.GetSection("ApiURLs")["LoginURL"]);
+            return RedirectPermanent(_config.GetSection("ApiURLs")["LoginURL"]);
         }
     }
 }
