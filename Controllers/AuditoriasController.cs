@@ -2869,15 +2869,6 @@ namespace SIA.Controllers
             }
         }
 
-
-
-
-
-
-
-
-
-
         /// <summary>
         /// Mostrar la carta de salida
         /// </summary>

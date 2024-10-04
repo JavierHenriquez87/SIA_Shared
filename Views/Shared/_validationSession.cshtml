@@ -1,16 +1,22 @@
 ﻿@model string;
 @using Microsoft.AspNetCore.Http;
 @using Microsoft.Extensions.Configuration;
+@using SIA.Helpers;
 @inject IConfiguration _config;
 @inject IHttpContextAccessor HttpContextAccessor;
 
 @{
-    string authenticated = HttpContextAccessor.HttpContext.Session.GetString("authenticated");
-
+    var authenticated = HttpContextAccessor.HttpContext.Session.GetString("Authenticated");
     if (authenticated == null || authenticated == "false")
     {
-        <script>
-            window.location.href = '@Url.Action("Login", "Acceso")';
-        </script>
+        HttpContextAccessor.HttpContext.Response.Redirect(Url.Action("Logout", "Acceso"));
+    }
+
+    var loginHelper = new LoginHelper();
+    var hash = HttpContextAccessor.HttpContext.Session.GetString("hash");
+    var resultApi = await loginHelper.ApiResponseAsync(hash, _config);
+    if (resultApi == null || resultApi.User == null)
+    {
+        HttpContextAccessor.HttpContext.Response.Redirect(Url.Action("Logout", "Acceso"));
     }
 }

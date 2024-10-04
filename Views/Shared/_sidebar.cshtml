@@ -14,7 +14,7 @@
 
                 <li class="menu-title" key="t-apps">MÓDULOS</li>
                 @{
-                    string authenticated = HttpContextAccessor.HttpContext.Session.GetString("authenticated");
+                    string authenticated = HttpContextAccessor.HttpContext.Session.GetString("Authenticated");
                     //Si la variable de sesion authenticated es nula no cargara el menu
                     if (!string.IsNullOrEmpty(authenticated))
                     {
