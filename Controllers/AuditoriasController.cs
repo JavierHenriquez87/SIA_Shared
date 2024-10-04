@@ -1896,6 +1896,36 @@ namespace SIA.Controllers
             return new JsonResult("Ok");
         }
 
+        /// <summary>
+        /// Eliminar actividad asignada a un usuario
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> Eliminar_Actividad_asignada(int codigoActividad, int numeroPdt, string codigoUsuarioAsignado)
+        {
+            try
+            {
+                // Obtén el registro completo basado en los criterios
+                var actividad = await _context.AU_DETALLE_PLAN_DE_TRABAJO
+                    .Where(a => a.NUMERO_PDT == numeroPdt &&
+                                a.CODIGO_ACTIVIDAD == codigoActividad &&
+                                a.CODIGO_USUARIO_ASIGNADO == codigoUsuarioAsignado)
+                    .FirstOrDefaultAsync();
+
+                _context.AU_DETALLE_PLAN_DE_TRABAJO.Remove(actividad);
+
+                // Guardar los cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("Ok");
+        }
 
         /// <summary>
         /// Metodo para obtener las actividades asignadas

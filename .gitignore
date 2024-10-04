@@ -3,3 +3,7 @@
 obj/project.nuget.cache
 obj/SIA.csproj.nuget.dgspec.json
 obj/SIA.csproj.nuget.g.props
+obj/Debug/net7.0/SIA.pdb
+obj/Debug/net7.0/SIA.dll
+obj/Debug/net7.0/refint/SIA.dll
+obj/Debug/net7.0/ref/SIA.dll

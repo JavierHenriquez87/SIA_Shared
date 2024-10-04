@@ -1,5 +1,6 @@
 ﻿AuditoresEncargados();
 GeActividadesAsignadas();
+var selectedCheckboxes = [];
 
 //FUNCION PARA REGRESAR PLAN DE TRABAJO
 //==========================================================================================
@@ -56,10 +57,26 @@ $(function () {
     });
 });
 
+//Agregamos o quitamos el registro seleccionado 
+$("#tbActividades").on('change', 'input[type="checkbox"]', function () {
+    var checkboxValue = $(this).val();
+
+    if ($(this).is(':checked')) {
+        // Si está marcado, lo agregamos al array
+        if (!selectedCheckboxes.includes(checkboxValue)) {
+            selectedCheckboxes.push(checkboxValue);
+        }
+    } else {
+        // Si está desmarcado, lo eliminamos del array
+        selectedCheckboxes = selectedCheckboxes.filter(function (value) {
+            return value !== checkboxValue;
+        });
+    }
+});
 
 async function AsignarActividad() {
     // Selecciona todos los checkboxes que están marcados
-    var checkboxesActivos = $("#tbActividades tbody input[type='checkbox']:checked");
+    //var checkboxesActivos = $("#tbActividades tbody input[type='checkbox']:checked");
     var usuario_asignado = $('#EquipoAuditoresAsignados').val();
     var numero_pdt = $('#numero_PDT_pt').val();
     var numeroai = $('#codAI_CU').val();
@@ -78,7 +95,7 @@ async function AsignarActividad() {
         return false; // Detiene la ejecución si es necesario
     }
 
-    if (checkboxesActivos.length === 0) {
+    if (selectedCheckboxes.length === 0) {
         // Si no hay ninguno marcado, muestra un mensaje de advertencia
         Swal.fire({
             title: 'Datos Incompletos',
@@ -102,13 +119,13 @@ async function AsignarActividad() {
         }
     });
 
-    var valoresCheckboxes = checkboxesActivos.map(function () {
-        return $(this).val();
-    }).get();
+    //var valoresCheckboxes = checkboxesActivos.map(function () {
+    //    return $(this).val();
+    //}).get();
 
     // Convertir el array en una cadena separada por comas
-    var actividadesString = valoresCheckboxes.join(',');
-
+    //var actividadesString = valoresCheckboxes.join(',');
+    var actividadesString = selectedCheckboxes.join(',');
     var data = {
         numeropdt: numero_pdt,
         numeroai: numeroai,
@@ -216,7 +233,7 @@ async function GeActividadesAsignadas() {
                     "render": function (data, type, row, meta) {
                         let buttons = "<div class='optiongrid'>";
 
-                        buttons += "<a style='cursor: pointer; href='#' title='Editar Actividad' onClick='EditarActividadAsignada(\"" + row.codigO_ACTIVIDAD + "\", \"" + row.numerO_PDT + "\", \"" + row.codigO_USUARIO_ASIGNADO + "\")'> <i class='fas fa-edit' style='color: black;'></i></a>";
+                        /*buttons += "<a style='cursor: pointer; href='#' title='Editar Actividad' onClick='EditarActividadAsignada(\"" + row.codigO_ACTIVIDAD + "\", \"" + row.numerO_PDT + "\", \"" + row.codigO_USUARIO_ASIGNADO + "\")'> <i class='fas fa-edit' style='color: black;'></i></a>";*/
 
                         buttons += " | <a style='cursor: pointer; href='#' title='Eliminar Actividad' onClick='EliminarActividadAsignada(\"" + row.codigO_ACTIVIDAD + "\", \"" + row.numerO_PDT + "\", \"" + row.codigO_USUARIO_ASIGNADO + "\")'> <i class='fas fa-trash' style='color: black;'></i></a>";
 
@@ -242,6 +259,68 @@ async function GeActividadesAsignadas() {
     });
 
 };
+
+function EliminarActividadAsignada(codigo_actividad, numero_pdt, codigo_usuario_asignado) {
+    var data = {
+        codigoActividad: codigo_actividad,
+        numeroPdt: numero_pdt,
+        codigoUsuarioAsignado: codigo_usuario_asignado
+    };
+
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás recuperar esta actividad después de eliminarla!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Si el usuario confirma la eliminación, procede a eliminar la actividad
+            var data = {
+                codigoActividad: codigo_actividad,
+                numeroPdt: numero_pdt,
+                codigoUsuarioAsignado: codigo_usuario_asignado
+            };
+
+            $.ajax({
+                method: 'POST',
+                url: 'Eliminar_Actividad_asignada',
+                data: $.param(data),
+                success: function (respuesta) {
+                    if (respuesta == "error") {
+                        Swal.fire(
+                            'Error!',
+                            'Ocurrió un error al eliminar la actividad.',
+                            'error'
+                        );
+                    } else {
+                        $('#divAsignarActividades').modal('hide');
+
+                        Swal.fire({
+                            title: 'Eliminado!',
+                            text: '¡Se eliminó la actividad con éxito!',
+                            icon: 'success',
+                            didClose: () => {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
+                    Swal.fire(
+                        'Error!',
+                        'Hubo un problema al procesar su solicitud.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+}
 
 //FUNCION PARA OBTENER LAS ACTIVIDADES ASIGNADAS A LOS AUDITORES EN UN PLAN DE TRABAJO
 //==========================================================================================
