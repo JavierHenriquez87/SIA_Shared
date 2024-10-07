@@ -55,7 +55,7 @@ function CargarRoles() {
                 result.forEach(function (rol) {
                     let opcion = document.createElement("option");
                     opcion.value = rol.codigO_ROL;
-                    opcion.text = rol.codigO_ROL + " - " + rol.nombrE_ROL;
+                    opcion.text = rol.codigO_ROL + " - " + rol.nombre;
                     selectRoles.appendChild(opcion);
                 });
             }

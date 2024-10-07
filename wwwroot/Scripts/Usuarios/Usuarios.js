@@ -20,28 +20,25 @@ function GetUsuarios() {
             "deferRender": true,
             "columns": [
                 {
-                    "data": "codigO_USUARIO", "render": function (data, type, row, meta) { return row.codigO_USUARIO }, "name": "CODIGO USUARIO", "autoWidth": true
+                    "data": "codigO_USUARIO", "render": function (data, type, row, meta) { return row.codigO_USUARIO }, "name": "CODIGO USUARIO", "autoWidth": true, "orderable": false
                 },
                 {
-                    "data": "nombrE_USUARIO", "render": function (data, type, row, meta) { return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.nombrE_USUARIO + "</div>"; }, "name": "NOMBRE USUARIO", "autoWidth": true, "orderable": false
+                    "data": "nombre", "render": function (data, type, row, meta) { return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.nombre + "</div>"; }, "name": "NOMBRE USUARIO", "autoWidth": true, "orderable": true
                 },
                 {
-                    "data": "numerO_IDENTIDAD", "render": function (data, type, row, meta) { return row.numerO_IDENTIDAD }, "name": "N° IDENTIDAD", "autoWidth": true, "orderable": false
+                    "data": "nombrE_ROL", "render": function (data, type, row, meta) { return row.nombrE_ROL }, "name": "NOMBRE ROL", "autoWidth": true, "orderable": false
                 },
                 {
-                    "data": "email", "render": function (data, type, row, meta) { return row.email }, "name": "CORREO", "autoWidth": true, "orderable": false
-                },
-                {
-                    "data": "mg_agencias.agencia", "render": function (data, type, row, meta) { return row.mg_agencias.agencia }, "name": "AGENCIA", "autoWidth": true, "orderable": false
+                    "data": "codigO_ESTADO", "render": function (data, type, row, meta) { return row.codigO_ESTADO == 1 ? "ACTIVO" : "INACTIVO" }, "name": "ESTADO", "autoWidth": true, "orderable": false
                 },
                 {
                     "data": "codigO_USUARIO",
                     "render": function (data, type, row, meta) {
                         let buttons = "<div class='optiongrid'>";
 
-                        buttons += "<a href='#' title='Editar Usuario' onClick='ModificarUsuario(\"" + row.codigO_USUARIO + "\", \"" + row.nombrE_USUARIO + "\")'> <i class='fas fa-pencil-alt'> </i> Modificar</a> |";
+                        buttons += "<a href='#' title='Editar Usuario' onClick='ModificarUsuario(\"" + row.codigO_USUARIO + "\", \"" + row.nombre + "\")'> <i class='fas fa-pencil-alt'> </i> Modificar</a> |";
                         
-                        buttons += "<a href='#' title='Firma' onClick='ModificarFirma(\"" + row.codigO_USUARIO + "\", \"" + row.nombrE_USUARIO + "\")'> <i class='fas fa-pencil-alt'> </i> Firma</a> ";
+                        buttons += "<a href='#' title='Firma' onClick='ModificarFirma(\"" + row.codigO_USUARIO + "\", \"" + row.nombre + "\")'> <i class='fas fa-pencil-alt'> </i> Firma</a> ";
 
                         buttons += "</div>";
 
@@ -180,12 +177,12 @@ function ModificarUsuario(idUsuario, nombreUsuario) {
                 //Limpiamos y agregamos la informacion
                 $('#codigoUsuarioEdit').val(idUsuario);
                 $('#inputNombre').val(nombreUsuario);
-                $('#inputEmail').val(result.email);
-                $('#inputNumeroIdentidad').val(result.numerO_IDENTIDAD);
-                $('#selectAgencias').val(result.codigO_AGENCIA);
+                //$('#inputEmail').val(result.email);
+                //$('#inputNumeroIdentidad').val(result.numerO_IDENTIDAD);
+                //$('#selectAgencias').val(result.codigO_AGENCIA);
                 $('#selectRoles').val(result.codigO_ROL);
-                $('#selectCargos').val(result.codigO_CARGO);
-                $('#selectEstado').val(result.estado);
+                //$('#selectCargos').val(result.codigO_CARGO);
+                $('#selectEstado').val(result.codigO_ESTADO);
 
                 //Mostramos el modal
                 $('#divUsuario').modal('show');
@@ -218,14 +215,14 @@ function GuardarUsuarioEditado() {
     // Objeto que contiene los datos a enviar
     var userData = {
         CODIGO_USUARIO: codigoUsuario,
-        CODIGO_AGENCIA: agenciaSeleccionada,
+        //CODIGO_AGENCIA: agenciaSeleccionada,
         CODIGO_ROL: rolSeleccionado,
-        CODIGO_CARGO: cargoSeleccionado,
-        ESTADO: estadoSeleccionado,
-        NUMERO_IDENTIDAD: numeroIdentidad,
-        NOMBRE_USUARIO: nombreUsuario,
-        EMAIL: emailUsuario,
-        CLAVE_USUARIO: claveUsuario
+        //CODIGO_CARGO: cargoSeleccionado,
+        //CODIGO_ESTADO: estadoSeleccionado,
+        //NUMERO_IDENTIDAD: numeroIdentidad,
+        //NOMBRE_USUARIO: nombreUsuario,
+        //EMAIL: emailUsuario,
+        //CLAVE_USUARIO: claveUsuario
     };
 
     $.ajax({

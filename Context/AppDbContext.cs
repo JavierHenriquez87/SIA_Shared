@@ -36,15 +36,15 @@ namespace SIA.Context
             .HasForeignKey(d => d.CODIGO_HALLAZGO);
 
             modelBuilder.Entity<Mg_Hallazgos>()
-                .HasMany(h => h.Documentos)
-                .WithOne(d => d.Hallazgo)
-                .HasForeignKey(d => d.CODIGO_HALLAZGO);
+            .HasMany(h => h.Documentos)
+            .WithOne(d => d.Hallazgo)
+            .HasForeignKey(d => d.CODIGO_HALLAZGO);
 
             modelBuilder.Entity<Mg_Hallazgos>()
-                .HasMany(h => h.OrientacionCalificacion)
-                .WithOne(d => d.Hallazgo)
-                .HasForeignKey(d => d.NIVEL_RIESGO)
-                .HasPrincipalKey(h => h.NIVEL_RIESGO);
+            .HasMany(h => h.OrientacionCalificacion)
+            .WithOne(d => d.Hallazgo)
+            .HasForeignKey(d => d.NIVEL_RIESGO)
+            .HasPrincipalKey(h => h.NIVEL_RIESGO);
 
             modelBuilder.Entity<Mg_secciones>()
             .HasMany(s => s.sub_secciones)
@@ -62,10 +62,9 @@ namespace SIA.Context
             .HasForeignKey(o => new { o.CODIGO_APLICACION, o.CODIGO_MENU });
 
             modelBuilder.Entity<Mg_menus_segun_rol>()
-                .HasOne(m => m.Menu)
-                .WithMany()
-                .HasForeignKey(m => new { m.CODIGO_APLICACION, m.CODIGO_MENU });
-
+            .HasOne(m => m.Menu)
+            .WithMany()
+            .HasForeignKey(m => new { m.CODIGO_APLICACION, m.CODIGO_MENU });
         }
 
         public virtual DbSet<Mg_usuarios_segun_app> MG_USUARIOS_SEGUN_APP { get; set; }

@@ -46,48 +46,100 @@ namespace SIA.Controllers
             int skip = start != null ? Convert.ToInt32(start) : 0;
             int recordsTotal = 0;
 
-            List<Mg_usuarios> data = new List<Mg_usuarios>();
+            List<Mg_usuarios_segun_app> data = new List<Mg_usuarios_segun_app>();
 
             if (!string.IsNullOrEmpty(searchValue) && searchValue.Count() >= 3)
             {
                 if (sortColumnDirection.Equals("asc"))
                 {
-                    data = await _context.MG_USUARIOS
-                        .Include(x => x.mg_agencias)
-                        .OrderByDescending(e => e.CODIGO_USUARIO)
-                        .Where(e => e.NOMBRE_USUARIO.ToUpper().Contains(searchValue))
-                        .Skip(skip).Take(pageSize).ToListAsync();
+                    data = await (from usuario in _context.MG_USUARIOS_SEGUN_APP
+                                      join rol in _context.MG_ROLES
+                                          on new { usuario.CODIGO_ROL, usuario.CODIGO_APLICACION }
+                                          equals new { rol.CODIGO_ROL, rol.CODIGO_APLICACION }
+                                      where usuario.NOMBRE.ToUpper().Contains(searchValue)
+                                          && rol.CODIGO_APLICACION == "SIA"
+                                      orderby usuario.NOMBRE descending
+                                      select new Mg_usuarios_segun_app
+                                      {
+                                          CODIGO_USUARIO = usuario.CODIGO_USUARIO,
+                                          NOMBRE = usuario.NOMBRE,
+                                          CODIGO_ROL = usuario.CODIGO_ROL,
+                                          NOMBRE_ROL = rol.NOMBRE,
+                                          CODIGO_ESTADO = usuario.CODIGO_ESTADO
+                                      })
+                                     .Skip(skip)
+                                     .Take(pageSize)
+                                     .ToListAsync();
                 }
                 else
                 {
-                    data = await _context.MG_USUARIOS
-                        .Include(x => x.mg_agencias)
-                        .OrderBy(e => e.CODIGO_USUARIO)
-                        .Where(e => e.NOMBRE_USUARIO.Contains(searchValue))
-                        .Skip(skip).Take(pageSize).ToListAsync();
+                    data = await (from usuario in _context.MG_USUARIOS_SEGUN_APP
+                                  join rol in _context.MG_ROLES
+                                      on new { usuario.CODIGO_ROL, usuario.CODIGO_APLICACION }
+                                      equals new { rol.CODIGO_ROL, rol.CODIGO_APLICACION }
+                                  where usuario.NOMBRE.ToUpper().Contains(searchValue)
+                                      && rol.CODIGO_APLICACION == "SIA"
+                                  orderby usuario.NOMBRE ascending
+                                  select new Mg_usuarios_segun_app
+                                  {
+                                      CODIGO_USUARIO = usuario.CODIGO_USUARIO,
+                                      NOMBRE = usuario.NOMBRE,
+                                      CODIGO_ROL = usuario.CODIGO_ROL,
+                                      NOMBRE_ROL = rol.NOMBRE,
+                                      CODIGO_ESTADO = usuario.CODIGO_ESTADO
+                                  })
+                                .Skip(skip)
+                                .Take(pageSize)
+                                .ToListAsync();
                 }
 
-                recordsTotal = await _context.MG_USUARIOS.CountAsync(x => x.NOMBRE_USUARIO.Contains(searchValue));
+                recordsTotal = await _context.MG_USUARIOS_SEGUN_APP.CountAsync(x => x.NOMBRE.Contains(searchValue));
             }
             else
             {
                 if (sortColumnDirection.Equals("asc"))
                 {
-                    data = await _context.MG_USUARIOS
-                        .Include(x => x.mg_agencias)
-                        .OrderByDescending(e => e.NOMBRE_USUARIO)
-                        .Skip(skip).Take(pageSize).ToListAsync();
+                    data = await (from usuario in _context.MG_USUARIOS_SEGUN_APP
+                                  join rol in _context.MG_ROLES
+                                      on new { usuario.CODIGO_ROL, usuario.CODIGO_APLICACION }
+                                      equals new { rol.CODIGO_ROL, rol.CODIGO_APLICACION }
+                                  where rol.CODIGO_APLICACION == "SIA"
+                                  orderby usuario.NOMBRE descending
+                                  select new Mg_usuarios_segun_app
+                                  {
+                                      CODIGO_USUARIO = usuario.CODIGO_USUARIO,
+                                      NOMBRE = usuario.NOMBRE,
+                                      CODIGO_ROL = usuario.CODIGO_ROL,
+                                      NOMBRE_ROL = rol.NOMBRE,
+                                      CODIGO_ESTADO = usuario.CODIGO_ESTADO
+                                  })
+                                .Skip(skip)
+                                .Take(pageSize)
+                                .ToListAsync();
                 }
                 else
                 {
-                    data = await _context.MG_USUARIOS
-                        .Include(x => x.mg_agencias)
-                        .OrderBy(e => e.NOMBRE_USUARIO)
-                        .Where(e => e.ESTADO == 1)
-                        .Skip(skip).Take(pageSize).ToListAsync();
+
+                    data = await (from usuario in _context.MG_USUARIOS_SEGUN_APP
+                                  join rol in _context.MG_ROLES
+                                      on new { usuario.CODIGO_ROL, usuario.CODIGO_APLICACION }
+                                      equals new { rol.CODIGO_ROL, rol.CODIGO_APLICACION }
+                                  where rol.CODIGO_APLICACION == "SIA"
+                                  orderby usuario.NOMBRE ascending
+                                  select new Mg_usuarios_segun_app
+                                  {
+                                      CODIGO_USUARIO = usuario.CODIGO_USUARIO,
+                                      NOMBRE = usuario.NOMBRE,
+                                      CODIGO_ROL = usuario.CODIGO_ROL,
+                                      NOMBRE_ROL = rol.NOMBRE,
+                                      CODIGO_ESTADO = usuario.CODIGO_ESTADO
+                                  })
+                                .Skip(skip)
+                                .Take(pageSize)
+                                .ToListAsync();
                 }
 
-                recordsTotal = await _context.MG_USUARIOS.CountAsync();
+                recordsTotal = await _context.MG_USUARIOS_SEGUN_APP.CountAsync();
             }
 
             var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
@@ -99,7 +151,7 @@ namespace SIA.Controllers
         {
             try
             {
-                var usuario = await _context.MG_USUARIOS.FirstOrDefaultAsync(x => x.CODIGO_USUARIO == idUsuario);
+                var usuario = await _context.MG_USUARIOS_SEGUN_APP.FirstOrDefaultAsync(x => x.CODIGO_USUARIO == idUsuario);
 
                 if (usuario == null) return new JsonResult("error");
 
@@ -112,24 +164,24 @@ namespace SIA.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Guardar_Usuario([FromBody] Mg_usuarios userData)
+        public async Task<IActionResult> Guardar_Usuario([FromBody] Mg_usuarios_segun_app userData)
         {
 
             if (userData == null) return new JsonResult("error");
 
-            userData.CODIGO_EMPRESA = 1;
-            userData.USUARIO_ADICIONA = HttpContext.Session.GetString("user");
-            userData.FECHA_ADICIONA = DateTime.Now;
+            //userData.CODIGO_EMPRESA = 1;
+            userData.CREADO_POR = HttpContext.Session.GetString("user");
+            userData.FECHA_CREACION = DateTime.Now;
 
-            byte[] bytes = Encoding.UTF8.GetBytes(userData.CLAVE_USUARIO);
+            //byte[] bytes = Encoding.UTF8.GetBytes(userData.CLAVE_USUARIO);
 
             // Calcular el hash SHA-256
-            byte[] hashBytes = SHA256.HashData(bytes);
+            //byte[] hashBytes = SHA256.HashData(bytes);
 
             // Convertir el hash a una cadena base64
-            string hashString = Convert.ToBase64String(hashBytes);
+            //string hashString = Convert.ToBase64String(hashBytes);
 
-            userData.CLAVE_USUARIO = hashString;
+            //userData.CLAVE_USUARIO = hashString;
 
             _context.Add(userData);
 
@@ -147,35 +199,35 @@ namespace SIA.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Editar_Usuario([FromBody] Mg_usuarios userData)
+        public async Task<IActionResult> Editar_Usuario([FromBody] Mg_usuarios_segun_app userData)
         {
-            var usuario = await _context.MG_USUARIOS.FirstOrDefaultAsync(x => x.CODIGO_USUARIO == userData.CODIGO_USUARIO);
+            var usuario = await _context.MG_USUARIOS_SEGUN_APP.FirstOrDefaultAsync(x => x.CODIGO_USUARIO == userData.CODIGO_USUARIO && x.CODIGO_APLICACION == "SIA");
 
             if (usuario == null) return new JsonResult("error");
 
-            if (!string.IsNullOrEmpty(userData.CLAVE_USUARIO))
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(userData.CLAVE_USUARIO);
+            //if (!string.IsNullOrEmpty(userData.CLAVE_USUARIO))
+            //{
+            //    byte[] bytes = Encoding.UTF8.GetBytes(userData.CLAVE_USUARIO);
 
-                // Calcular el hash SHA-256
-                byte[] hashBytes = SHA256.HashData(bytes);
+            //    // Calcular el hash SHA-256
+            //    byte[] hashBytes = SHA256.HashData(bytes);
 
-                // Convertir el hash a una cadena base64
-                string hashString = Convert.ToBase64String(hashBytes);
+            //    // Convertir el hash a una cadena base64
+            //    string hashString = Convert.ToBase64String(hashBytes);
 
-                usuario.CLAVE_USUARIO = hashString;
-            }
+            //    usuario.CLAVE_USUARIO = hashString;
+            //}
 
             // Agregar campos adicionales de userData a la entidad usuario
-            usuario.CODIGO_AGENCIA = userData.CODIGO_AGENCIA;
+            //usuario.CODIGO_AGENCIA = userData.CODIGO_AGENCIA;
             usuario.CODIGO_ROL = userData.CODIGO_ROL;
-            usuario.CODIGO_CARGO = userData.CODIGO_CARGO;
-            usuario.ESTADO = userData.ESTADO;
-            usuario.NUMERO_IDENTIDAD = userData.NUMERO_IDENTIDAD;
-            usuario.NOMBRE_USUARIO = userData.NOMBRE_USUARIO;
-            usuario.EMAIL = userData.EMAIL;
-            usuario.USUARIO_MODIFICA = HttpContext.Session.GetString("user");
-            usuario.FECHA_MODIFICA = DateTime.Now;
+            //usuario.CODIGO_CARGO = userData.CODIGO_CARGO;
+            //usuario.ESTADO = userData.ESTADO;
+            //usuario.NUMERO_IDENTIDAD = userData.NUMERO_IDENTIDAD;
+            //usuario.NOMBRE_USUARIO = userData.NOMBRE_USUARIO;
+            //usuario.EMAIL = userData.EMAIL;
+            usuario.MODIFICADO_POR = HttpContext.Session.GetString("user");
+            usuario.FECHA_MODIFICACION = DateTime.Now;
 
             _context.Entry(usuario).CurrentValues.SetValues(usuario);
 

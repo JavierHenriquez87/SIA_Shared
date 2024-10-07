@@ -51,11 +51,11 @@ namespace SIA.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Mg_roles_del_sistema>>> GetRoles()
+        public async Task<ActionResult<List<Mg_roles>>> GetRoles()
         {
             try
             {
-                var listadoRoles = await _context.MG_ROLES_DEL_SISTEMA.ToListAsync();
+                var listadoRoles = await _context.MG_ROLES.Where(a => a.CODIGO_APLICACION == "SIA").ToListAsync();
 
                 if (listadoRoles == null)
                 {

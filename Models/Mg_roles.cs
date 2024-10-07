@@ -14,6 +14,5 @@ namespace SIA.Models
         public string? MODIFICADO_POR { get; set; }
 
         public virtual ICollection<Mg_permisos_submenus> PermisosSubmenus { get; set; }
-
     }
 }

@@ -25,5 +25,8 @@ namespace SIA.Models
         public string? MODIFICADO_POR { get; set; }
         [NotMapped]
         public bool SELECTED { get; set; }
+        [NotMapped]
+        public string NOMBRE_ROL { get; set; }
+
     }
 }
