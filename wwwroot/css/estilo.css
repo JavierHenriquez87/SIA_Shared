@@ -189,3 +189,13 @@ h3, h5 {
     border-radius: 5px; /* Esquinas redondeadas */
     cursor: not-allowed; /* Mostrar el cursor de prohibido */
 }
+
+select.form-control {
+    -webkit-appearance: menulist; /* Safari/Chrome */
+    -moz-appearance: menulist; /* Firefox */
+    appearance: menulist; /* Estilo predeterminado de los navegadores */
+}
+
+.table-primary {
+    --bs-table-bg: #dde2fa !important;
+}

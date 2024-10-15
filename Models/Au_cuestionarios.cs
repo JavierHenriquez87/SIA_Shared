@@ -5,7 +5,7 @@ namespace SIA.Models
     public class Au_cuestionarios
     {
         [Key]
-        public int? CODIGO_CUESTIONARIO { get; set; }
+        public int CODIGO_CUESTIONARIO { get; set; }
         public string? NOMBRE_CUESTIONARIO { get; set; }
         public int? TIPO_CUESTIONARIO { get; set; }
         public DateTime? FECHA_CREACION { get; set; }

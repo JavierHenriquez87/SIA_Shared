@@ -367,7 +367,7 @@ namespace SIA.Controllers
                     int maxNumeroAuditoriaEspecifica = await _context.AU_AUDITORIAS
                         .MaxAsync(a => (int?)a.NUMERO_AUDITORIA) ?? 0;
 
-                    // Incrementar el valor máximo en 1
+                    // Incrementar el valor máximo en 1 
                     nuevoIdAuditoria = maxNumeroAuditoriaEspecifica + 1;
 
                     //Obtenemos informacion complementaria del universo auditable

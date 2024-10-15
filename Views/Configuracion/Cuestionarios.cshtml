@@ -6,13 +6,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloCuestionario.css" rel="stylesheet" type="text/css" />
+
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <button type="button" style="margin-bottom: 15px" onClick="NuevoCuestionario()" class="btn btn-primary">
-                    Nuevo Cuestionario
-                </button>
+                <div class=" d-flex align-items-end justify-content-end">
+                    <button type="button" style="margin-bottom: 30px; margin-right: 10px;" onClick="MantenimientoSecciones()" class="btn btn-primary">
+                        Mantenimiento de Secciones
+                    </button>
+
+                    <button type="button" style="margin-bottom: 30px" onClick="NuevoCuestionario()" class="btn btn-primary">
+                        Nuevo Cuestionario
+                    </button>
+                </div>
 
                 <table id="tbCuestionarios" class="table table-bordered dt-responsive  nowrap w-100">
                     <thead>
@@ -23,12 +32,13 @@
                         </tr>
                     </thead>
                 </table>
-
             </div>
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
+
 @await Html.PartialAsync("partialView/_mainCuestionario")
+@await Html.PartialAsync("partialView/_mainSecciones")
 
 @section scripts{
     <script src="~/Scripts/Configuracion/Cuestionarios.js"></script>

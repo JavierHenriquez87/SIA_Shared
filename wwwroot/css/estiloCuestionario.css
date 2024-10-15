@@ -1,0 +1,26 @@
+.btn-add {
+    width: 100%; /* Se ajusta al 100% del contenedor */
+    height: 50px; /* Altura fija */
+    border: 2px dashed grey; /* Borde gris y punteado */
+    background-color: transparent; /* Fondo transparente */
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    cursor: pointer;
+}
+
+.plus-sign {
+    font-size: 32px; /* Tamaño más grande para el signo "+" */
+    color: grey; /* Color del signo "+" */
+    margin-right: 10px; /* Espacio entre el "+" y el texto */
+}
+
+.add-section {
+    font-size: 14px; /* Tamaño más pequeño para el texto */
+    color: grey; /* Color del texto */
+}
+
+.btn-add:hover {
+    background-color: #f0f0f0; /* Fondo al pasar el mouse */
+    border-color: darkgrey; /* Borde más oscuro en hover */
+}

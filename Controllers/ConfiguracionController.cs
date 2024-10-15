@@ -5,6 +5,7 @@ using System.Text;
 using SIA.Context;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SIA.Controllers
 {
@@ -404,6 +405,183 @@ namespace SIA.Controllers
             }
 
             return new JsonResult("false");
+        }
+
+        /// <summary>
+        /// Metodo para obtener un las secciones
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> ObtenerSecciones()
+        {
+            try
+            {
+                List<Mg_secciones> secciones = await _context.MG_SECCIONES
+                .Select(s => new Mg_secciones
+                {
+                    CODIGO_SECCION = s.CODIGO_SECCION,
+                    DESCRIPCION_SECCION = s.DESCRIPCION_SECCION,
+                    // Agregar cualquier otra propiedad de la sección que necesites
+                    EXISTE_SUB_SECCION = _context.MG_SUB_SECCIONES.Any(sub => sub.CODIGO_SECCION == s.CODIGO_SECCION)
+                })
+                .OrderBy(c => c.CODIGO_SECCION)
+                .ToListAsync();
+                var options = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    WriteIndented = true,
+                };
+
+                return new JsonResult(secciones, options);
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+        }
+
+        /// <summary>
+        /// Metodo para agregar secciones
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult AgregarSeccion(string? nombre)
+        {
+            try
+            {
+                int maxCodigoSeccion = _context.MG_SECCIONES.Max(s => s.CODIGO_SECCION);
+
+                // Crear una nueva entidad de la sección
+                var nuevaSeccion = new Mg_secciones
+                {
+                    CODIGO_SECCION = maxCodigoSeccion + 1,
+                    DESCRIPCION_SECCION = nombre,
+                };
+
+                // Guardar la nueva sección en la base de datos
+                _context.MG_SECCIONES.Add(nuevaSeccion);
+                _context.SaveChanges();
+
+                // Retornar una respuesta de éxito
+                return Json(new { success = true, message = "Sección agregada correctamente." });
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones
+                return Json(new { success = false, message = "Ocurrió un error al agregar la sección: " + ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Metodo para eliminar secciones
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult EliminarSeccion(int codigo)
+        {
+            try
+            {
+                var seccion = _context.MG_SECCIONES.FirstOrDefault(s => s.CODIGO_SECCION == codigo);
+
+                if (seccion == null)
+                {
+                    // Si no se encuentra la sección, retornar un error
+                    return Json(new { success = false, message = "No se encontró la sección con el código especificado." });
+                }
+
+                // Eliminar la entidad de la sección
+                _context.MG_SECCIONES.Remove(seccion);
+                _context.SaveChanges();
+
+                // Retornar una respuesta de éxito
+                return Json(new { success = true, message = "Sección eliminada correctamente." });
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones
+                return Json(new { success = false, message = "Ocurrió un error al eliminar la sección: " + ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Guardar un cuestionario
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult GuardarCuestionarioNuevo([FromBody] Mg_cuestionario_subseccion cuestionario)
+        {
+            try
+            {
+                int maxCodigoCuestionario = _context.AU_CUESTIONARIOS.Any() ? _context.AU_CUESTIONARIOS.Max(s => s.CODIGO_CUESTIONARIO) : 0;
+
+                // Crear una nueva entidad de la sección
+                var nuevoCuestionario = new Au_cuestionarios
+                {
+                    CODIGO_CUESTIONARIO = maxCodigoCuestionario + 1,
+                    NOMBRE_CUESTIONARIO = cuestionario.NOMBRE_CUESTIONARIO,
+                    CREADO_POR = HttpContext.Session.GetString("user"),
+                    FECHA_CREACION = DateTime.Now,
+                    ESTADO = 1
+                };
+
+                _context.AU_CUESTIONARIOS.Add(nuevoCuestionario);
+
+                var secciones = cuestionario.SUB_SECCIONES
+                                .GroupBy(c => c.CODIGO_SECCION)
+                                .Select(group => new Mg_cuestionario_secciones
+                                {
+                                    CODIGO_SECCION = group.Key,
+                                    CODIGO_CUESTIONARIO = maxCodigoCuestionario + 1,
+                                })
+                                .ToList();
+
+                _context.MG_CUESTIONARIO_SECCIONES.AddRange(secciones);
+
+                foreach (var subSeccion in cuestionario.SUB_SECCIONES)
+                {
+                    int maxSubSeccion = _context.MG_SUB_SECCIONES.Any() ? _context.MG_SUB_SECCIONES.Max(s => s.CODIGO_SUB_SECCION) : 0;
+
+                    var nuevaSubSeccion = new Mg_sub_secciones
+                    {
+                        CODIGO_SUB_SECCION = maxSubSeccion + 1,
+                        DESCRIPCION = subSeccion.DESCRIPCION,
+                        CODIGO_SECCION = subSeccion.CODIGO_SECCION,
+                        CODIGO_CUESTIONARIO = maxCodigoCuestionario + 1
+                    };
+
+                    _context.MG_SUB_SECCIONES.Add(nuevaSubSeccion);
+
+                    _context.SaveChanges();
+
+                    foreach (var pregunta in subSeccion.Preguntas_Cuestionarios)
+                    {
+                        int maxPregunta = _context.MG_PREGUNTAS_CUESTIONARIO.Any() ? _context.MG_PREGUNTAS_CUESTIONARIO.Max(s => s.CODIGO_PREGUNTA) : 0;
+
+                        var nuevaPregunta = new Mg_preguntas_cuestionario
+                        {
+                            CODIGO_PREGUNTA = maxPregunta + 1,
+                            CODIGO_SUB_SECCION = maxSubSeccion + 1,
+                            DESCRIPCION = pregunta.DESCRIPCION,
+                            CODIGO_CUESTIONARIO = maxCodigoCuestionario + 1,
+                            CREADO_POR = HttpContext.Session.GetString("user"),
+                            FECHA_CREACION = DateTime.Now,
+                        };
+
+                        _context.MG_PREGUNTAS_CUESTIONARIO.Add(nuevaPregunta);
+
+                        _context.SaveChanges();
+                    }
+                }
+
+                // Retornar una respuesta de éxito
+                return Json(new { success = true, message = "Cuestionario agregado con exito." });
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones
+                return Json(new { success = false, message = "Ocurrió un error al agregar el cuestionario: " + ex.Message });
+            }
         }
     }
 }

@@ -1,0 +1,32 @@
+﻿<!-- Modal nuevo seccion-->
+<div class="modal fade" id="divSeccion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-width: 830px;">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header" >
+                <h5 class="modal-title">Mantenimiento de Secciones</h5>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="las la-chess la-2x">&nbsp</i>Nombre de la Sección</span>
+                            <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="Nombre Sección" id="nombreSeccion" placeholder="Digite el nombre de la sección" required="" maxlength="100">
+                            <button onClick="btnAgregarSeccion()" type="button" class="btn btn-primary" style=" border-radius: 0 10px 10px 0 !important">AGREGAR</button>
+                        </div>
+                    </div>
+                    <span style="color:darkred; display: none" id="validacionSeccion"></span>
+                </div>
+
+                <div class="contenedor" style="height: 350px; overflow-y: scroll; overflow-x: hidden;">
+                    <table id="" class="table table-bordered dt-responsive  nowrap w-100">
+                        <tbody id="tbVerSecciones"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+            </div>
+        </div>
+    </div>
+</div>

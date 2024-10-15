@@ -14,9 +14,18 @@
                             <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="Nombre Cuestionario" id="nombreCuestionario" placeholder="Digite el nombre del cuestionario" required="" maxlength="100">
                         </div>
                     </div>
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="las la-chess la-2x">&nbsp</i>Selecciona una sección</span>
+                            <select class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="Selecciona una sección" id="selectSeccion" required="">
+                                <option value="0">Seleccione una sección</option>
+                            </select>
+                            <button onClick="btSeleccionarSeccion()" type="button" class="btn btn-primary" style="margin-left: 5px; border-radius: 0 10px 10px 0 !important">AGREGAR</button>
+                        </div>
+                    </div>
                     <span style="color:darkred; display: none" id="validacionCuestionario"></span>
                 </div>
-
+                
                 <div class="contenedor" style="height: 350px; overflow-y: scroll; overflow-x: hidden;">
                     <table id="" class="table table-bordered dt-responsive  nowrap w-100">
                         <tbody id="tbVerCuestionarioPreguntas"></tbody>

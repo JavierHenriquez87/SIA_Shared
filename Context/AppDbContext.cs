@@ -29,6 +29,7 @@ namespace SIA.Context
             modelBuilder.Entity<Au_detalle_plan_de_trabajo>().HasKey(e => new { e.CODIGO_ACTIVIDAD, e.NUMERO_PDT, e.NUMERO_AUDITORIA_INTEGRAL, e.NUMERO_AUDITORIA, e.ANIO_AI, e.CODIGO_USUARIO_ASIGNADO });
             modelBuilder.Entity<Mg_roles>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_ROL });
             modelBuilder.Entity<Mg_hallazgos_detalles>().HasKey(e => new { e.CODIGO_HALLAZGO, e.TIPO });
+            modelBuilder.Entity<Mg_cuestionario_secciones>().HasKey(e => new { e.CODIGO_CUESTIONARIO, e.CODIGO_SECCION });
 
             modelBuilder.Entity<Mg_Hallazgos>()
             .HasMany(h => h.Detalles)
@@ -102,5 +103,6 @@ namespace SIA.Context
         public virtual DbSet<Mg_hallazgos_documentos> MG_HALLAZGOS_DOCUMENTOS { get; set; }
         public virtual DbSet<Mg_orientacion_calificacion> MG_ORIENTACION_CALIFICACION { get; set; }
         public virtual DbSet<Mg_objetivos_internos> MG_OBJETIVOS_INTERNOS { get; set; }
+        public virtual DbSet<Mg_cuestionario_secciones> MG_CUESTIONARIO_SECCIONES { get; set; }
     }
 }

@@ -533,6 +533,10 @@
       "PackagePath": "staticwebassets\\assets\\images\\faviconHDH.ico"
     },
     {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\assets\\images\\firmas_usuarios\\AI10A100.jpg",
+      "PackagePath": "staticwebassets\\assets\\images\\firmas_usuarios\\AI10A100.jpg"
+    },
+    {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\assets\\images\\firmas_usuarios\\JA01A103.jpg",
       "PackagePath": "staticwebassets\\assets\\images\\firmas_usuarios\\JA01A103.jpg"
     },
@@ -5495,6 +5499,10 @@
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\css\\estiloAuditoriaTrabajo.css",
       "PackagePath": "staticwebassets\\css\\estiloAuditoriaTrabajo.css"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\css\\estiloCuestionario.css",
+      "PackagePath": "staticwebassets\\css\\estiloCuestionario.css"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.SIA.Microsoft.AspNetCore.StaticWebAssets.props",

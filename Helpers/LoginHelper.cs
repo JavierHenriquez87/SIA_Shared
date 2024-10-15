@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 using SIA.Models;
+using System.Runtime.InteropServices;
 
 namespace SIA.Helpers
 {

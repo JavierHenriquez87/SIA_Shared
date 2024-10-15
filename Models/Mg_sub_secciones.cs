@@ -9,6 +9,7 @@ namespace SIA.Models
         public int CODIGO_SUB_SECCION { get; set; }
         public string? DESCRIPCION { get; set; }
         public int CODIGO_SECCION { get; set; }
+        public int CODIGO_CUESTIONARIO { get; set; }
 
         // Propiedad de navegación a Mg_secciones
         public Mg_secciones Seccion { get; set; }

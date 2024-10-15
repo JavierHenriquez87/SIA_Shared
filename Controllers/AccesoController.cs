@@ -30,7 +30,7 @@ namespace SIA.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Login(string? hash)
         {
-            var hashSession = "vtUvMjqkmHKZiZtIMASxhOngtLKCXSwHyZhBupelrlMgqhcQgyjwW"; //HttpContext.Session.GetString("hash");
+            var hashSession = "TivFRTGkcVbxYJePxjNNGCimLjxCkHRzkMXFFZBMKruqduwVQtLrguT"; // HttpContext.Session.GetString("hash");
             if ((hash == "" || hash == null) && hashSession == null)
             {
                 return Redirect(Url.Action("Logout", "Acceso"));

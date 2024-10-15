@@ -10,6 +10,9 @@ namespace SIA.Models
 
         public string? DESCRIPCION_SECCION { get; set; }
 
+        [NotMapped]
+        public bool? EXISTE_SUB_SECCION { get; set; }
+
         // Propiedad de navegación para la relación uno a muchos con Mg_sub_secciones
         public ICollection<Mg_sub_secciones> sub_secciones { get; set; }
 
