@@ -9,5 +9,8 @@ namespace SIA.Models
         public int CODIGO_CUESTIONARIO { get; set; }
 
         public int? CODIGO_SECCION { get; set; }
+
+        [NotMapped]
+        public List<Mg_secciones> Secciones { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SIA.Models
 {
@@ -14,5 +15,8 @@ namespace SIA.Models
         public string? MODIFICADO_POR { get; set; }
         public int? ESTADO { get; set; }
         public string? CODIGO_TIPO_AUDITORIA { get; set; }
+
+        [NotMapped]
+        public bool EXISTE_RESPUESTAS { get; set; }
     }
 }

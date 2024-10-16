@@ -171,8 +171,8 @@ $(document).on('click', '.btnRemovePregunta', function () {
 //FUNCION PARA GUARDAR EL CUESTIONARIO QUE SE HA EDITADO
 //==========================================================================================
 
-async function GuardarCuestionarioEditado() {
-    
+function GuardarCuestionarioEditado(codigo) {
+    console.log(codigo);
 }
 
 //FUNCION PARA CARGAR LA INFORMACION DEL CUESTIONARIO

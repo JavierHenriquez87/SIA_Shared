@@ -25,10 +25,13 @@ function GetCuestionarios() {
                 },
                 {
                     "data": "codigO_CUESTIONARIO",
-                    "render": function (data, type, row, meta) {
+                    "render": function (data, type, row, meta, existeRespuesta) {
                         let buttons = "<div class='optiongrid'>";
+                        var estado = row.existE_RESPUESTAS ? "class='disabled-button'" : "";
 
-                        buttons += "<a href='javascript:void(0)' title='Editar Cuestionario' onClick='ModificarCuestionario(\"" + row.codigO_CUESTIONARIO + "\", \"" + row.nombrE_CUESTIONARIO + "\")'> <i class='fas fa-pencil-alt'> </i> Modificar</a> ";
+                        buttons += "<a href='javascript:void(0)' title='Editar Cuestionario' onClick='ModificarCuestionario(\"" + row.codigO_CUESTIONARIO + "\", \"" + row.nombrE_CUESTIONARIO + "\")' " + estado + "> <i class='fas fa-pencil-alt'> </i> Modificar</a> &nbsp| &nbsp";
+
+                        buttons += "<a href='javascript:void(0)' title='Eliminar Cuestionario' style='color: red;' onClick='EliminarCuestionario(\"" + row.codigO_CUESTIONARIO + "\", \"" + row.nombrE_CUESTIONARIO + "\")' " + estado + "> <i class='fas fa-trash-alt'> </i> Eliminar</a> ";
 
                         buttons += "</div>";
 
@@ -57,50 +60,48 @@ function NuevoCuestionario() {
     seccionesArray = [];
     subseccionesSeleccionadas = [];
 
-    $(document).ready(function () {
-        $.ajax({
-            type: 'post',
-            url: '/Configuracion/ObtenerPreguntasCuestionario',
-            data: {},
-            dataType: 'json',
-            success: function (result) {
-                if (result == "error") {
-                    Swal.fire(
-                        'Error!',
-                        'Ocurrio un error al obtener el cuestionario',
-                        'error'
-                    );
-                } else {
-                    // Limpiamos la tabla antes de agregar nuevas filas
-                    $('#tbVerCuestionarioPreguntas').empty();
-                    // Mostramos el modal
-                    $('#verCuestionarioModal').modal('show');
-
-                    const selectSeccion = document.getElementById('selectSeccion');
-                    const opcionInicial = selectSeccion.options[0];
-
-                    // Limpiar todas las opciones del select
-                    selectSeccion.innerHTML = '';
-                    // Volver a agregar solo la opción inicial
-                    selectSeccion.appendChild(opcionInicial);
-
-                    // Recorremos el objeto resultante y llenamos la tabla
-                    result.forEach(function (seccion, index) {
-                        const option = document.createElement('option');
-                        option.value = seccion.CODIGO_SECCION;  
-                        option.text = seccion.DESCRIPCION_SECCION;
-                        selectSeccion.appendChild(option);
-                    });
-                }
-            },
-            error: function (xhr, textStatus, errorThrown) {
+    $.ajax({
+        type: 'post',
+        url: 'ObtenerPreguntasCuestionario',
+        data: {},
+        dataType: 'json',
+        success: function (result) {
+            if (result == "error") {
                 Swal.fire(
                     'Error!',
-                    'Ocurrio un error',
+                    'Ocurrio un error al obtener el cuestionario',
                     'error'
                 );
+            } else {
+                // Limpiamos la tabla antes de agregar nuevas filas
+                $('#tbVerCuestionarioPreguntas').empty();
+                // Mostramos el modal
+                $('#verCuestionarioModal').modal('show');
+
+                const selectSeccion = document.getElementById('selectSeccion');
+                const opcionInicial = selectSeccion.options[0];
+
+                // Limpiar todas las opciones del select
+                selectSeccion.innerHTML = '';
+                // Volver a agregar solo la opción inicial
+                selectSeccion.appendChild(opcionInicial);
+
+                // Recorremos el objeto resultante y llenamos la tabla
+                result.forEach(function (seccion, index) {
+                    const option = document.createElement('option');
+                    option.value = seccion.CODIGO_SECCION;  
+                    option.text = seccion.DESCRIPCION_SECCION;
+                    selectSeccion.appendChild(option);
+                });
             }
-        });
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            Swal.fire(
+                'Error!',
+                'Ocurrio un error',
+                'error'
+            );
+        }
     });
 
     //Ocultamos el boton de editar y mostramos guardar
@@ -111,6 +112,98 @@ function NuevoCuestionario() {
 
     var modalTitle = document.getElementById('titleNuevoCuestionario');
     modalTitle.textContent = 'Nuevo Cuestionario';
+
+    //Mostramos el modal
+    $('#divCuestionario').modal('show');
+}
+
+
+//FUNCION PARA CARGAR EL MODAL DE MODIFICAR EL CUESTIONARIO
+//==========================================================================================
+
+function ModificarCuestionario(codigo, nombre) {
+    //Agregamos el evento de onclic para enviar el codigo
+    document.getElementById("btnEditarCuestionario").onclick = function () {
+        GuardarCuestionarioEditado(codigo);
+    };
+
+    //Limpiamos los arreglos
+    seccionesArray = [];
+    subseccionesSeleccionadas = [];
+
+    $.ajax({
+        type: 'post',
+        url: 'ObtenerPreguntasCuestionario',
+        data: { codigo: codigo }, 
+        dataType: 'json',
+        success: function (result) {
+            if (result == "error") {
+                Swal.fire(
+                    'Error!',
+                    'Ocurrio un error al obtener el cuestionario',
+                    'error'
+                );
+            } else {
+                // Limpiamos la tabla antes de agregar nuevas filas
+                $('#tbVerCuestionarioPreguntas').empty();
+                // Mostramos el modal
+                $('#verCuestionarioModal').modal('show');
+
+                const selectSeccion = document.getElementById('selectSeccion');
+                const opcionInicial = selectSeccion.options[0];
+
+                // Limpiar todas las opciones del select
+                selectSeccion.innerHTML = '';
+                // Volver a agregar solo la opción inicial
+                selectSeccion.appendChild(opcionInicial);
+
+                // Recorremos el objeto resultante y llenamos la tabla
+                result.forEach(function (seccion, index) {
+                    const option = document.createElement('option');
+                    option.value = seccion.CODIGO_SECCION;
+                    option.text = seccion.DESCRIPCION_SECCION;
+                    selectSeccion.appendChild(option);
+
+                    if (seccion.sub_secciones.length > 0) {
+                        //Si la sección tiene una sub seccion la agregamos
+                        AgregarSeccionCuestionario(seccion.CODIGO_SECCION, seccion.DESCRIPCION_SECCION);
+                        let subSectionId = 1;
+
+                        seccion.sub_secciones.forEach(function (sub_secciones, index) {
+                            $('.btnAddSubsection[data-section="section-' + seccion.CODIGO_SECCION + '"]').trigger('click');
+                            $('#subsection-section-' + seccion.CODIGO_SECCION + '-' + subSectionId + ' .subsection-title').val(sub_secciones.DESCRIPCION);
+
+                            if (sub_secciones.Preguntas_Cuestionarios.length > 0) {
+                                sub_secciones.Preguntas_Cuestionarios.forEach(function (preguntas, index) {
+                                    $('.btnAddPregunta[data-subsection="subsection-section-' + seccion.CODIGO_SECCION + '-' + subSectionId + '"]').trigger('click');
+                                    $('#subsection-section-' + seccion.CODIGO_SECCION + '-' + subSectionId + ' .question-input').val(preguntas.DESCRIPCION);
+                                    console.log(preguntas);
+                                });
+                            }
+
+                            subSectionId += 1;
+                        });
+                    }
+                });
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            Swal.fire(
+                'Error!',
+                'Ocurrio un error',
+                'error'
+            );
+        }
+    });
+
+    //Ocultamos el boton de editar y mostramos guardar
+    document.getElementById('btnGuardarCuestionario').style.display = 'none';
+    document.getElementById('btnEditarCuestionario').style.display = 'block';
+
+    $('#nombreCuestionario').val(nombre);
+
+    var modalTitle = document.getElementById('titleNuevoCuestionario');
+    modalTitle.textContent = 'Modificar Cuestionario';
 
     //Mostramos el modal
     $('#divCuestionario').modal('show');
@@ -171,23 +264,6 @@ $(document).on('click', '.btnRemovePregunta', function () {
     $(this).closest('tr').remove();
 });
 
-//FUNCION PARA CARGAR LA INFORMACION DEL CUESTIONARIO
-//==========================================================================================
-
-function ModificarCuestionario(id, nombre) {
-    //Ocultamos el boton de editar y mostramos guardar
-    document.getElementById('btnGuardarCuestionario').style.display = 'none';
-    document.getElementById('btnEditarCuestionario').style.display = 'block';
-
-    $('#nombreCuestionario').val("");
-
-    var modalTitle = document.getElementById('titleNuevoCuestionario');
-    modalTitle.textContent = 'Editar Cuestionario';
-
-    //Mostramos el modal
-    $('#divCuestionario').modal('show');
-}
-
 //FUNCION PARA VALIDAR EL NOMBRE DEL CUESTIONARIO
 //==========================================================================================
 function validarNombreCuestionarioDuplicado($id, $nombreCuestionario) {
@@ -218,58 +294,63 @@ function validarNombreCuestionarioDuplicado($id, $nombreCuestionario) {
     }
 }
 
+//FUNCION PARA GUARDAR EL CUESTIONARIO QUE SE HA EDITADO
+//==========================================================================================
+
+function GuardarCuestionarioEditado(codigo) {
+    GuardarCuestionario(codigo);
+}
+
 //FUNCION PARA AGREGAR O ELIMINAR SECCIONES EN EL MANTENIMIENTO
 //==========================================================================================
 function MantenimientoSecciones() {
-    $(document).ready(function () {
-        $.ajax({
-            type: 'post',
-            url: '/Configuracion/ObtenerSecciones',
-            data: {},
-            dataType: 'json',
-            success: function (result) {
-                if (result == "error") {
-                    Swal.fire(
-                        'Error!',
-                        'Ocurrio un error al obtener las secciones',
-                        'error'
-                    );
-                } else {
-                    // Limpiamos la tabla antes de agregar nuevas filas
-                    $('#tbVerSecciones').empty();
-
-                    // Recorremos el objeto resultante y llenamos la tabla
-                    result.forEach(function (seccion, index) {
-                        var index = index + 1;
-
-                        // Agregar la sección principal
-                        $('#tbVerSecciones').append(
-                            `<tr id="section-${index}" class="table table-bordered dt-responsive nowrap w-100">
-                                <td style="width: 5%; text-align:center;">${index}</td> <!-- Columna para el índice -->
-                                <th colspan="1" style="text-align:center;">${seccion.DESCRIPCION_SECCION}</th>
-                                <td style="width: 10%; text-align:center;">
-                                    <button type="button" class="btn btn-danger btn-sm" 
-                                            id="btnEliminar-${seccion.CODIGO_SECCION}"
-                                            onclick="eliminarSeccion('${seccion.CODIGO_SECCION}')">
-                                        Eliminar
-                                    </button>
-                                </td> 
-                            </tr>`
-                        );
-                        if (seccion.EXISTE_SUB_SECCION) {
-                            $(`#btnEliminar-${seccion.CODIGO_SECCION}`).prop('disabled', true);
-                        }
-                    });
-                }
-            },
-            error: function (xhr, textStatus, errorThrown) {
+    $.ajax({
+        type: 'post',
+        url: '/Configuracion/ObtenerSecciones',
+        data: {},
+        dataType: 'json',
+        success: function (result) {
+            if (result == "error") {
                 Swal.fire(
                     'Error!',
-                    'Ocurrio un error',
+                    'Ocurrio un error al obtener las secciones',
                     'error'
                 );
+            } else {
+                // Limpiamos la tabla antes de agregar nuevas filas
+                $('#tbVerSecciones').empty();
+
+                // Recorremos el objeto resultante y llenamos la tabla
+                result.forEach(function (seccion, index) {
+                    var index = index + 1;
+
+                    // Agregar la sección principal
+                    $('#tbVerSecciones').append(
+                        `<tr id="section-${index}" class="table table-bordered dt-responsive nowrap w-100">
+                            <td style="width: 5%; text-align:center;">${index}</td> <!-- Columna para el índice -->
+                            <th colspan="1" style="text-align:center;">${seccion.DESCRIPCION_SECCION}</th>
+                            <td style="width: 10%; text-align:center;">
+                                <button type="button" class="btn btn-danger btn-sm" 
+                                        id="btnEliminar-${seccion.CODIGO_SECCION}"
+                                        onclick="eliminarSeccion('${seccion.CODIGO_SECCION}')">
+                                    Eliminar
+                                </button>
+                            </td> 
+                        </tr>`
+                    );
+                    if (seccion.EXISTE_SUB_SECCION) {
+                        $(`#btnEliminar-${seccion.CODIGO_SECCION}`).prop('disabled', true);
+                    }
+                });
             }
-        });
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            Swal.fire(
+                'Error!',
+                'Ocurrio un error',
+                'error'
+            );
+        }
     });
 
     $('#nombreSeccion').val("");
@@ -361,11 +442,16 @@ function btSeleccionarSeccion() {
         );
     }
     else {
-        let sectionId = `section-${select.value}`;
-        // Agregar la sección principal
-        $('#tbVerCuestionarioPreguntas').append(
-            `<tr class="table-primary">
-            <th colspan="2" style="text-align:center;">${select.options[select.selectedIndex].text}</th>
+        AgregarSeccionCuestionario(select.value, select.options[select.selectedIndex].text);
+    }
+}
+
+function AgregarSeccionCuestionario(codigo, descripcion) {
+    let sectionId = `section-${codigo}`;
+    // Agregar la sección principal
+    $('#tbVerCuestionarioPreguntas').append(
+        `<tr class="table-primary">
+            <th colspan="2" style="text-align:center;">${descripcion}</th>
         </tr>
         <tr>
             <td colspan="2">
@@ -379,28 +465,33 @@ function btSeleccionarSeccion() {
                 </div>
             </td>
         </tr>`
-        );
+    );
 
-        // Agregamos la nueva seccion al array
-        let nuevaSeccion = {
-            CODIGO_SECCION: parseInt(select.value),
-            DESCRIPCION_SECCION: select.options[select.selectedIndex].text
-        };
-        seccionesArray.push(nuevaSeccion);
+    // Agregamos la nueva seccion al array
+    let nuevaSeccion = {
+        CODIGO_SECCION: parseInt(codigo),
+        DESCRIPCION_SECCION: descripcion
+    };
+    seccionesArray.push(nuevaSeccion);
 
-        // Quitar la opción seleccionada del select
-        const optionToRemove = select.options[select.selectedIndex];
-        select.remove(optionToRemove.index);
+    const select = document.getElementById('selectSeccion');
+    // Seleccionar y eliminar la opción directamente por su valor
+    const optionToRemove = select.querySelector(`option[value="${codigo}"]`);
+    optionToRemove.remove();
 
-        // Seleccionar la opción predeterminada (posición 0)
-        select.selectedIndex = 0;
-    }
+    // Seleccionar la opción predeterminada (posición 0)
+    select.selectedIndex = 0;
 }
 
 //FUNCION PARA GUARDAR EL CUESTIONARIO NUEVO
 //==========================================================================================
 
-async function GuardarCuestionarioNuevo() {
+function GuardarCuestionarioNuevo() {
+    GuardarCuestionario();
+}
+
+//FUNCION PARA GUARDAR O EDITAR 
+async function GuardarCuestionario(codigo = 0) {
     let subseccionesSeleccionadas = [];
 
     const nombreCuestionario = $('#nombreCuestionario').val().trim();
@@ -471,13 +562,14 @@ async function GuardarCuestionarioNuevo() {
     });
 
     const cuestionario = {
+        CODIGO_CUESTIONARIO: codigo,
         NOMBRE_CUESTIONARIO: nombreCuestionario,
         SUB_SECCIONES: subseccionesSeleccionadas
     };
 
     $.ajax({
         method: 'POST',
-        url: 'GuardarCuestionarioNuevo',
+        url: 'GuardarCuestionario',
         data: JSON.stringify(cuestionario),
         contentType: 'application/json',
         success: function (respuesta) {
@@ -493,7 +585,9 @@ async function GuardarCuestionarioNuevo() {
                     text: respuesta.message,
                     icon: 'success',
                     didClose: () => {
-                        location.reload();
+                        $('#divCuestionario').modal('hide');
+                        // Actualizar la tabla
+                        $('#tbCuestionarios').DataTable().ajax.reload(); // Recarga la tabla
                     }
                 });
             }
@@ -510,6 +604,52 @@ async function GuardarCuestionarioNuevo() {
             });
         }
     });
+}
 
-    console.log(subseccionesSeleccionadas);
+//FUNCION PARA ELIMINAR EL CUESTIONARIO
+//==========================================================================================
+function EliminarCuestionario(codigo, nombre) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: `¿Quieres eliminar el cuestionario "${nombre}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Realizar llamada AJAX para eliminar el cuestionario
+            $.ajax({
+                method: 'POST',
+                url: 'EliminarCuestionario',
+                data: { codigo: codigo },
+                success: function (respuesta) {
+                    if (respuesta.success) {
+                        Swal.fire(
+                            'Eliminado!',
+                            `El cuestionario "${nombre}" ha sido eliminado.`,
+                            'success'
+                        );
+                        // Actualizar la tabla o la interfaz aquí
+                        $('#tbCuestionarios').DataTable().ajax.reload(); // Recarga la tabla
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            respuesta.message,
+                            'error'
+                        );
+                    }
+                },
+                error: function () {
+                    Swal.fire(
+                        'Error!',
+                        'Hubo un problema al procesar tu solicitud. Intenta de nuevo más tarde.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
 }

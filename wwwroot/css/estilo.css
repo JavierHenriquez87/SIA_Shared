@@ -199,3 +199,11 @@ select.form-control {
 .table-primary {
     --bs-table-bg: #dde2fa !important;
 }
+
+.disabled-button {
+    pointer-events: none;
+    color: gray;
+    text-decoration: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+}

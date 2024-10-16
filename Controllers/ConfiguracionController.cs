@@ -323,7 +323,36 @@ namespace SIA.Controllers
                 recordsTotal = await _context.AU_CUESTIONARIOS.CountAsync();
             }
 
-            var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
+            var cuestionariosConRespuestas = new List<object>();
+
+            foreach (var cuestionario in data)
+            {
+                // Obtener las preguntas del cuestionario actual
+                var preguntasDelCuestionario = await _context.MG_PREGUNTAS_CUESTIONARIO
+                    .Where(p => p.CODIGO_CUESTIONARIO == cuestionario.CODIGO_CUESTIONARIO)
+                    .Select(p => p.CODIGO_PREGUNTA)
+                    .ToListAsync();
+
+                // Verificar si existen respuestas para las preguntas del cuestionario
+                var existeRespuesta = await _context.MG_RESPUESTAS_CUESTIONARIO
+                    .AnyAsync(r => preguntasDelCuestionario.Contains(r.CODIGO_PREGUNTA));
+
+                cuestionariosConRespuestas.Add(new
+                {
+                    cuestionario.CODIGO_CUESTIONARIO,
+                    cuestionario.NOMBRE_CUESTIONARIO,
+                    cuestionario.TIPO_CUESTIONARIO,
+                    cuestionario.FECHA_CREACION,
+                    cuestionario.CREADO_POR,
+                    cuestionario.FECHA_MODIFICACION,
+                    cuestionario.MODIFICADO_POR,
+                    cuestionario.ESTADO,
+                    cuestionario.CODIGO_TIPO_AUDITORIA,
+                    EXISTE_RESPUESTAS = existeRespuesta
+                });
+            }
+
+            var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data = cuestionariosConRespuestas };
             return Ok(jsonData);
         }
 
@@ -365,14 +394,34 @@ namespace SIA.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> ObtenerPreguntasCuestionario()
+        public async Task<IActionResult> ObtenerPreguntasCuestionario(int codigo = 0)
         {
             try
             {
-                List<Mg_secciones> secciones = await _context.MG_SECCIONES
-                        .Include(x => x.sub_secciones)
-                        .ThenInclude(x => x.Preguntas_Cuestionarios)
-                        .ToListAsync();
+                List<Mg_secciones> secciones = await _context.MG_SECCIONES.ToListAsync();
+
+                if (codigo > 0)
+                {
+                    var cuestionarioConSecciones = await _context.MG_CUESTIONARIO_SECCIONES
+                                                        .Where(cs => cs.CODIGO_CUESTIONARIO == codigo) 
+                                                        .ToListAsync();
+
+                    List<Mg_secciones> seccionesConCuestionario = new List<Mg_secciones>();
+
+                    foreach (var cuestionarioSeccion in cuestionarioConSecciones)
+                    {
+                        var subSecciones = await _context.MG_SUB_SECCIONES.Where(s => s.CODIGO_SECCION == cuestionarioSeccion.CODIGO_SECCION && s.CODIGO_CUESTIONARIO == codigo).ToListAsync();
+
+                        foreach (var subseccion in subSecciones)
+                        {
+                            var preguntas = await _context.MG_PREGUNTAS_CUESTIONARIO.Where(s => s.CODIGO_SUB_SECCION == subseccion.CODIGO_SUB_SECCION && s.CODIGO_CUESTIONARIO == codigo).ToListAsync();
+
+                            subseccion.Preguntas_Cuestionarios = preguntas;
+                        }
+                        
+                        secciones.FirstOrDefault(a => a.CODIGO_SECCION == cuestionarioSeccion.CODIGO_SECCION).sub_secciones = subSecciones;
+                    }
+                }
 
                 var options = new JsonSerializerOptions
                 {
@@ -509,30 +558,74 @@ namespace SIA.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult GuardarCuestionarioNuevo([FromBody] Mg_cuestionario_subseccion cuestionario)
+        public async Task<IActionResult> GuardarCuestionarioAsync([FromBody] Cuestionario_subseccion cuestionario)
         {
+            int codigoCuestionario = 0;
+
             try
             {
-                int maxCodigoCuestionario = _context.AU_CUESTIONARIOS.Any() ? _context.AU_CUESTIONARIOS.Max(s => s.CODIGO_CUESTIONARIO) : 0;
-
-                // Crear una nueva entidad de la sección
-                var nuevoCuestionario = new Au_cuestionarios
+                if (cuestionario.CODIGO_CUESTIONARIO == 0)
                 {
-                    CODIGO_CUESTIONARIO = maxCodigoCuestionario + 1,
-                    NOMBRE_CUESTIONARIO = cuestionario.NOMBRE_CUESTIONARIO,
-                    CREADO_POR = HttpContext.Session.GetString("user"),
-                    FECHA_CREACION = DateTime.Now,
-                    ESTADO = 1
-                };
+                    codigoCuestionario = _context.AU_CUESTIONARIOS.Any() ? _context.AU_CUESTIONARIOS.Max(s => s.CODIGO_CUESTIONARIO) : 0;
 
-                _context.AU_CUESTIONARIOS.Add(nuevoCuestionario);
+                    codigoCuestionario = codigoCuestionario + 1;
+
+                    // Crear una nueva entidad de la sección
+                    var nuevoCuestionario = new Au_cuestionarios
+                    {
+                        CODIGO_CUESTIONARIO = codigoCuestionario,
+                        NOMBRE_CUESTIONARIO = cuestionario.NOMBRE_CUESTIONARIO,
+                        CREADO_POR = HttpContext.Session.GetString("user"),
+                        FECHA_CREACION = DateTime.Now,
+                        ESTADO = 1
+                    };
+
+                    _context.AU_CUESTIONARIOS.Add(nuevoCuestionario);
+                }
+                else
+                {
+                    codigoCuestionario = cuestionario.CODIGO_CUESTIONARIO;
+
+                    // Eliminar preguntas relacionadas
+                    var preguntasAEliminar = _context.MG_PREGUNTAS_CUESTIONARIO
+                        .Where(p => p.CODIGO_CUESTIONARIO == codigoCuestionario).ToList();
+                    if (preguntasAEliminar.Any())
+                    {
+                        _context.MG_PREGUNTAS_CUESTIONARIO.RemoveRange(preguntasAEliminar);
+                    }
+
+                    // Eliminar subsecciones relacionadas
+                    var subSeccionesAEliminar = _context.MG_SUB_SECCIONES
+                        .Where(s => s.CODIGO_CUESTIONARIO == codigoCuestionario).ToList();
+                    if (subSeccionesAEliminar.Any())
+                    {
+                        _context.MG_SUB_SECCIONES.RemoveRange(subSeccionesAEliminar);
+                    }
+
+                    // Eliminar secciones relacionadas
+                    var seccionesAEliminar = _context.MG_CUESTIONARIO_SECCIONES
+                        .Where(s => s.CODIGO_CUESTIONARIO == codigoCuestionario).ToList();
+                    if (seccionesAEliminar.Any())
+                    {
+                        _context.MG_CUESTIONARIO_SECCIONES.RemoveRange(seccionesAEliminar);
+                    }
+                    var cuestionarioExistente = await _context.AU_CUESTIONARIOS.FirstOrDefaultAsync(c => c.CODIGO_CUESTIONARIO == codigoCuestionario);
+
+                    // Actualizar las propiedades del cuestionario existente
+                    cuestionarioExistente.NOMBRE_CUESTIONARIO = cuestionario.NOMBRE_CUESTIONARIO;
+                    cuestionarioExistente.MODIFICADO_POR = HttpContext.Session.GetString("user");
+                    cuestionarioExistente.FECHA_MODIFICACION = DateTime.Now;
+
+                    // Guardar los cambios después de eliminar
+                    _context.SaveChanges();
+                }
 
                 var secciones = cuestionario.SUB_SECCIONES
                                 .GroupBy(c => c.CODIGO_SECCION)
                                 .Select(group => new Mg_cuestionario_secciones
                                 {
                                     CODIGO_SECCION = group.Key,
-                                    CODIGO_CUESTIONARIO = maxCodigoCuestionario + 1,
+                                    CODIGO_CUESTIONARIO = codigoCuestionario,
                                 })
                                 .ToList();
 
@@ -547,7 +640,7 @@ namespace SIA.Controllers
                         CODIGO_SUB_SECCION = maxSubSeccion + 1,
                         DESCRIPCION = subSeccion.DESCRIPCION,
                         CODIGO_SECCION = subSeccion.CODIGO_SECCION,
-                        CODIGO_CUESTIONARIO = maxCodigoCuestionario + 1
+                        CODIGO_CUESTIONARIO = codigoCuestionario
                     };
 
                     _context.MG_SUB_SECCIONES.Add(nuevaSubSeccion);
@@ -563,7 +656,7 @@ namespace SIA.Controllers
                             CODIGO_PREGUNTA = maxPregunta + 1,
                             CODIGO_SUB_SECCION = maxSubSeccion + 1,
                             DESCRIPCION = pregunta.DESCRIPCION,
-                            CODIGO_CUESTIONARIO = maxCodigoCuestionario + 1,
+                            CODIGO_CUESTIONARIO = codigoCuestionario,
                             CREADO_POR = HttpContext.Session.GetString("user"),
                             FECHA_CREACION = DateTime.Now,
                         };
@@ -579,8 +672,94 @@ namespace SIA.Controllers
             }
             catch (Exception ex)
             {
-                // Manejo de excepciones
+                if(codigoCuestionario > 0)
+                {
+                    // Eliminar preguntas relacionadas
+                    var preguntasAEliminar = _context.MG_PREGUNTAS_CUESTIONARIO
+                        .Where(p => p.CODIGO_CUESTIONARIO == codigoCuestionario).ToList();
+                    if (preguntasAEliminar.Any())
+                    {
+                        _context.MG_PREGUNTAS_CUESTIONARIO.RemoveRange(preguntasAEliminar);
+                    }
+
+                    // Eliminar subsecciones relacionadas
+                    var subSeccionesAEliminar = _context.MG_SUB_SECCIONES
+                        .Where(s => s.CODIGO_CUESTIONARIO == codigoCuestionario).ToList();
+                    if (subSeccionesAEliminar.Any())
+                    {
+                        _context.MG_SUB_SECCIONES.RemoveRange(subSeccionesAEliminar);
+                    }
+
+                    // Eliminar secciones relacionadas
+                    var seccionesAEliminar = _context.MG_CUESTIONARIO_SECCIONES
+                        .Where(s => s.CODIGO_CUESTIONARIO == codigoCuestionario).ToList();
+                    if (seccionesAEliminar.Any())
+                    {
+                        _context.MG_CUESTIONARIO_SECCIONES.RemoveRange(seccionesAEliminar);
+                    }
+
+                    // Eliminar el cuestionario
+                    var cuestionarioAEliminar = _context.AU_CUESTIONARIOS
+                        .Where(c => c.CODIGO_CUESTIONARIO == codigoCuestionario).FirstOrDefault();
+                    if (cuestionarioAEliminar != null)
+                    {
+                        _context.AU_CUESTIONARIOS.Remove(cuestionarioAEliminar);
+                    }
+
+                    // Guardar los cambios después de eliminar
+                    _context.SaveChanges();
+                }
+
                 return Json(new { success = false, message = "Ocurrió un error al agregar el cuestionario: " + ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// eliminar un cuestionario
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult EliminarCuestionario(int codigo)
+        {
+            try
+            {
+                // Eliminar preguntas relacionadas
+                var preguntasAEliminar = _context.MG_PREGUNTAS_CUESTIONARIO
+                    .Where(p => p.CODIGO_CUESTIONARIO == codigo).ToList();
+                _context.MG_PREGUNTAS_CUESTIONARIO.RemoveRange(preguntasAEliminar);
+
+                // Guardar los cambios
+                _context.SaveChanges();
+
+                // Eliminar subsecciones relacionadas
+                var subSeccionesAEliminar = _context.MG_SUB_SECCIONES
+                    .Where(s => s.CODIGO_CUESTIONARIO == codigo).ToList();
+                _context.MG_SUB_SECCIONES.RemoveRange(subSeccionesAEliminar);
+
+                // Guardar los cambios
+                _context.SaveChanges();
+
+                // Eliminar secciones relacionadas
+                var seccionesAEliminar = _context.MG_CUESTIONARIO_SECCIONES
+                    .Where(s => s.CODIGO_CUESTIONARIO == codigo).ToList();
+                _context.MG_CUESTIONARIO_SECCIONES.RemoveRange(seccionesAEliminar);
+
+                // Guardar los cambios
+                _context.SaveChanges();
+
+                // Eliminar el cuestionario
+                var cuestionarioAEliminar = _context.AU_CUESTIONARIOS
+                    .FirstOrDefault(c => c.CODIGO_CUESTIONARIO == codigo);
+                _context.AU_CUESTIONARIOS.Remove(cuestionarioAEliminar);
+
+                // Guardar los cambios
+                _context.SaveChanges();
+                
+                return Json(new { success = true, message = "" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Ocurrió un error: " + ex.Message });
             }
         }
     }
