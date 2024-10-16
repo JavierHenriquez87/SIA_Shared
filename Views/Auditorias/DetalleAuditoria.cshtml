@@ -78,6 +78,16 @@
 
                 <div id="documents-lists">
                     <div id="opcion1DA" style="display:block; cursor: pointer;">
+                        <div class="document-item" style="cursor: pointer;" onclick="IrCartaSalida('@ViewBag.CODIGO_AUDITORIA')">
+                            <div class="icon doc"></div>
+                            <div class="title">CARTA DE SALIDA</div>
+                            <div class="@styleTextStatusMDP">@TextStatusMDP</div>
+                        </div>
+                        <div class="document-item" style="cursor: pointer;" onclick="IrCartaIngreso('@ViewBag.CODIGO_AUDITORIA')">
+                            <div class="icon doc"></div>
+                            <div class="title">CARTA DE INGRESO</div>
+                            <div class="@styleTextStatusMDP">@TextStatusMDP</div>
+                        </div>
                         <div class="document-item" onclick="MostrarOpcionesDA()">
                             <div class="icon folder"></div>
                             <div class="title">PLANIFICACIÓN</div>

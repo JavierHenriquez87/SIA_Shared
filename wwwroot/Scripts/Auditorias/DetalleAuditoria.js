@@ -154,3 +154,11 @@ function IrCuestionarioAudi() {
 function IrPlanTrabajo() {
     window.location.href = '/Auditorias/ProgramasDeTrabajo';
 }
+
+function IrCartaSalida(codigo_auditoria) {
+    window.location.href = '/Auditorias/AuditoriaCartaSalida?id=' + codigo_auditoria;
+}
+
+function IrCartaIngreso(codigo_auditoria) {
+    window.location.href = '/Auditorias/AuditoriaCartaIngreso?id=' + codigo_auditoria;
+}

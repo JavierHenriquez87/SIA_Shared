@@ -367,7 +367,7 @@ namespace SIA.Controllers
                     int maxNumeroAuditoriaEspecifica = await _context.AU_AUDITORIAS
                         .MaxAsync(a => (int?)a.NUMERO_AUDITORIA) ?? 0;
 
-                    // Incrementar el valor máximo en 1 
+                    // Incrementar el valor máximo en 1
                     nuevoIdAuditoria = maxNumeroAuditoriaEspecifica + 1;
 
                     //Obtenemos informacion complementaria del universo auditable
@@ -608,6 +608,7 @@ namespace SIA.Controllers
             ViewBag.ESTADO_AUDITORIA = dataAuditoria.CODIGO_ESTADO;
             ViewBag.MEMO_EXISTE = MemoExiste;
             ViewBag.ESTADO_MDP = MemoExiste?.CODIGO_ESTADO ?? 0;
+            ViewBag.CODIGO_AUDITORIA = dataAuditoria.CODIGO_AUDITORIA;
 
 
             return View();
@@ -2839,7 +2840,7 @@ namespace SIA.Controllers
         /// Mostrar la carta de ingreso
         /// </summary>
         /// <returns></returns>
-        [Route("Auditorias/AuditoriaCartaIngreso/")]
+        [Route("Auditorias/AuditoriaCartaIngreso")]
         public async Task<IActionResult> AuditoriaCartaIngresoAsync(string id)
         {
             ViewBag.id = id;

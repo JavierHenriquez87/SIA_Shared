@@ -403,7 +403,7 @@ namespace SIA.Controllers
                 if (codigo > 0)
                 {
                     var cuestionarioConSecciones = await _context.MG_CUESTIONARIO_SECCIONES
-                                                        .Where(cs => cs.CODIGO_CUESTIONARIO == codigo) 
+                                                        .Where(cs => cs.CODIGO_CUESTIONARIO == codigo)
                                                         .ToListAsync();
 
                     List<Mg_secciones> seccionesConCuestionario = new List<Mg_secciones>();
@@ -418,7 +418,7 @@ namespace SIA.Controllers
 
                             subseccion.Preguntas_Cuestionarios = preguntas;
                         }
-                        
+
                         secciones.FirstOrDefault(a => a.CODIGO_SECCION == cuestionarioSeccion.CODIGO_SECCION).sub_secciones = subSecciones;
                     }
                 }
@@ -495,11 +495,13 @@ namespace SIA.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult AgregarSeccion(string? nombre)
+        public async Task<IActionResult> AgregarSeccion(string? nombre)
         {
             try
             {
-                int maxCodigoSeccion = _context.MG_SECCIONES.Max(s => s.CODIGO_SECCION);
+                //Obtenemos el codigo del siguiente registro segun el anio actual
+                int maxCodigoSeccion = await _context.MG_SECCIONES
+                    .MaxAsync(a => (int?)a.CODIGO_SECCION) ?? 0;
 
                 // Crear una nueva entidad de la sección
                 var nuevaSeccion = new Mg_secciones
@@ -672,7 +674,7 @@ namespace SIA.Controllers
             }
             catch (Exception ex)
             {
-                if(codigoCuestionario > 0)
+                if (codigoCuestionario > 0)
                 {
                     // Eliminar preguntas relacionadas
                     var preguntasAEliminar = _context.MG_PREGUNTAS_CUESTIONARIO
@@ -754,7 +756,7 @@ namespace SIA.Controllers
 
                 // Guardar los cambios
                 _context.SaveChanges();
-                
+
                 return Json(new { success = true, message = "" });
             }
             catch (Exception ex)

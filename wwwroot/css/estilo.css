@@ -190,6 +190,7 @@ h3, h5 {
     cursor: not-allowed; /* Mostrar el cursor de prohibido */
 }
 
+
 select.form-control {
     -webkit-appearance: menulist; /* Safari/Chrome */
     -moz-appearance: menulist; /* Firefox */
@@ -199,6 +200,7 @@ select.form-control {
 .table-primary {
     --bs-table-bg: #dde2fa !important;
 }
+
 
 .disabled-button {
     pointer-events: none;

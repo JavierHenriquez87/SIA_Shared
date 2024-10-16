@@ -1,0 +1,169 @@
+﻿@{
+    ViewBag.Title = "Detalle Auditoría";
+    ViewBag.pTitle = "DETALLE DE LA AUDITORÍA";
+    ViewBag.pageTitle = "Auditorías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var estado = ViewBag.ESTADO;
+    var estadoAI = ViewBag.ESTADOAI;
+    var rolcode = ViewBag.ROL_CODE;
+}
+
+@section styles {
+    <link href="~/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/libs/spectrum-colorpicker2/spectrum.min.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/libs/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/libs/@("@chenfengyuan")/datepicker/datepicker.min.css" rel="stylesheet">
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloAuditoriaDetalle.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="row">
+                    <h5 style="width: 70%">@ViewBag.TITULO_AUDITORIA</h5>
+                    <div class="form-group" style="padding-top: 10px" id="divButtons">
+                        <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
+                        <div class="status @ViewBag.STATUS" id="divStatus" style="width: 20%; height: 20px;">@ViewBag.ESTADO</div>
+                    </div>
+                    @if (estado == "Aprobado")
+                    {
+                        <a href="~/print/Index?doc=memorandumPlanificacion&id=@ViewBag.CODIGO_MEMORANDUM_PLANIFICACION" target="_blank" style="width: 10%; font-size:18px; cursor:pointer;">
+                            <i class="fas fa-print"></i>
+                        </a>
+                    }
+                </div>
+
+                <div class="row" style="margin-bottom: 20px">
+                    <div class="form-group col-md-6">
+                        <label for="codigoMemorandum">Código de Memorándum de Planificación</label>
+                        <input type="hidden" id="numAudInteg" class="form-control" value="@ViewBag.NUMERO_AUDITORIA_INTEGRAL" disabled>
+                        <input type="hidden" id="anioAudInteg" class="form-control" value="@ViewBag.ANIO_AUDITORIA_INTEGRAL" disabled>
+                        <input type="hidden" id="numeroMDPEdit" class="form-control" value="@ViewBag.NUMERO_MDP" disabled>
+                        <input type="text" id="codigoMemorandum" name="codigoMemorandum" class="form-control" value="@ViewBag.CODIGO_MEMORANDUM_PLANIFICACION" disabled>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="fechaAprobacion">Fecha de Aprobación</label>
+                        <input type="date" id="fechaAprobacion" name="fechaAprobacion" class="form-control" value="" disabled>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="DETtipoAuditoria">Tipos de Auditoría</label>
+                        </div>
+                        <div class="col-md-6" style="text-align:right">
+                            @if (estado == "Con Observaciones")
+                            {
+                                <button type="button" class="btn btn-xl waves-effect" onclick="openSidebar()">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                            }
+                        </div>
+                    </div>
+                    <pre id="DETtipoAuditoria" name="DETtipoAuditoria" class="form-control" placeholder="Escribir..." disabled>@Html.Raw(ViewBag.TIPOS_DE_AUDITORIAS_REALIZAR)</pre>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="objetivoAuditoria">Objetivo de la Auditoría</label>
+                        </div>
+                        <div class="col-md-6" style="text-align:right">
+                            @if (estado == "Con Observaciones")
+                            {
+                                <button type="button" class="btn btn-xl waves-effect" onclick="openSidebarObjRec()">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                            }
+                        </div>
+                    </div>
+                    <textarea id="objetivoAuditoria" name="objetivoAuditoria" class="form-control" placeholder="Escribir..." disabled rows="7">@ViewBag.OBJETIVO_AUDITORIA</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="equipoTrabajo">Equipo de Trabajo</label>
+                    <textarea id="equipoTrabajo" name="equipoTrabajo" class="form-control" placeholder="Escribir..." disabled rows="7">@ViewBag.TEXTO_AUDITORES_AUDITORIA @ViewBag.AUDITORES_AUDITORIA</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="recursos">Recursos</label>
+                    <textarea id="recursos" name="recursos" class="form-control" placeholder="Escribir..." disabled rows="7">@ViewBag.RECURSOS_AUDITORIA</textarea>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="tiempoAuditoria">Tiempo</label>
+                        </div>
+                    </div>
+                    <input id="tiempoAuditoria" type="text" name="tiempoAuditoria" class="form-control" value="@ViewBag.TEXTO_TIEMPO_AUDITORIA @ViewBag.TIEMPO_AUDITORIA_INICIO al @ViewBag.TIEMPO_AUDITORIA_FIN" disabled>
+                </div>
+
+                @* Verificamos si el memorandum de planificacion esta aprobado *@
+                @if (estado == "Pendiente Aprobación")
+                {
+                    @if (estadoAI != 14)
+                    {
+                        @* Verificamos si el rol del usuario logueado es Auditor Interno*@
+                        @if (rolcode == "AI")
+                        {
+                            <div class="form-group" style="padding-top: 10px" id="divButtons">
+                                <button type="button" onclick="RegresarMDP()" class="btn btn-warning">Regresar</button>
+                                <button type="button" onclick="AprobarMDP()" class="btn btn-success">Aprobar</button>
+                            </div>
+                        }
+                    }
+                }
+                @if (estado != "Aprobado")
+                {
+                    <div class="form-group">
+                        <label for="comentarioMDP">Comentarios</label>
+                        <textarea id="comentarioMDP" name="comentarioMDP" class="form-control" placeholder="Escribir..." maxlength="1000"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" onclick="AgregarComentario()" style="width: 20%" class="btn btn-primary" id="buttonConfirm">Agregar Comentario</button>
+                    </div>
+                }
+
+
+                <div id="comentarios-list">
+                    @{
+                        var comentarios = ViewBag.COMENTARIOS as List<Au_comentarios_mdp>;
+                    }
+                    @Html.Partial("partialView/_ComentariosMDP", comentarios)
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@Html.Partial("partialView/_EditMDP_sidebar")
+@Html.Partial("partialView/_EditObjRecurMDP_sidebar")
+
+@section scripts {
+    <script src="~/assets/libs/select2/js/select2.min.js"></script>
+    <script src="~/assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/assets/libs/spectrum-colorpicker2/spectrum.min.js"></script>
+    <script src="~/assets/libs/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+    <script src="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="~/assets/libs/@("@chenfengyuan")/datepicker/datepicker.min.js"></script>
+    <!-- form advanced init -->
+    <script src="~/assets/js/pages/form-advanced.init.js"></script>
+    <script src="~/assets/js/app.js"></script>
+
+    <script src="~/Scripts/Helpers/Helpers.js"></script>
+    <script src="~/Scripts/Auditorias/DetalleDocAuditoria.js"></script>
+}
