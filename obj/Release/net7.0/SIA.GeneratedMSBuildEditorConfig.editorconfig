@@ -10,6 +10,8 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = SIA
 build_property.RootNamespace = SIA
 build_property.ProjectDir = C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
@@ -62,6 +64,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA_Shared/Views/Auditorias/DetalleDocAuditoria - Copia.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXVkaXRvcmlhc1xEZXRhbGxlRG9jQXVkaXRvcmlhIC0gQ29waWEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA_Shared/Views/Auditorias/DetalleDocAuditoria.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXVkaXRvcmlhc1xEZXRhbGxlRG9jQXVkaXRvcmlhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA_Shared/Views/Auditorias/partialView/_AgregarCuestionario.cshtml]
@@ -138,6 +144,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA_Shared/Views/Configuracion/partialView/_mainCuestionario.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uZmlndXJhY2lvblxwYXJ0aWFsVmlld1xfbWFpbkN1ZXN0aW9uYXJpby5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA_Shared/Views/Configuracion/partialView/_mainSecciones.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uZmlndXJhY2lvblxwYXJ0aWFsVmlld1xfbWFpblNlY2Npb25lcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA_Shared/Views/Dashboard/DashboardBlog.cshtml]

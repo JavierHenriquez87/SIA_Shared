@@ -39,6 +39,9 @@ namespace SIA.Print
             var dataAI = await _context.AU_AUDITORIAS_INTEGRALES
                                 .FirstOrDefaultAsync(u => u.CODIGO_AUDITORIA == id);
 
+            var carta = await _context.MG_CARTAS
+                                .FirstOrDefaultAsync(u => u.TIPO_CARTA == 1 && u.NUMERO_AUDITORIA_INTEGRAL == dataAI.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == dataAI.ANIO_AI);
+
             string fechaInicioVisita = dataAI.FECHA_INICIO_VISITA?.ToString("dd MMMM yyyy");
             string fechaFinVisita = dataAI.FECHA_FIN_VISITA?.ToString("dd MMMM 'del año' yyyy");
 
@@ -117,106 +120,204 @@ namespace SIA.Print
                                 .SetFontColor(_helpersPDF.ColorGris())
                                 ).SetMarginTop(14)));
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Realizaremos nuestra auditoría con el objetivo de expresar nuestros comentarios, observaciones y recomendaciones sobre las inconsistencias encontradas en dicha revisión.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
-
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat(" Una auditoría conlleva la aplicación de procedimientos para obtener evidencia de auditoría sobre los importes y la información revelada en los estados financieros, comprobando el cumplimiento de los procesos, manuales, reglamentos, normativas y las circulares emitidas por la Administración y/o CNBS.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
-
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Los procedimientos seleccionados dependen del juicio del auditor, incluida la valoración de los riesgos de incorrección material en los estados financieros, debida a fraude o error.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
-
                     document.Add(section1);
 
-                    document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                    var elements = HtmlConverter.ConvertToElements(carta.TEXTO_CARTA);
 
-                    section1 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
-                    cell = _helpersPDF.CreateTableCellNoBorder();
+                    foreach (IElement element in elements)
+                    {
+                        if (element is Paragraph paragraph)
+                        {
+                            Paragraph styledParagraph = new Paragraph();
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("La Unidad de Auditoría Interna realiza revisiones de forma continua desde la Oficina Principal a través del Sistema Integral de Auditoria y solicitando información a las Agencias vía electrónica, identificado inconsistencias que serán consideradas al momento de emitir el informe de la auditoría realizada a su Agencia.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(2)));
+                            foreach (IElement childElement in paragraph.GetChildren())
+                            {
+                                if (childElement is Text text)
+                                {
+                                    var existe = text.GetProperty<string>(95) == "bold";
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Debido a las limitaciones inherentes a la auditoría, junto con las limitaciones inherentes al control interno, existe un riesgo inevitable de que puedan no detectarse algunas incorrecciones materiales, aun cuando la auditoría se planifique y ejecute adecuadamente.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                                    if (existe)
+                                    {
+                                        text.SetFont(bfArialBd);
+                                    }
+                                    else
+                                    {
+                                        text.SetFont(bfArial);
+                                    }
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Al efectuar nuestras valoraciones del riesgo verificaremos el cumplimiento del control interno implementado por la Administración, identificando algunos riesgos y controles que no se han tomado en cuenta por la Administración, comunicándoles por escrito cualquier inconsistencia significativa en el control interno, relevante para la auditoría que identifiquemos durante la realización de la misma.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                                    styledParagraph.Add(text.SetFontSize(13).SetFontColor(_helpersPDF.ColorGris()));
+                                }
+                                else if (childElement is LineSeparator lineSeparator)
+                                {
+                                    styledParagraph.Add(lineSeparator);
+                                }
+                            }
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Realizaremos la auditoría considerando que la estructura organizativa de la Institución, reconocen y comprenden que el Jefe de Agencia es el responsable de:", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                            document.Add(styledParagraph);
+                        }
+                        else if (element is List list)
+                        {
+                            foreach (ListItem item in list.GetChildren())
+                            {
+                                item.SetFont(bfArial).SetFontSize(13).SetFontColor(_helpersPDF.ColorGris());
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("a. La preparación, presentación y resguardo de la información de todas las transacciones realizadas en su Agencia", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginLeft(14).SetMarginTop(14)));
+                                foreach (IElement listItemChild in item.GetChildren())
+                                {
+                                    if (listItemChild is Text text)
+                                    {
+                                        var existe = text.GetProperty<string>(95) == "bold";
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("b. Fiel en el cumplimiento de todos los manuales, reglamentos, normativas y circulares emitidas por la Administración.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginLeft(14)));
+                                        if (existe)
+                                        {
+                                            text.SetFont(bfArialBd).SetFontSize(13).SetFontColor(_helpersPDF.ColorGris());
+                                        }
+                                        else
+                                        {
+                                            text.SetFont(bfArial).SetFontSize(13).SetFontColor(_helpersPDF.ColorGris());
+                                        }
+                                    }
+                                    else if (listItemChild is Paragraph || listItemChild is List || listItemChild is Div)
+                                    {
+                                        if (listItemChild is Paragraph paragraph2)
+                                        {
+                                            paragraph2.SetMarginTop(8);
+                                            Paragraph styledParagraph = new Paragraph();
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("c. El control interno que la Agencia considere necesario para permitir la preparación de toda la información, misma que debe ser transparente, confiable, oportuna, libre de errores e incorrección material y fraudes.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginLeft(14)));
+                                            foreach (IElement childElement in paragraph2.GetChildren())
+                                            {
+                                                if (childElement is Text text2)
+                                                {
+                                                    var existe = text2.GetProperty<string>(95) == "bold";
 
-                    document.Add(section1);
+                                                    if (existe)
+                                                    {
+                                                        text2.SetFont(bfArialBd);
+                                                    }
+                                                    else
+                                                    {
+                                                        text2.SetFont(bfArial);
+                                                    }
 
-                    document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                                                    styledParagraph.Add(text2.SetFontSize(13).SetFontColor(_helpersPDF.ColorGris()));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            document.Add(list);
+                        }
+                        else if (element is IBlockElement blockElement)
+                        {
+                            document.Add(blockElement);
+                        }
+                        else
+                        {
+                            // Manejar casos no esperados
+                            throw new InvalidOperationException($"Elemento no compatible: {element.GetType().Name}");
+                        }
+                    }
 
-                    section1 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
-                    cell = _helpersPDF.CreateTableCellNoBorder();
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Realizaremos nuestra auditoría con el objetivo de expresar nuestros comentarios, observaciones y recomendaciones sobre las inconsistencias encontradas en dicha revisión.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Jefe de Agencia debe proporcionarnos", bfArialBd, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(2)));
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat(" Una auditoría conlleva la aplicación de procedimientos para obtener evidencia de auditoría sobre los importes y la información revelada en los estados financieros, comprobando el cumplimiento de los procesos, manuales, reglamentos, normativas y las circulares emitidas por la Administración y/o CNBS.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("a. Acceso a toda la información que tenga conocimiento que sea relevante en la preparación de nuestro informe, tal como registros, documentación y otros datos.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Los procedimientos seleccionados dependen del juicio del auditor, incluida la valoración de los riesgos de incorrección material en los estados financieros, debida a fraude o error.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("b. Información adicional que podamos solicitar para los fines de la auditoría;", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                    //document.Add(section1);
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("c. Acceso ilimitado al personal de la Unidad de Auditoría Interna en la realización de nuestro trabajo a manera de obtener evidencia de las inconsistencias encontradas.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                    //document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Realizaremos la auditoría considerando que la estructura organizativa de la Institución, reconocen y comprenden que el Jefe de Agencia es el responsable de:", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                    //section1 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    //cell = _helpersPDF.CreateTableCellNoBorder();
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Esperamos contar con la plena colaboración de sus empleados durante nuestra auditoría, es posible que la estructura y el contenido de nuestro informe tengan que ser modificados en función de las inconsistencias identificadas en nuestra auditoría.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("La Unidad de Auditoría Interna realiza revisiones de forma continua desde la Oficina Principal a través del Sistema Integral de Auditoria y solicitando información a las Agencias vía electrónica, identificado inconsistencias que serán consideradas al momento de emitir el informe de la auditoría realizada a su Agencia.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(2)));
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat(" Le rogamos que firme y devuelva la copia adjunta de esta carta para indicar que conoce y acepta los acuerdos relativos a nuestra auditoría, de todas las transacciones que comprenden cartera de préstamos, cartera de ahorros, movimientos diarios de caja de ventanilla, caja de reserva y libros.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14).SetMarginBottom(28)));
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Debido a las limitaciones inherentes a la auditoría, junto con las limitaciones inherentes al control interno, existe un riesgo inevitable de que puedan no detectarse algunas incorrecciones materiales, aun cuando la auditoría se planifique y ejecute adecuadamente.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
 
-                    document.Add(section1);
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Al efectuar nuestras valoraciones del riesgo verificaremos el cumplimiento del control interno implementado por la Administración, identificando algunos riesgos y controles que no se han tomado en cuenta por la Administración, comunicándoles por escrito cualquier inconsistencia significativa en el control interno, relevante para la auditoría que identifiquemos durante la realización de la misma.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Realizaremos la auditoría considerando que la estructura organizativa de la Institución, reconocen y comprenden que el Jefe de Agencia es el responsable de:", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("a. La preparación, presentación y resguardo de la información de todas las transacciones realizadas en su Agencia", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginLeft(14).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("b. Fiel en el cumplimiento de todos los manuales, reglamentos, normativas y circulares emitidas por la Administración.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginLeft(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("c. El control interno que la Agencia considere necesario para permitir la preparación de toda la información, misma que debe ser transparente, confiable, oportuna, libre de errores e incorrección material y fraudes.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginLeft(14)));
+
+                    //document.Add(section1);
+
+                    //document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+
+                    //section1 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    //cell = _helpersPDF.CreateTableCellNoBorder();
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Jefe de Agencia debe proporcionarnos", bfArialBd, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(2)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("a. Acceso a toda la información que tenga conocimiento que sea relevante en la preparación de nuestro informe, tal como registros, documentación y otros datos.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("b. Información adicional que podamos solicitar para los fines de la auditoría;", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("c. Acceso ilimitado al personal de la Unidad de Auditoría Interna en la realización de nuestro trabajo a manera de obtener evidencia de las inconsistencias encontradas.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Realizaremos la auditoría considerando que la estructura organizativa de la Institución, reconocen y comprenden que el Jefe de Agencia es el responsable de:", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Esperamos contar con la plena colaboración de sus empleados durante nuestra auditoría, es posible que la estructura y el contenido de nuestro informe tengan que ser modificados en función de las inconsistencias identificadas en nuestra auditoría.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat(" Le rogamos que firme y devuelva la copia adjunta de esta carta para indicar que conoce y acepta los acuerdos relativos a nuestra auditoría, de todas las transacciones que comprenden cartera de préstamos, cartera de ahorros, movimientos diarios de caja de ventanilla, caja de reserva y libros.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14).SetMarginBottom(28)));
+
+                    //document.Add(section1);
 
                     var sectionFirma = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 })).SetWidth(UnitValue.CreatePercentValue(100));
                     cell = _helpersPDF.CreateTableCellNoBorder();

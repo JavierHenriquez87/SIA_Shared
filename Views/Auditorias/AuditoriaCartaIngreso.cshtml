@@ -16,9 +16,15 @@
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
     }
+
+    div:where(.swal2-container) div:where(.swal2-popup) {
+        width: 70% !important;
+        max-width: none !important;
+    }
 </style>
 
 <link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/lib/summernote/summernote-lite.min.css" rel="stylesheet">
 
 <div class="row">
     <div class="col-12">
@@ -30,18 +36,20 @@
                     <div class="form-group" style="padding-top: 10px; display: flex; align-items: center;" id="divButtons">
                         <button type="button" onclick="history.go(-1)" class="btn btn-primary" style="margin-right: 6px">Regresar</button>
                         <button type="button" onclick="ModificarFecha('@ViewBag.id', 'visita')" class="btn btn-primary" style="margin-right: 6px">Modificar Fecha de Periodo Inicio</button>
-                        <button type="button" onclick="ModificarFecha('@ViewBag.id', 'revision')" class="btn btn-primary">Modificar Fecha de Periodo Revisión</button>
+                        <button type="button" onclick="ModificarFecha('@ViewBag.id', 'revision')" class="btn btn-primary" style="margin-right: 6px">Modificar Fecha de Periodo Revisión</button>
+                        <button type="button" onclick="ModificarTextoPdf('@ViewBag.id', '1')" class="btn btn-primary">Modificar Texto</button>
                     </div>
                 </div>
 
                 <iframe src="@pdfGenerate" frameborder="0"></iframe>
-            </div>
 
+            </div>
         </div>
     </div>
 </div>
 
 @section scripts {
+    <script src="~/lib/summernote/summernote-lite.min.js"></script>
     <script src="~/Scripts/Helpers/Helpers.js"></script>
     <script src="~/Scripts/Auditorias/AuditoriaCartaIngreso.js"></script>
 }

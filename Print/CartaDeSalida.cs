@@ -40,6 +40,9 @@ namespace SIA.Print
             var dataAI = await _context.AU_AUDITORIAS_INTEGRALES
                                 .FirstOrDefaultAsync(u => u.CODIGO_AUDITORIA == id);
 
+            var carta = await _context.MG_CARTAS
+                                .FirstOrDefaultAsync(u => u.TIPO_CARTA == 2 && u.NUMERO_AUDITORIA_INTEGRAL == dataAI.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == dataAI.ANIO_AI);
+
             string fechaInicioVisita = dataAI.FECHA_INICIO_VISITA?.ToString("dd MMMM yyyy");
             string fechaFinVisita = dataAI.FECHA_FIN_VISITA?.ToString("dd MMMM 'del año' yyyy");
 
@@ -105,64 +108,162 @@ namespace SIA.Print
                                 .SetFontColor(_helpersPDF.ColorGris())
                                 ).SetMarginTop(14)));
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Para efectos de expresar una conformidad sobre el cumplimiento de controles, internos, Resoluciones, Procesos, reglamentos internos y manuales operativos.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
-
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Confirmo que he cumplido con mi responsabilidad, tal como se establecen en el memorándum de solicitud y en la carta de entrada, con respecto a la presentación de toda la información misma que es transparente, confiable, oportuna, libre de errores de incorrección material y fraudes.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
-
                     document.Add(section1);
 
-                    document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                    var elements = HtmlConverter.ConvertToElements(carta.TEXTO_CARTA);
 
-                    section1 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
-                    cell = _helpersPDF.CreateTableCellNoBorder();
+                    foreach (IElement element in elements)
+                    {
+                        if (element is Paragraph paragraph)
+                        {
+                            Paragraph styledParagraph = new Paragraph();
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("Les hemos proporcionado", bfArialBd, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(2)));
+                            foreach (IElement childElement in paragraph.GetChildren())
+                            {
+                                if (childElement is Text text)
+                                {
+                                    var existe = text.GetProperty<string>(95) == "bold";
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("a. Acceso a toda la información que tengo conocimiento que sea relevante en la preparación del informe, tal como registros, documentación y otro material;", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                                    if (existe)
+                                    {
+                                        text.SetFont(bfArialBd);
+                                    }
+                                    else
+                                    {
+                                        text.SetFont(bfArial);
+                                    }
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("b. Información adicional que solicitaron para los fines de la auditoría;", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                                    styledParagraph.Add(text.SetFontSize(13).SetFontColor(_helpersPDF.ColorGris()));
+                                }
+                                else if (childElement is LineSeparator lineSeparator)
+                                {
+                                    styledParagraph.Add(lineSeparator);
+                                }
+                            }
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("c. Acceso ilimitado al personal de la Unidad de Auditoría Interna en la realización de su trabajo, a manera de obtener las evidencias sobre las inconsistencias encontradas.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                            document.Add(styledParagraph);
+                        }
+                        else if (element is List list)
+                        {
+                            foreach (ListItem item in list.GetChildren())
+                            {
+                                item.SetFont(bfArial).SetFontSize(13).SetFontColor(_helpersPDF.ColorGris());
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("d. Les manifiesto que la información proporcionada para la realización de su trabajo, está libre de incorrecciones materiales debida a fraudes de la que tenemos conocimiento y que afecta a la Agencia e implica a los empleados que desempeñan funciones significativas en el control interno.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                                foreach (IElement listItemChild in item.GetChildren())
+                                {
+                                    if (listItemChild is Text text)
+                                    {
+                                        var existe = text.GetProperty<string>(95) == "bold";
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("e. Le he revelado toda la información relativa a denuncias de fraude o a indicios de fraude que afectan a los estados financieros de la Institución, comunicada por empleados, antiguos empleados y clientes.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                                        if (existe)
+                                        {
+                                            text.SetFont(bfArialBd).SetFontSize(13).SetFontColor(_helpersPDF.ColorGris());
+                                        }
+                                        else
+                                        {
+                                            text.SetFont(bfArial).SetFontSize(13).SetFontColor(_helpersPDF.ColorGris());
+                                        }
+                                    }
+                                    else if (listItemChild is Paragraph || listItemChild is List || listItemChild is Div)
+                                    {
+                                        if (listItemChild is Paragraph paragraph2)
+                                        {
+                                            paragraph2.SetMarginTop(8);
+                                            Paragraph styledParagraph = new Paragraph();
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat("f. Le he revelado todos los casos conocidos de incumplimiento o sospecha de incumplimiento de las disposiciones legales y reglamentarias cuyos efectos deberían considerarse para preparar los estados financieros.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                                            foreach (IElement childElement in paragraph2.GetChildren())
+                                            {
+                                                if (childElement is Text text2)
+                                                {
+                                                    var existe = text2.GetProperty<string>(95) == "bold";
 
-                    section1.AddCell(cell.Add(new Paragraph(
-                                _helpersPDF.CreateTextFormat(" Le he revelado la identidad de las partes vinculadas con los Empleados y todas las relaciones y transacciones con partes vinculadas de las que tengo conocimiento.", bfArial, 13)
-                                .SetFontColor(_helpersPDF.ColorGris())
-                                ).SetMarginTop(14)));
+                                                    if (existe)
+                                                    {
+                                                        text2.SetFont(bfArialBd);
+                                                    }
+                                                    else
+                                                    {
+                                                        text2.SetFont(bfArial);
+                                                    }
 
-                    document.Add(section1);
+                                                    styledParagraph.Add(text2.SetFontSize(13).SetFontColor(_helpersPDF.ColorGris()));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            document.Add(list);
+                        }
+                        else if (element is IBlockElement blockElement)
+                        {
+                            document.Add(blockElement);
+                        }
+                        else
+                        {
+                            // Manejar casos no esperados
+                            throw new InvalidOperationException($"Elemento no compatible: {element.GetType().Name}");
+                        }
+                    }
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Para efectos de expresar una conformidad sobre el cumplimiento de controles, internos, Resoluciones, Procesos, reglamentos internos y manuales operativos.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Confirmo que he cumplido con mi responsabilidad, tal como se establecen en el memorándum de solicitud y en la carta de entrada, con respecto a la presentación de toda la información misma que es transparente, confiable, oportuna, libre de errores de incorrección material y fraudes.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //document.Add(section1);
+
+                    //document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+
+                    //section1 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    //cell = _helpersPDF.CreateTableCellNoBorder();
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("Les hemos proporcionado", bfArialBd, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(2)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("a. Acceso a toda la información que tengo conocimiento que sea relevante en la preparación del informe, tal como registros, documentación y otro material;", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("b. Información adicional que solicitaron para los fines de la auditoría;", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("c. Acceso ilimitado al personal de la Unidad de Auditoría Interna en la realización de su trabajo, a manera de obtener las evidencias sobre las inconsistencias encontradas.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("d. Les manifiesto que la información proporcionada para la realización de su trabajo, está libre de incorrecciones materiales debida a fraudes de la que tenemos conocimiento y que afecta a la Agencia e implica a los empleados que desempeñan funciones significativas en el control interno.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("e. Le he revelado toda la información relativa a denuncias de fraude o a indicios de fraude que afectan a los estados financieros de la Institución, comunicada por empleados, antiguos empleados y clientes.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat("f. Le he revelado todos los casos conocidos de incumplimiento o sospecha de incumplimiento de las disposiciones legales y reglamentarias cuyos efectos deberían considerarse para preparar los estados financieros.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //section1.AddCell(cell.Add(new Paragraph(
+                    //            _helpersPDF.CreateTextFormat(" Le he revelado la identidad de las partes vinculadas con los Empleados y todas las relaciones y transacciones con partes vinculadas de las que tengo conocimiento.", bfArial, 13)
+                    //            .SetFontColor(_helpersPDF.ColorGris())
+                    //            ).SetMarginTop(14)));
+
+                    //document.Add(section1);
 
                     var sectionFirma = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 })).SetWidth(UnitValue.CreatePercentValue(100));
                     cell = _helpersPDF.CreateTableCellNoBorder();

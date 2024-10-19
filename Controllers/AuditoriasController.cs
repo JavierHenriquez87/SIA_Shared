@@ -2901,6 +2901,59 @@ namespace SIA.Controllers
         }
 
         /// <summary>
+        /// Modificar fecha de inicio y fin de la auditoria integral
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> ModificarTexto(string id, string texto, int tipo)
+        {
+            try
+            {
+                var auditoria = await _context.AU_AUDITORIAS_INTEGRALES
+                                    .FirstOrDefaultAsync(a => a.CODIGO_AUDITORIA == id);
+
+                var carta = await _context.MG_CARTAS
+                                    .FirstOrDefaultAsync(u => u.TIPO_CARTA == tipo && u.NUMERO_AUDITORIA_INTEGRAL == auditoria.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == auditoria.ANIO_AI);
+
+                carta.TEXTO_CARTA = texto;
+
+                // Guardar los cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Obtenemos el texto para mostrarlo en el editor
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> ObtenerTextoCarta(string id, int tipo)
+        {
+            try
+            {
+                var auditoria = await _context.AU_AUDITORIAS_INTEGRALES
+                                    .FirstOrDefaultAsync(a => a.CODIGO_AUDITORIA == id);
+
+                var carta = await _context.MG_CARTAS
+                                    .FirstOrDefaultAsync(u => u.TIPO_CARTA == tipo && u.NUMERO_AUDITORIA_INTEGRAL == auditoria.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == auditoria.ANIO_AI);
+
+                return Json(new { success = true, message = carta.TEXTO_CARTA });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
         /// Mostrar la carta de salida
         /// </summary>
         /// <returns></returns>

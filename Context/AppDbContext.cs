@@ -104,5 +104,6 @@ namespace SIA.Context
         public virtual DbSet<Mg_orientacion_calificacion> MG_ORIENTACION_CALIFICACION { get; set; }
         public virtual DbSet<Mg_objetivos_internos> MG_OBJETIVOS_INTERNOS { get; set; }
         public virtual DbSet<Mg_cuestionario_secciones> MG_CUESTIONARIO_SECCIONES { get; set; }
+        public virtual DbSet<Mg_cartas> MG_CARTAS { get; set; }
     }
 }

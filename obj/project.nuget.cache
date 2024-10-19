@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bqvjQM/BH8Q=",
+  "dgSpecHash": "NTAOzF/HMUs=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Expresate\\SIA_Shared\\SIA.csproj",
+  "projectFilePath": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\SIA.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\bouncycastle.cryptography\\2.4.0\\bouncycastle.cryptography.2.4.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

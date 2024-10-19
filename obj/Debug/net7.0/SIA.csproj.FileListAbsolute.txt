@@ -201,7 +201,6 @@ C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\static
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\staticwebassets.build.json
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\staticwebassets.development.json
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\scopedcss\bundle\SIA.styles.css
-C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\SIA.csproj.CopyComplete
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\SIA.dll
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\refint\SIA.dll
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\SIA.pdb
@@ -302,3 +301,5 @@ C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net7.0\refint\SIA.dl
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net7.0\SIA.pdb
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net7.0\SIA.genruntimeconfig.cache
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net7.0\ref\SIA.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\SIA.sourcelink.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\SIA.csproj.Up2Date
