@@ -22,7 +22,7 @@
         disabledDA = " disabled";
     }
 
-    if (ViewBag.MEMO_EXISTE == null )//|| ViewBag.ESTADO_MDP != 3
+    if (ViewBag.MEMO_EXISTE == null)//|| ViewBag.ESTADO_MDP != 3
     {
         disabledOptions = "disabled-div";
     }
@@ -37,7 +37,7 @@
         TextStatusMDP = "Pendiente Aprobación";
         styleTextStatusMDP = "statusAD pendingcreate";
     }
-    else if(ViewBag.ESTADO_MDP == 3)
+    else if (ViewBag.ESTADO_MDP == 3)
     {
         TextStatusMDP = "Aprobado";
         styleTextStatusMDP = "statusAD success";
@@ -77,6 +77,11 @@
 
 
                 <div id="documents-lists">
+                    <div class="document-item" style="cursor: pointer;" onclick="IrInformePreliminar()">
+                        <div class="icon doc"></div>
+                        <div class="title">INFORME PRELIMINAR DE LOS RESULTADOS DE LA AUDITORÍA</div>
+                        <div class="@styleTextStatusMDP">@TextStatusMDP</div>
+                    </div>
                     <div id="opcion1DA" style="display:block; cursor: pointer;">
                         <div class="document-item" style="cursor: pointer;" onclick="IrCartaSalida('@ViewBag.CODIGO_AUDITORIA')">
                             <div class="icon doc"></div>

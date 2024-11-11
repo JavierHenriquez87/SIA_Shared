@@ -220,6 +220,8 @@ C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Expresate\SIA_Shared\bin\Debug
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Expresate\SIA_Shared\bin\Debug\net7.0\itext.html2pdf.dll
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Expresate\SIA_Shared\bin\Debug\net7.0\itextsharp.dll
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Expresate\SIA_Shared\bin\Debug\net7.0\itextsharp.xmlworker.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\SIA.sourcelink.json
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\SIA.csproj.Up2Date
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net7.0\appsettings.Development.json
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net7.0\appsettings.json
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\bin\Debug\net7.0\libman.json
@@ -301,5 +303,3 @@ C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net7.0\refint\SIA.dl
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net7.0\SIA.pdb
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net7.0\SIA.genruntimeconfig.cache
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA\obj\Debug\net7.0\ref\SIA.dll
-C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\SIA.sourcelink.json
-C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\SIA.csproj.Up2Date

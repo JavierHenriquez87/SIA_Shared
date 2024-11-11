@@ -2784,55 +2784,9 @@ namespace SIA.Controllers
 
 
 
-
         //********************************************************************************
-        // PAGES NEWS
+        // CARTA DE INGRESO Y SALIDA
         //********************************************************************************
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult ProgramarAuditoriaPost()
-        {
-
-            return Json("Ok");
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        [Route("Auditorias/AuditoriaResultados/AuditoriaResultadosInforme")]
-        public IActionResult AuditoriaResultadosInforme()
-        {
-            return View();
-        }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2980,5 +2934,35 @@ namespace SIA.Controllers
 
             return View();
         }
+
+
+
+        //********************************************************************************
+        // PAGES NEWS
+        //********************************************************************************
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ProgramarAuditoriaPost()
+        {
+
+            return Json("Ok");
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("Auditorias/AuditoriaResultados/AuditoriaResultadosInforme")]
+        public IActionResult AuditoriaResultadosInforme()
+        {
+            return View();
+        }
+
     }
 }
