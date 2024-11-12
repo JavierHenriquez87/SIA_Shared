@@ -2970,10 +2970,22 @@ namespace SIA.Controllers
                     .Where(e => e.ANIO_AI == anio)
                     .FirstOrDefaultAsync();
 
+            var hallazgos = await _context.MG_HALLAZGOS
+                .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
+                .Where(d => d.ANIO_AI == anio)
+                .ToListAsync();
+
+            var hallazgosAnteriores = await _context.MG_HALLAZGOS
+                .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
+                .Where(d => d.ANIO_AI == anio)
+                .ToListAsync();
+
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
             ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
             ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
             ViewBag.AU_TXT_INFOR_PRELIM = Infor;
+            ViewBag.HALLAZGOS = hallazgos;
+            ViewBag.HALLAZGOS_ANTERIORES = hallazgosAnteriores;
 
             return View();
         }

@@ -143,7 +143,7 @@
             <a style="font-weight: bold;">
                 3. Resultados Generales
             </a>
-            
+
             <div style="white-space: pre-line; margin:0 24px; width:95%">
                 Como resultado de nuestra Auditoría a continuación detallamos, en resumen, los Hallazgos identificadas: Bajo, Medio, Alto.
 
@@ -158,16 +158,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td style="text-align:left">Depósitos bancarios en circulación por no identificar a que cliente corresponde.</td>
-                        <td class="highlight-alto">Alto</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td style="text-align:left">Documentación faltante en el expediente de cuenta de ahorro.</td>
-                        <td class="highlight-medio">Medio</td>
-                    </tr>
+                    @{
+                        if (ViewBag.HALLAZGOS == null || ViewBag.HALLAZGOS.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="3">Sin hallazgos encontrados</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var HALLAZGO in ViewBag.HALLAZGOS)
+                            {
+                                var riesgo = HALLAZGO.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO.NIVEL_RIESGO == 2 ? "MEDIO" : "ALTO";
+                                <tr>
+                                    <td>@HALLAZGO.CODIGO_HALLAZGO</td>
+                                    <td style="text-align:left">@HALLAZGO.HALLAZGO</td>
+                                    <td class="highlight-@riesgo.ToLower()">@riesgo</td>
+                                </tr>
+                            }
+                        }
+                        
+                    }
                 </tbody>
             </table>
 
@@ -184,16 +195,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td style="text-align:left">Depósitos bancarios en circulación por no identificar a que cliente corresponde.</td>
-                        <td class="highlight-alto">Alto</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td style="text-align:left">Documentación faltante en el expediente de cuenta de ahorro.</td>
-                        <td class="highlight-medio">Medio</td>
-                    </tr>
+                    @{
+                        if (ViewBag.HALLAZGOS_ANTERIORES == null || ViewBag.HALLAZGOS.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="3">Sin hallazgos encontrados</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var HALLAZGO_ANTERIOR in ViewBag.HALLAZGOS_ANTERIORES)
+                            {
+                                var riesgo = HALLAZGO_ANTERIOR.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO_ANTERIOR.NIVEL_RIESGO == 2 ? "MEDIO" : "ALTO";
+                                <tr>
+                                    <td>@HALLAZGO_ANTERIOR.CODIGO_HALLAZGO</td>
+                                    <td style="text-align:left">@HALLAZGO_ANTERIOR.HALLAZGO</td>
+                                    <td class="highlight-@riesgo.ToLower()">@riesgo</td>
+                                </tr>
+                            }
+                        }
+                    }
                 </tbody>
             </table>
 
