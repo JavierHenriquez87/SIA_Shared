@@ -5521,6 +5521,10 @@
       "PackagePath": "staticwebassets\\css\\estiloAuditoriaResultado.css"
     },
     {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\css\\estiloAuditoriaResultadoInforme.css",
+      "PackagePath": "staticwebassets\\css\\estiloAuditoriaResultadoInforme.css"
+    },
+    {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\css\\estiloAuditoriaTrabajo.css",
       "PackagePath": "staticwebassets\\css\\estiloAuditoriaTrabajo.css"
     },

@@ -1,4 +1,5 @@
 ﻿function ModificarTexto(id, tipo) {
+
     Swal.fire({
         title: "Modificar el texto",
         html: `
@@ -25,7 +26,7 @@
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'ModificarTexto',
+                url: '/Auditorias/ModificarTextoAuditoriaRI',
                 type: 'POST',
                 data: {
                     id: id,
@@ -74,32 +75,40 @@
         ]
     });
 
-    //$.ajax({
-    //    url: 'ObtenerTextoCarta',
-    //    type: 'POST',
-    //    data: {
-    //        id: id,
-    //        tipo: tipo
-    //    },
-    //    success: function (response) {
-    //        if (response.success) {
-    //            // Establecer el texto en el editor
-    //            $('#html-editor').summernote('code', response.message);
-    //        } else {
-    //            Swal.fire(
-    //                'Error',
-    //                'Ocurrió un error al mostrar el texto: ' + response.message,
-    //                'error'
-    //            );
-    //        }
-    //    },
-    //    error: function (err) {
-    //        Swal.fire(
-    //            'Error',
-    //            'Ocurrió un error en la solicitud AJAX: ' + err.statusText,
-    //            'error'
-    //        );
-    //    }
-    //});
+    const contentDiv = document.getElementById(tipo).innerHTML;
 
+    $('#html-editor').summernote('code', contentDiv);
+}
+
+function toggleConclusion(id) {
+    var conclusionContent = document.getElementById("conclusionContent");
+    var toggle = document.getElementById("toggleConclusion").checked;
+
+    $.ajax({
+        url: '/Auditorias/ActivarConclusionAuditoriaRI',
+        type: 'POST',
+        data: {
+            id: id,
+            estado: toggle,
+        },
+        success: function (response) {
+            if (response.success) {
+                conclusionContent.style.display = toggle ? "block" : "none";
+            } else {
+                document.getElementById("toggleConclusion").checked = !toggle;
+                Swal.fire(
+                    'Error',
+                    'Ocurrió un error al actualizar el texto: ' + response.message,
+                    'error'
+                );
+            }
+        },
+        error: function (err) {
+            Swal.fire(
+                'Error',
+                'Ocurrió un error en la solicitud AJAX: ' + err.statusText,
+                'error'
+            );
+        }
+    });
 }

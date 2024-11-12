@@ -5,25 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var valor = "alto";
+    var id = @ViewBag.AU_TXT_INFOR_PRELIM == null ? 0 : @ViewBag.AU_TXT_INFOR_PRELIM.CODIGO_TXT_INF_PREL;
 }
 
 <link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
-<link href="~/css/estiloAuditoriaResultado.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloAuditoriaResultadoInforme.css" rel="stylesheet" type="text/css" />
 <link href="~/lib/summernote/summernote-lite.min.css" rel="stylesheet">
-<style type="text/css">
-    iframe {
-        width: 100%;
-        height: 700px;
-        border: none;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-    }
-
-    div:where(.swal2-container) div:where(.swal2-popup) {
-        width: 70% !important;
-        max-width: none !important;
-    }
-</style>
 
 <div class="container">
     <div class="form-container">
@@ -102,38 +89,47 @@
                 <a style="font-weight: bold;">
                     1. Objetivo
                 </a>
-                <button type="button" onclick="ModificarTexto(1, 'objetivo')" class="btn btn-primary">Modificar Texto</button>
+                <button type="button" onclick="ModificarTexto(@id, 'objetivoContent')" class="btn btn-primary">Modificar Objetivo</button>
             </div>
 
-            <div style="white-space: pre-line;">
-                Emitir una opinión independiente sobre el cumplimiento razonable en la Agencia respecto a las disposiciones contenidas en las normativas emitidas por el ente regulador y los manuales y procesos establecidos dentro de la Institución relacionada al control y calidad de las operaciones.
-            </div>
+            @{
+                var objetivo = "";
+                if (ViewBag.AU_TXT_INFOR_PRELIM != null && ViewBag.AU_TXT_INFOR_PRELIM.OBJETIVO != null)
+                {
+                    objetivo = ViewBag.AU_TXT_INFOR_PRELIM.OBJETIVO;
+                }
+                else
+                {
+                    objetivo = "<p>Emitir una opinión independiente sobre el cumplimiento razonable en la Agencia respecto a las disposiciones contenidas en las normativas emitidas por el ente regulador y los manuales y procesos establecidos dentro de la Institución relacionada al control y calidad de las operaciones.</p>";
+                }
 
-            <div class="button-container">
-                <a style="font-weight: bold; padding-top: 20px;">
-                    2. Alcance
-                </a>
-                @* <button type="button" onclick="ModificarTexto('@ViewBag.id', '1')" class="btn btn-primary">Modificar Texto</button> *@
-                <button type="button" onclick="ModificarTexto(1, 'alcance')" class="btn btn-primary">Modificar Texto</button>
-            </div>
-
-            <div style="white-space: pre-line;">
-                Nuestra revisión se realizó de conformidad con los manuales y políticas de la Fundación Micro Financiera HDH-OPDF haciendo su aplicación en todas las áreas de la Agencia que se encuentran en ejecución.
-
-                La Gerencia General es responsable de mantener los sistemas de control interno efectivos, la responsabilidad del Área de Auditoría Interna se limita a la revisión de los registros contenidos en los sistemas de la Fundación respecto a las operaciones efectuadas en su Oficina y la documentación de respaldo proporcionada por el personal y a la exposición de los resultados alcanzados basados en la revisión de dicha información.
-
-                De acuerdo a lo anterior, nuestro trabajo fue desarrollado basados en análisis sobre una muestra de las transacciones de 4 meses, por lo cual pueden existir desviaciones en el proceso auditado que no fueron identificadas por las técnicas de auditoría aplicadas en base a la NIA 530 Muestreo de Auditoría, esta norma permite al Auditor utilizar un enfoque de muestreo no estadístico, basado en las características del universo que se somete a prueba.
-
-                En tal sentido el alcance de la revisión corresponde al periodo comprendido entre el 01 de enero 2024 al 30 de abril del 2024, donde se verificó el cumplimiento con los manuales y políticas de la institución
-
-            </div>
+                <div id="objetivoContent" style="white-space: pre-line;">@Html.Raw(objetivo)</div>
+            }
 
             <div class="button-container">
                 <a style="font-weight: bold;">
-                    3. Resultados Generales
+                    2. Alcance
                 </a>
-                <button type="button" onclick="ModificarTexto(1, 'resultadosGenerales')" class="btn btn-primary">Modificar Texto</button>
+                <button type="button" onclick="ModificarTexto(@id, 'alcanceContent')" class="btn btn-primary">Modificar Alcance</button>
             </div>
+
+            @{
+                var alcance = "";
+                if (ViewBag.AU_TXT_INFOR_PRELIM != null && ViewBag.AU_TXT_INFOR_PRELIM.ALCANCE != null)
+                {
+                    alcance = ViewBag.AU_TXT_INFOR_PRELIM.ALCANCE;
+                }
+                else
+                {
+                    alcance = "<p>Nuestra revisión se realizó de conformidad con los manuales y políticas de la Fundación Micro Financiera HDH-OPDF haciendo su aplicación en todas las áreas de la Agencia que se encuentran en ejecución.</p><p><br></p><p>La Gerencia General es responsable de mantener los sistemas de control interno efectivos, la responsabilidad del Área de Auditoría Interna se limita a la revisión de los registros contenidos en los sistemas de la Fundación respecto a las operaciones efectuadas en su Oficina y la documentación de respaldo proporcionada por el personal y a la exposición de los resultados alcanzados basados en la revisión de dicha información.</p><p><br></p><p>De acuerdo a lo anterior, nuestro trabajo fue desarrollado basados en análisis sobre una muestra de las transacciones de 4 meses, por lo cual pueden existir desviaciones en el proceso auditado que no fueron identificadas por las técnicas de auditoría aplicadas en base a la NIA 530 Muestreo de Auditoría, esta norma permite al Auditor utilizar un enfoque de muestreo no estadístico, basado en las características del universo que se somete a prueba.</p><p><br></p><p>En tal sentido el alcance de la revisión corresponde al periodo comprendido entre el 01 de enero 2024 al 30 de abril del 2024, donde se verificó el cumplimiento con los manuales y políticas de la institución</p>";
+                }
+
+                <div id="alcanceContent" style="white-space: pre-line;">@Html.Raw(alcance)</div>
+            }
+
+            <a style="font-weight: bold;">
+                3. Resultados Generales
+            </a>
             
             <div style="white-space: pre-line; margin:0 24px; width:95%">
                 Como resultado de nuestra Auditoría a continuación detallamos, en resumen, los Hallazgos identificadas: Bajo, Medio, Alto.
@@ -192,24 +188,50 @@
                 <a style="font-weight: bold;">
                     5. Conclusión General
                 </a>
-                <button type="button" onclick="ModificarTexto(2, 'conclusion')" class="btn btn-primary">Modificar Texto</button>
+                <div>
+                    <label for="toggleConclusion">Mostrar Conclusión</label>
+                    <label class="switch" style="margin-right: 20px">
+                        <input type="checkbox" id="toggleConclusion" onclick="toggleConclusion(@id)" @(ViewBag.AU_TXT_INFOR_PRELIM != null && ViewBag.AU_TXT_INFOR_PRELIM.MOSTRAR_CONCLUSION_GENERAL != null && ViewBag.AU_TXT_INFOR_PRELIM.MOSTRAR_CONCLUSION_GENERAL == 1 ? "checked" : "") />
+                        <span class="slider"></span>
+                    </label>
+                    <button type="button" onclick="ModificarTexto(@id, 'conclusionContent')" class="btn btn-primary">Modificar Conclusión</button>
+                </div>
             </div>
 
-            <div style="white-space: pre-line; margin:0 24px; width:95% !important">
-                is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+            @{
+                var conclusion = "";
+                if (ViewBag.AU_TXT_INFOR_PRELIM != null && ViewBag.AU_TXT_INFOR_PRELIM.TEXTO_CONCLUSION_GENERAL != null)
+                {
+                    conclusion = ViewBag.AU_TXT_INFOR_PRELIM.TEXTO_CONCLUSION_GENERAL;
+                }
+                else
+                {
+                    conclusion = "<p>Conclusion.</p>";
+                }
 
-                It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-
-            </div>
+                <div id="conclusionContent" style="white-space: pre-line; display: @(ViewBag.AU_TXT_INFOR_PRELIM != null && ViewBag.AU_TXT_INFOR_PRELIM.MOSTRAR_CONCLUSION_GENERAL != null && ViewBag.AU_TXT_INFOR_PRELIM.MOSTRAR_CONCLUSION_GENERAL == 1 ? "block" : "none");">@Html.Raw(conclusion)</div>
+            }
 
             <div class="button-container">
                 <h4 class="title-green" style="width: 85%; padding-top: 20px;">
                     I. PROCEDIMIENTOS DE LA AUDITORÍA
                 </h4>
-                <button type="button" onclick="ModificarTexto(2, 'parteI')" class="btn btn-primary">Modificar Texto</button>
+                <button type="button" onclick="ModificarTexto(@id, 'procedimientoAuditoriaContent')" class="btn btn-primary">Modificar PDA</button>
             </div>
 
-            <a style="padding:100px"></a>
+            @{
+                var procedimientoAuditoria = "";
+                if (ViewBag.AU_TXT_INFOR_PRELIM != null && ViewBag.AU_TXT_INFOR_PRELIM.PROCEDIMIENTOS_AUDITORIA != null)
+                {
+                    procedimientoAuditoria = ViewBag.AU_TXT_INFOR_PRELIM.PROCEDIMIENTOS_AUDITORIA;
+                }
+                else
+                {
+                    procedimientoAuditoria = "<p>Procedimientos de la Auditoria.</p>";
+                }
+
+                <div id="procedimientoAuditoriaContent" style="white-space: pre-line;">@Html.Raw(procedimientoAuditoria)</div>
+            }
 
             <h4 class="title-green">
                 II. RESULTADOS DE LA AUDITORÍA
