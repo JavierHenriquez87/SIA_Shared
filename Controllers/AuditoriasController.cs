@@ -2990,16 +2990,28 @@ namespace SIA.Controllers
             {
                 if(id == 0)
                 {
+                    int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+                    int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
                     int maxNumeroRegistro = await _context.AU_TXT_INFOR_PRELIM
                     .MaxAsync(a => (int?)a.CODIGO_TXT_INF_PREL) ?? 0;
+
+                    var AuditoriaIntegral = await _context.AU_AUDITORIAS_INTEGRALES
+                    .Where(u => u.NUMERO_AUDITORIA_INTEGRAL == cod)
+                    .Where(e => e.ANIO_AI == anio)
+                    .FirstOrDefaultAsync();
 
                     var nuevoRegistro = new Au_txt_infor_prelim
                     {
                         CODIGO_TXT_INF_PREL = maxNumeroRegistro + 1,
+                        CODIGO_AUDITORIA = AuditoriaIntegral.CODIGO_AUDITORIA,
+                        NUMERO_AUDITORIA_INTEGRAL = cod,
+                        ANIO_AI = anio,
+                        MOTIVO_INFORME = tipo == "motivoContent" ? texto : null,
                         OBJETIVO = tipo == "objetivoContent" ? texto : null,
                         ALCANCE = tipo == "alcanceContent" ? texto : null,
                         TEXTO_CONCLUSION_GENERAL = tipo == "conclusionContent" ? texto : null,
                         PROCEDIMIENTOS_AUDITORIA = tipo == "procedimientoAuditoriaContent" ? texto : null,
+                        MOSTRAR_CONCLUSION_GENERAL = 0
                     };
 
                     _context.AU_TXT_INFOR_PRELIM.Add(nuevoRegistro);
@@ -3013,6 +3025,9 @@ namespace SIA.Controllers
                     {
                         switch (tipo)
                         {
+                            case "motivoContent":
+                                infor.MOTIVO_INFORME = texto;
+                                break;
                             case "objetivoContent":
                                 infor.OBJETIVO = texto;
                                 break;
@@ -3055,11 +3070,21 @@ namespace SIA.Controllers
             {
                 if (id == 0)
                 {
+                    int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+                    int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
                     int maxNumeroRegistro = await _context.AU_TXT_INFOR_PRELIM
                     .MaxAsync(a => (int?)a.CODIGO_TXT_INF_PREL) ?? 0;
 
+                    var AuditoriaIntegral = await _context.AU_AUDITORIAS_INTEGRALES
+                    .Where(u => u.NUMERO_AUDITORIA_INTEGRAL == cod)
+                    .Where(e => e.ANIO_AI == anio)
+                    .FirstOrDefaultAsync();
+
                     var nuevoRegistro = new Au_txt_infor_prelim
                     {
+                        NUMERO_AUDITORIA_INTEGRAL = cod,
+                        CODIGO_AUDITORIA = AuditoriaIntegral.CODIGO_AUDITORIA,
+                        ANIO_AI = anio,
                         CODIGO_TXT_INF_PREL = maxNumeroRegistro + 1,
                         MOSTRAR_CONCLUSION_GENERAL = estado ? 1 : 0,
                     };

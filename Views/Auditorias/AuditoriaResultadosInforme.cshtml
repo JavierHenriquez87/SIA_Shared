@@ -73,19 +73,32 @@
                 San Marcos, Ocotepeque, 30 de junio 2024<br /><br />
             </a>
 
-            <a style="font-weight: bold;">
-                MOTIVO DEL INFORME
-            </a>
+            <div class="button-container" style="margin-bottom: 10px">
+                <a style="font-weight: bold;">
+                    MOTIVO DEL INFORME
+                </a>
+                <button type="button" onclick="ModificarTexto(@id, 'motivoContent')" class="btn btn-primary">Modificar Motivo</button>
+            </div>
 
-            <a>
-               Como Auditores Internos de la Fundación Microfinanciera Hermandad de Honduras y dando cumplimiento al Plan Anual de Trabajo de Auditoría Interna para el año 2024, nos permitimos presentar el informe correspondiente a la Auditoría Agencia Santa Barbara.
-            </a>
+            @{
+                var motivo = "";
+                if (ViewBag.AU_TXT_INFOR_PRELIM != null && ViewBag.AU_TXT_INFOR_PRELIM.MOTIVO_INFORME != null)
+                {
+                    motivo = ViewBag.AU_TXT_INFOR_PRELIM.MOTIVO_INFORME;
+                }
+                else
+                {
+                    motivo = "<p>Como Auditores Internos de la Fundación Microfinanciera Hermandad de Honduras y dando cumplimiento al Plan Anual de Trabajo de Auditoría Interna para el año 2024, nos permitimos presentar el informe correspondiente a la Auditoría Agencia Santa Barbara.</p>";
+                }
+
+                <div id="motivoContent" style="white-space: pre-line;">@Html.Raw(motivo)</div>
+            }
             
             <a style="font-weight: bold; text-align:center; padding-top: 20px">
                 INTRODUCCIÓN
             </a>
 
-            <div class="button-container">
+            <div class="button-container" style="margin-bottom: 10px">
                 <a style="font-weight: bold;">
                     1. Objetivo
                 </a>
@@ -106,7 +119,7 @@
                 <div id="objetivoContent" style="white-space: pre-line;">@Html.Raw(objetivo)</div>
             }
 
-            <div class="button-container">
+            <div class="button-container" style="margin-bottom: 10px">
                 <a style="font-weight: bold;">
                     2. Alcance
                 </a>
@@ -227,7 +240,7 @@
                 }
                 else
                 {
-                    procedimientoAuditoria = "<p>Procedimientos de la Auditoria.</p>";
+                    procedimientoAuditoria = "<div>Los procedimientos y técnicas utilizadas para la realización de este trabajo,</div><div>fueron los siguientes:</div>";
                 }
 
                 <div id="procedimientoAuditoriaContent" style="white-space: pre-line;">@Html.Raw(procedimientoAuditoria)</div>
