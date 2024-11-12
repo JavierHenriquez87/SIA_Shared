@@ -2968,14 +2968,124 @@ namespace SIA.Controllers
             var Infor = await _context.AU_TXT_INFOR_PRELIM
                     .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == cod)
                     .Where(e => e.ANIO_AI == anio)
-                    .ToListAsync();
+                    .FirstOrDefaultAsync();
 
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
             ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
             ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
-            ViewBag.AUDITORIAS_CUESTIONARIOS = Infor;
+            ViewBag.AU_TXT_INFOR_PRELIM = Infor;
 
             return View();
+        }
+
+        /// <summary>
+        /// Modificar fecha de inicio y fin de la auditoria integral
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> ModificarTextoAuditoriaRI(int id, string texto, string tipo)
+        {
+            try
+            {
+                if(id == 0)
+                {
+                    int maxNumeroRegistro = await _context.AU_TXT_INFOR_PRELIM
+                    .MaxAsync(a => (int?)a.CODIGO_TXT_INF_PREL) ?? 0;
+
+                    var nuevoRegistro = new Au_txt_infor_prelim
+                    {
+                        CODIGO_TXT_INF_PREL = maxNumeroRegistro + 1,
+                        OBJETIVO = tipo == "objetivoContent" ? texto : null,
+                        ALCANCE = tipo == "alcanceContent" ? texto : null,
+                        TEXTO_CONCLUSION_GENERAL = tipo == "conclusionContent" ? texto : null,
+                        PROCEDIMIENTOS_AUDITORIA = tipo == "procedimientoAuditoriaContent" ? texto : null,
+                    };
+
+                    _context.AU_TXT_INFOR_PRELIM.Add(nuevoRegistro);
+                }
+                else
+                {
+                    var infor = await _context.AU_TXT_INFOR_PRELIM
+                                   .FirstOrDefaultAsync(a => a.CODIGO_TXT_INF_PREL == id);
+
+                    if (infor != null)
+                    {
+                        switch (tipo)
+                        {
+                            case "objetivoContent":
+                                infor.OBJETIVO = texto;
+                                break;
+                            case "alcanceContent":
+                                infor.ALCANCE = texto;
+                                break;
+                            case "conclusionContent":
+                                infor.TEXTO_CONCLUSION_GENERAL = texto;
+                                break;
+                            case "procedimientoAuditoriaContent":
+                                infor.PROCEDIMIENTOS_AUDITORIA = texto;
+                                break;
+                            default:
+
+                                break;
+                        }
+                    }
+                }
+
+                // Guardar los cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Modificar fecha de inicio y fin de la auditoria integral
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> ActivarConclusionAuditoriaRI(int id, bool estado)
+        {
+            try
+            {
+                if (id == 0)
+                {
+                    int maxNumeroRegistro = await _context.AU_TXT_INFOR_PRELIM
+                    .MaxAsync(a => (int?)a.CODIGO_TXT_INF_PREL) ?? 0;
+
+                    var nuevoRegistro = new Au_txt_infor_prelim
+                    {
+                        CODIGO_TXT_INF_PREL = maxNumeroRegistro + 1,
+                        MOSTRAR_CONCLUSION_GENERAL = estado ? 1 : 0,
+                    };
+
+                    _context.AU_TXT_INFOR_PRELIM.Add(nuevoRegistro);
+                }
+                else
+                {
+                    var infor = await _context.AU_TXT_INFOR_PRELIM
+                                   .FirstOrDefaultAsync(a => a.CODIGO_TXT_INF_PREL == id);
+
+                    if (infor != null)
+                    {
+                        infor.MOSTRAR_CONCLUSION_GENERAL = estado ? 1 : 0;
+                    }
+                }
+
+                // Guardar los cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
     }
 }

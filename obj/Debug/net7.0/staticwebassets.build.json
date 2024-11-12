@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "r9CX1rWmT7kxGBkzxm7KaSWKidxgorIyUFrPzobr6As=",
+  "Hash": "582gkikLjOtyEfQGgaRlAuCIyYH++MRCi8vnx76g++I=",
   "Source": "SIA",
   "BasePath": "_content/SIA",
   "Mode": "Default",
@@ -25893,6 +25893,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\estiloAuditoriaResultado.css"
+    },
+    {
+      "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\css\\estiloAuditoriaResultadoInforme.css",
+      "SourceId": "SIA",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\",
+      "BasePath": "_content/SIA",
+      "RelativePath": "css/estiloAuditoriaResultadoInforme.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\estiloAuditoriaResultadoInforme.css"
     },
     {
       "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\css\\estiloAuditoriaTrabajo.css",
