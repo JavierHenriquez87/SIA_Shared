@@ -111,3 +111,11 @@
     width: 100%;
 }
 
+
+.button-container {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding-top: 20px;
+}

@@ -2959,10 +2959,23 @@ namespace SIA.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("Auditorias/AuditoriaResultados/AuditoriaResultadosInforme")]
-        public IActionResult AuditoriaResultadosInforme()
+        public async Task<IActionResult> AuditoriaResultadosInformeAsync()
         {
+            int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+            int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+
+            //obtenemos el numero de auditorias informe
+            var Infor = await _context.AU_TXT_INFOR_PRELIM
+                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == cod)
+                    .Where(e => e.ANIO_AI == anio)
+                    .ToListAsync();
+
+            ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
+            ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
+            ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
+            ViewBag.AUDITORIAS_CUESTIONARIOS = Infor;
+
             return View();
         }
-
     }
 }
