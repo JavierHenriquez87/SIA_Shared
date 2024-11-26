@@ -93,10 +93,10 @@
 
                 <div id="motivoContent" style="white-space: pre-line;">@Html.Raw(motivo)</div>
             }
-            
-            <a style="font-weight: bold; text-align:center; padding-top: 20px">
-                INTRODUCCIÓN
-            </a>
+
+            <h4 class="title-green" style="width: 85%; padding-top: 20px;">
+                I. INTRODUCCIÓN
+            </h4>
 
             <div class="button-container" style="margin-bottom: 10px">
                 <a style="font-weight: bold;">
@@ -177,7 +177,7 @@
                                 </tr>
                             }
                         }
-                        
+
                     }
                 </tbody>
             </table>
@@ -248,7 +248,7 @@
 
             <div class="button-container">
                 <h4 class="title-green" style="width: 85%; padding-top: 20px;">
-                    I. PROCEDIMIENTOS DE LA AUDITORÍA
+                    II. PROCEDIMIENTOS DE LA AUDITORÍA
                 </h4>
                 <button type="button" onclick="ModificarTexto(@id, 'procedimientoAuditoriaContent')" class="btn btn-primary">Modificar PDA</button>
             </div>
@@ -268,67 +268,127 @@
             }
 
             <h4 class="title-green">
-                II. RESULTADOS DE LA AUDITORÍA
+                III. RESULTADOS DE LA AUDITORÍA
             </h4>
 
-            <a class="title-black">
-                1. INCUMPLIMIENTO EN LA CONSULTA A LA CENTRAL DE RIESGOS DEL CLIENTE PRESTATARIO.
-            </a>
+            @{
+                if (ViewBag.HALLAZGOS == null || ViewBag.HALLAZGOS.Count == 0)
+                {
+                    <a class="title-black">
+                        Sin hallazgos encontrados
+                    </a>
+                }
+                else
+                {
+                    foreach (var HALLAZGO in ViewBag.HALLAZGOS)
+                    {
+                        var calif = "";
+                        var colorcalif = "";
 
-            <a style="margin:0 24px; width:95%;">
-                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search
-            </a>
+                        @if (HALLAZGO.CALIFICACION == 2)
+                        {
+                            if (HALLAZGO.NIVEL_RIESGO == 1)
+                            {
+                                calif = " - BAJO";
+                                colorcalif = "green";
+                            }
+                            else if (HALLAZGO.NIVEL_RIESGO == 2)
+                            {
+                                calif = " - MEDIO";
+                                colorcalif = "orange";
+                            }
+                            else if (HALLAZGO.NIVEL_RIESGO == 3)
+                            {
+                                calif = " - ALTO";
+                                colorcalif = "red";
+                            }
+                        }
 
-            <table class="table" style="margin:20px 30px; width:95%">
-                <thead>
-                    <tr>
-                        <th>Valor de Muestra</th>
-                        <th>Muestra con Hallazgos</th>
-                        <th>Desviación de Muestra</th>
-                        <th>Nivel de Riesgo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>191</td>
-                        <td>36</td>
-                        <td>18.8%</td>
-                        <td class="highlight-@valor">Alto</td>
-                    </tr>
-                </tbody>
-            </table>
+                        <a class="title-black">
+                            @HALLAZGO.HALLAZGO.ToUpper() <i style="color: @colorcalif">@calif</i>
+                        </a>
 
-            <div style="margin:0 24px; width:95%; white-space: pre-line;">
-                <span style="font-weight: bold;">Criterio</span>
-                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search
+                        @if (HALLAZGO.CALIFICACION == 1)
+                        {
+                            <table class="table" style="margin:20px 30px; width:95%">
+                                <thead>
+                                    <tr>
+                                        <th>Valor de Muestra</th>
+                                        <th>Muestra con Hallazgos</th>
+                                        <th>Desviación de Muestra</th>
+                                        <th>Nivel de Riesgo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@HALLAZGO.VALOR_MUESTRA</td>
+                                        <td>@HALLAZGO.MUESTRA_INCONSISTENTE</td>
+                                        <td>@HALLAZGO.DESVIACION_MUESTRA %</td>
+                                        <td class="highlight-@valor">Alto</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
 
-                <span style="font-weight: bold;">Causas</span>
-                • It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
+                        <a style="margin:0 24px; width:95%;">
+                            @HALLAZGO.CONDICION
+                        </a>
 
-                <span style="font-weight: bold;">Efectos</span>
-                • It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
 
-                <span style="font-weight: bold;">Proceso Asociado</span>
-                Proceso de Consulta en Central de Riesgo
 
-                <span style="font-weight: bold;">Acciones Requeridas</span>
-                • It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
-                <div @*style="display:none"*@>
-                    <span style="font-weight: bold;">Contestación</span>
-                    <textarea class="text-area" placeholder="Escribir..."> </textarea>
+                        <div style="margin:0 24px; width:95%; white-space: pre-line;">
+                            <span style="font-weight: bold;">Criterio</span>
+                            @HALLAZGO.CRITERIO
 
-                    <span style="font-weight: bold;">Documentos</span>
-                    <div class="upload-area">
-                        <i class='bx bx-info-circle font-size-24 upload-warning'></i>
-                        <p><span style="color: #186040;">Click para subir documento</span> o arrastre y suelte el archivo aquí</p><p><small>PDF (máx. 4MB)</small></p></div>
-                    <button type="button" onclick="AgregarComentarios()" class="btn btn-secondary btn-purple">Agregar Comentarios</button>
-                </div>
-                <span style="font-weight: bold;">Comentarios del Auditado</span>
-                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
-            </div>
+                            <span style="font-weight: bold;">Efectos</span>
+                            @foreach (var CAUSAS in HALLAZGO.Detalles)
+                            {
+                                if (CAUSAS.TIPO.Contains("efecto"))
+                                {
+                                    <label>• @CAUSAS.DESCRIPCION</label>
+                                }
+                            }
+
+                            <span style="font-weight: bold;">Causas</span>
+                            @foreach (var CAUSAS in HALLAZGO.Detalles)
+                            {
+                                if (CAUSAS.TIPO.Contains("causa"))
+                                {
+                                    <label>• @CAUSAS.DESCRIPCION</label>
+                                }
+                            }
+
+
+
+
+                            <span style="font-weight: bold;">Proceso Asociado</span>
+                            Proceso de Consulta en Central de Riesgo
+
+                            <span style="font-weight: bold;">Acciones Requeridas</span>
+                            • It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
+                            <div @*style="display:none"*@>
+                                <span style="font-weight: bold;">Contestación</span>
+                                <textarea class="text-area" placeholder="Escribir..."> </textarea>
+
+                                <span style="font-weight: bold;">Documentos</span>
+                                <div class="upload-area">
+                                    <i class='bx bx-info-circle font-size-24 upload-warning'></i>
+                                    <p><span style="color: #186040;">Click para subir documento</span> o arrastre y suelte el archivo aquí</p><p><small>PDF (máx. 4MB)</small></p>
+                                </div>
+                                <button type="button" onclick="AgregarComentarios()" class="btn btn-secondary btn-purple">Agregar Comentarios</button>
+                            </div>
+                            <span style="font-weight: bold;">Comentarios del Auditado</span>
+                            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
+                        </div>
+                        <br>
+                        <br>
+                        <hr>
+                    }
+                }
+            }
 
             <h4 class="title-green">
-                III. CONCLUSIONES
+                IV. CONCLUSIONES
             </h4>
 
             <div style="margin:0 24px; width:95%; white-space: pre-line;">
@@ -337,7 +397,7 @@
             </div>
 
             <h4 class="title-green">
-                IV. RECOMENDACIONES DE LA AUDITORÍA
+                V. RECOMENDACIONES DE LA AUDITORÍA
             </h4>
 
             <div style="margin:0 24px; width:95%; white-space: pre-line;">
@@ -347,7 +407,7 @@
             </div>
 
             <h4 class="title-green">
-                V. COMENTARIOS DEL AUDITADO
+                VI. COMENTARIOS DEL AUDITADO
             </h4>
 
             <div style="margin:0 24px; width:95%; white-space: pre-line;">

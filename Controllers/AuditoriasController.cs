@@ -2938,20 +2938,8 @@ namespace SIA.Controllers
 
 
         //********************************************************************************
-        // PAGES NEWS
+        // INFORME PRELIMINAR
         //********************************************************************************
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult ProgramarAuditoriaPost()
-        {
-
-            return Json("Ok");
-        }
 
 
         /// <summary>
@@ -2970,21 +2958,113 @@ namespace SIA.Controllers
                     .Where(e => e.ANIO_AI == anio)
                     .FirstOrDefaultAsync();
 
-            var hallazgos = await _context.MG_HALLAZGOS
-                .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
-                .Where(d => d.ANIO_AI == anio)
-                .ToListAsync();
 
             var hallazgosAnteriores = await _context.MG_HALLAZGOS
                 .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
                 .Where(d => d.ANIO_AI == anio)
                 .ToListAsync();
 
+            var hallazgosAllData = await _context.MG_HALLAZGOS
+                .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
+                .Where(d => d.ANIO_AI == anio)
+                .Include(d => d.Detalles)
+                .Include(d => d.OrientacionCalificacion.Where(s => s.ESTADO == "A"))
+                .Include(d => d.Documentos)
+                .ToListAsync();
+
+
+
+
+            //******************
+
+
+
+
+
+            //Obtenemos el o los cuestionarios agregados a la auditoria
+            var data = await _context.MG_AUDITORIAS_CUESTIONARIOS
+                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == cod)
+                    .Where(e => e.ANIO == anio)
+                    .Where(e => e.CODIGO_ESTADO == 3)
+                    .ToListAsync();
+
+            List<Mg_secciones> secciones = new List<Mg_secciones>();
+
+            // Iteramos sobre los cuestionarios
+            foreach (var item in data)
+            {
+                secciones = await _context.MG_SECCIONES
+                    .Include(x => x.sub_secciones
+                    .Where(sub => sub.CODIGO_CUESTIONARIO == item.CODIGO_CUESTIONARIO))
+                    .ThenInclude(x => x.Preguntas_Cuestionarios)
+                    .ToListAsync();
+
+                //    // Iteramos sobre las secciones
+                //    foreach (var itemSection in secciones)
+                //    {
+                //        //Obtenemos las respuestas del cuestionario
+                //        var respuestasData = await _context.MG_RESPUESTAS_CUESTIONARIO
+                //                    .Where(e => e.CODIGO_AUDITORIA_CUESTIONARIO == itemSection.CODIGO_SECCION)
+                //                    .ToListAsync();
+
+                //        foreach (var item in secciones)
+                //        {
+                //            foreach (var item2 in item.sub_secciones)
+                //            {
+                //                var totalPuntos = 0;
+                //                var numPreguntas = 0;
+                //                foreach (var item3 in item2.Preguntas_Cuestionarios)
+                //                {
+                //                    var respuesta = respuestasData.FirstOrDefault(r => r.CODIGO_PREGUNTA == item3.CODIGO_PREGUNTA);
+
+                //                    item3.RESPUESTA_PREGUNTA = respuesta;
+
+                //                    if (respuesta?.CUMPLE == 1)
+                //                    {
+                //                        totalPuntos += 100;
+                //                        numPreguntas++;
+                //                    }
+                //                    else if (respuesta?.CUMPLE_PARCIALMENTE == 1)
+                //                    {
+                //                        totalPuntos += 50;
+                //                        numPreguntas++;
+                //                    }
+                //                    else if (respuesta?.NO_CUMPLE == 1)
+                //                    {
+                //                        totalPuntos += 0;
+                //                        numPreguntas++;
+                //                    }
+                //                    else if (respuesta?.NO_APLICA == 1)
+                //                    {
+                //                        totalPuntos += 0;
+                //                    }
+                //                    else
+                //                    {
+                //                        totalPuntos += 0;
+                //                    }
+                //                }
+                //                // Calcular el promedio
+                //                item2.PORCENTAJE = numPreguntas > 0 ? (double)totalPuntos / numPreguntas : 0;
+                //            }
+                //        }
+                //    }
+            }
+
+
+
+
+
+            //ViewBag.DATA_CUESTIONARIO = secciones;
+
+
+
+            //********************
+
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
             ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
             ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
             ViewBag.AU_TXT_INFOR_PRELIM = Infor;
-            ViewBag.HALLAZGOS = hallazgos;
+            ViewBag.HALLAZGOS = hallazgosAllData;
             ViewBag.HALLAZGOS_ANTERIORES = hallazgosAnteriores;
 
             return View();
@@ -3000,7 +3080,7 @@ namespace SIA.Controllers
         {
             try
             {
-                if(id == 0)
+                if (id == 0)
                 {
                     int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
                     int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
@@ -3124,5 +3204,26 @@ namespace SIA.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
+
+
+
+
+        //********************************************************************************
+        // PAGES NEWS
+        //********************************************************************************
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ProgramarAuditoriaPost()
+        {
+
+            return Json("Ok");
+        }
+
     }
 }
