@@ -358,9 +358,6 @@
                                 }
                             }
 
-
-
-
                             <span style="font-weight: bold;">Proceso Asociado</span>
                             Proceso de Consulta en Central de Riesgo
 
@@ -387,34 +384,141 @@
                 }
             }
 
-            <h4 class="title-green">
-                IV. CONCLUSIONES
-            </h4>
+            @if (ViewBag.SECC_INF_PRELI != null && ViewBag.SECC_INF_PRELI.Count > 1)
+            {
+                foreach (var secc in ViewBag.SECC_INF_PRELI)
+                {
+                    if (@secc.TITULO == "IV. CONCLUSIONES")
+                    {
+                        <div class="button-container" style="margin-bottom: 10px">
+                            <h4 class="title-green" style="text-align: center; flex: 1;">
+                                @secc.TITULO
+                            </h4>
+                            <button type="button" onclick="ModificarTextoRI('@secc.TITULO', 'conclusionText')" class="btn btn-primary">Agregar Conclusión</button>
+                        </div>
 
-            <div style="margin:0 24px; width:95%; white-space: pre-line;">
-                • Contrary to popular belief, Lorem Ipsum is not simply random telt` It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old` Richard McClintock, a Latin professor at HampdenSydney College in Virginia, looked up one of the more obscure Latin words
-                • There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable` If you are going to use a passage of Lorem Ipsum
-            </div>
+                        <div id="conclusionText" style="margin:0 24px; width:95%; white-space: pre-line;">@Html.Raw(@secc.TEXTO_SECCION)</div>
+                    }
+                    else if (@secc.TITULO == "V. RECOMENDACIONES DE LA AUDITORÍA")
+                    {
+                        <div class="button-container" style="margin-bottom: 10px">
+                            <h4 class="title-green" style="text-align: center; flex: 1;">
+                                @secc.TITULO
+                            </h4>
+                            <button type="button" onclick="ModificarTextoRI('@secc.TITULO', 'recomendacionText')" class="btn btn-primary">Agregar Recomendacíon</button>
+                        </div>
 
-            <h4 class="title-green">
-                V. RECOMENDACIONES DE LA AUDITORÍA
-            </h4>
+                        <div id="recomendacionText" style="margin:0 24px; width:95%; white-space: pre-line;">@Html.Raw(@secc.TEXTO_SECCION)</div>
+                    }
+                }
+            }
+            else if (ViewBag.SECC_INF_PRELI != null && ViewBag.SECC_INF_PRELI.Count == 1)
+            {
+                foreach (var secc in ViewBag.SECC_INF_PRELI)
+                {
+                    if (@secc.TITULO == "IV. CONCLUSIONES")
+                    {
+                        <div class="button-container" style="margin-bottom: 10px">
+                            <h4 class="title-green" style="text-align: center; flex: 1;">
+                                @secc.TITULO
+                            </h4>
+                            <button type="button" onclick="ModificarTextoRI('@secc.TITULO', 'conclusionText')" class="btn btn-primary">Agregar Conclusión</button>
+                        </div>
 
-            <div style="margin:0 24px; width:95%; white-space: pre-line;">
-                • Contrary to popular belief, Lorem Ipsum is not simply random telt` It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old` Richard McClintock, a Latin professor at HampdenSydney College in Virginia, looked up one of the more obscure Latin words
-                • There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable` If you are going to use a passage of Lorem Ipsum
-                • The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested` Sections 1`10`32 and 1`10`33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their elact original form, accompanied by English versions from the 1914 translation by H` Rackham`
-            </div>
+                        <div id="conclusionText" style="margin:0 24px; width:95%; white-space: pre-line;">@Html.Raw(@secc.TEXTO_SECCION)</div>
 
-            <h4 class="title-green">
+
+                        <div class="button-container" style="margin-bottom: 10px">
+                            <h4 class="title-green" style="text-align: center; flex: 1;">
+                                V. RECOMENDACIONES DE LA AUDITORÍA
+                            </h4>
+                            <button type="button" onclick="ModificarTextoRI('V. RECOMENDACIONES DE LA AUDITORÍA', '')" class="btn btn-primary">Agregar Recomendacíon</button>
+                        </div>
+
+                        <div id="recomendacionText" style="margin:0 24px; width:95%; white-space: pre-line;">Agregar Recomendación...</div>
+                    }
+                    else
+                    {
+                        <div class="button-container" style="margin-bottom: 10px">
+                            <h4 class="title-green" style="text-align: center; flex: 1;">
+                                IV. CONCLUSIONES
+                            </h4>
+                            <button type="button" onclick="ModificarTextoRI('IV. CONCLUSIONES', '')" class="btn btn-primary">Agregar Conclusión</button>
+                        </div>
+
+                        <div id="conclusionText" style="margin:0 24px; width:95%; white-space: pre-line;">Agregar conclusión...</div>
+
+                        <div class="button-container" style="margin-bottom: 10px">
+                            <h4 class="title-green" style="text-align: center; flex: 1;">
+                                @secc.TITULO
+                            </h4>
+                            <button type="button" onclick="ModificarTextoRI('@secc.TITULO', '@secc.CODIGO_SEC_INF' + '_text')" class="btn btn-primary">Agregar Recomendacíon</button>
+                        </div>
+
+                        <div id="'@secc.CODIGO_SEC_INF' + '_text'" style="margin:0 24px; width:95%; white-space: pre-line;">@Html.Raw(@secc.TEXTO_SECCION)</div>
+                    }
+                }
+            }
+            else
+            {
+                <div class="button-container" style="margin-bottom: 10px">
+                    <h4 class="title-green" style="text-align: center; flex: 1;">
+                        IV. CONCLUSIONES
+                    </h4>
+                    <button type="button" onclick="ModificarTextoRI('IV. CONCLUSIONES', '')" class="btn btn-primary">Agregar Conclusión</button>
+                </div>
+
+                <div id="conclusionText" style="margin:0 24px; width:95%; white-space: pre-line;">
+                    Agregar conclusión...
+                </div>
+
+                <div class="button-container" style="margin-bottom: 10px">
+                    <h4 class="title-green" style="text-align: center; flex: 1;">
+                        V. RECOMENDACIONES DE LA AUDITORÍA
+                    </h4>
+                    <button type="button" onclick="ModificarTextoRI('V. RECOMENDACIONES DE LA AUDITORÍA', '')" class="btn btn-primary">Agregar Recomendacíon</button>
+                </div>
+
+                <div id="recomendacionText" style="margin:0 24px; width:95%; white-space: pre-line;">
+                    Agregar Recomendación...
+                </div>
+            }
+
+             <h4 class="title-green">
                 VI. COMENTARIOS DEL AUDITADO
             </h4>
 
-            <div style="margin:0 24px; width:95%; white-space: pre-line;">
-                • Contrary to popular belief, Lorem Ipsum is not simply random telt` It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old` Richard McClintock, a Latin professor at HampdenSydney College in Virginia, looked up one of the more obscure Latin words
-                • There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable` If you are going to use a passage of Lorem Ipsum
-                • The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested` Sections 1`10`32 and 1`10`33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their elact original form, accompanied by English versions from the 1914 translation by H` Rackham`
+            <div id="comentarioText" style="margin:0 24px; width:95%; white-space: pre-line;">
+                Agregar Comentario...
             </div>
+
+            @if (ViewBag.SECC_INF_PRELI != null && ViewBag.SECC_INF_PRELI.Count > 1)
+            {
+                @foreach (var secc in ViewBag.SECC_INF_PRELI)
+                {
+                    if (secc.TITULO == "IV. CONCLUSIONES" || secc.TITULO == "V. RECOMENDACIONES DE LA AUDITORÍA")
+                    {
+                        continue;
+                    }
+
+                    var titulo = @secc.CODIGO_SEC_INF + "_text";
+                    
+                    <div class="button-container" style="margin-bottom: 10px">
+                        <h4 class="title-green" style="text-align: center; flex: 1;">
+                            @secc.TITULO
+                        </h4>
+                        <button type="button" onclick="ModificarTextoRI('@secc.TITULO', '@titulo')" class="btn btn-primary">Editar Contenido</button>
+                    </div>
+
+                    <div id="@titulo" style="margin:0 24px; width:95%; white-space: pre-line;">@Html.Raw(@secc.TEXTO_SECCION)</div>
+                }
+                <button type="button" onclick="ModificarTextoRI('', '')" class="btn btn-primary" style="margin-top: 20px">AGREGAR NUEVA SECCIÓN</button>
+            }
+            else
+            {
+                <button type="button" onclick="ModificarTextoRI('', '')" class="btn btn-primary" style="margin-top: 20px" disabled>AGREGAR NUEVA SECCIÓN</button>
+            }
+
         </div>
     </div>
 </div>

@@ -3060,14 +3060,70 @@ namespace SIA.Controllers
 
             //********************
 
+            var seccInformesPreli = await _context.MG_SECC_INF_PRELI
+                .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
+                .Where(d => d.ANIO_AI == anio)
+                .OrderBy(d => d.CODIGO_SEC_INF)
+                .ToListAsync();
+
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
             ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
             ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
             ViewBag.AU_TXT_INFOR_PRELIM = Infor;
             ViewBag.HALLAZGOS = hallazgosAllData;
             ViewBag.HALLAZGOS_ANTERIORES = hallazgosAnteriores;
+            ViewBag.SECC_INF_PRELI = seccInformesPreli;
 
             return View();
+        }
+
+        /// <summary>
+        /// Modificar fecha de inicio y fin de la auditoria integral
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> ModificarTextoResultadoInforme(string texto, string titulo)
+        {
+            try
+            {
+                int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+                int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+
+                var registro = await _context.MG_SECC_INF_PRELI
+                                    .FirstOrDefaultAsync(u => u.NUMERO_AUDITORIA_INTEGRAL == cod && u.ANIO_AI == anio && u.TITULO == titulo.ToUpper());
+
+                if (registro != null)
+                {
+                    registro.TEXTO_SECCION = texto;
+                }
+                else
+                {
+                    int maxNumeroRegistro = await _context.MG_SECC_INF_PRELI
+                    .MaxAsync(a => (int?)a.CODIGO_SEC_INF) ?? 0;
+
+                    registro = new Mg_secc_inf_preli
+                    {
+                        CODIGO_SEC_INF = maxNumeroRegistro + 1,
+                        NUMERO_AUDITORIA_INTEGRAL = cod,
+                        ANIO_AI = anio,
+                        TITULO = titulo.ToUpper(),
+                        TEXTO_SECCION = texto,
+                        MOSTRAR_SECCION = 1
+                    };
+
+                    _context.MG_SECC_INF_PRELI.Add(registro);
+                }
+
+                // Guardar los cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         /// <summary>
