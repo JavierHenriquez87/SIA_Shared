@@ -206,3 +206,38 @@ function ModificarTextoRI(titulo, texto) {
         $('#html-editor').summernote('code', contentDiv);
     }
 }
+
+function EliminarSeccion(codigoSecInf) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción eliminará la sección de forma permanente.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/Auditorias/EliminarSeccion', 
+                type: 'POST',
+                data: { codigoSecInf: codigoSecInf },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire(
+                            'Eliminado',
+                            'La sección ha sido eliminada correctamente.',
+                            'success'
+                        ).then(() => {
+                            location.reload(); 
+                        });
+                    } else {
+                        Swal.fire('Error', 'No se pudo eliminar la sección: ' + response.message, 'error');
+                    }
+                },
+                error: function (err) {
+                    Swal.fire('Error', 'Ocurrió un error al eliminar la sección: ' + err.statusText, 'error');
+                }
+            });
+        }
+    });
+}

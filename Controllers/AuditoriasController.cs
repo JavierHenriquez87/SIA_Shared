@@ -3078,7 +3078,7 @@ namespace SIA.Controllers
         }
 
         /// <summary>
-        /// Modificar fecha de inicio y fin de la auditoria integral
+        /// Modificar el texto de las secciones
         /// </summary>
         /// <param></param>
         /// <returns></returns>
@@ -3119,6 +3119,43 @@ namespace SIA.Controllers
                 await _context.SaveChangesAsync();
 
                 return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Eliminar la seccion
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> EliminarSeccion(int codigoSecInf)
+        {
+            try
+            {
+                int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+                int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+
+                var registro = await _context.MG_SECC_INF_PRELI
+                                    .FirstOrDefaultAsync(u => u.NUMERO_AUDITORIA_INTEGRAL == cod && u.ANIO_AI == anio && u.CODIGO_SEC_INF == codigoSecInf);
+
+                if (registro != null)
+                {
+                    // Eliminar el registro
+                    _context.MG_SECC_INF_PRELI.Remove(registro);
+
+                    // Guardar los cambios en la base de datos
+                    await _context.SaveChangesAsync();
+
+                    return Json(new { success = true });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "La sección no fue encontrada." });
+                }
             }
             catch (Exception ex)
             {
