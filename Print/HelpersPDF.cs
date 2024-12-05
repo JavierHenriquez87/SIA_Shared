@@ -58,9 +58,45 @@ namespace SIA.Print
             return color;
         }
 
+        public Color ColorGrisBordeTabla()
+        {
+            Color color = new DeviceRgb(221, 221, 221);
+            return color;
+        }
+
+        public Color ColorGrisClaro()
+        {
+            Color color = new DeviceRgb(243, 243, 243);
+            return color;
+        }
+
         public Color ColorGrisOscuro()
         {
             Color color = new DeviceRgb(52, 56, 61);
+            return color;
+        }
+
+        public Color ColorBajoTabla()
+        {
+            Color color = new DeviceRgb(23, 178, 106);
+            return color;
+        }
+
+        public Color ColorMedioTabla()
+        {
+            Color color = new DeviceRgb(247, 144, 9);
+            return color;
+        }
+
+        public Color ColorAltoTabla()
+        {
+            Color color = new DeviceRgb(240, 68, 56);
+            return color;
+        }
+
+        public Color ColorBlanco()
+        {
+            Color color = new DeviceRgb(255, 255, 255);
             return color;
         }
 

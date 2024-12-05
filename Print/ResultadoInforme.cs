@@ -16,6 +16,7 @@ using System.Drawing;
 using Image = iText.Layout.Element.Image;
 using iText.IO.Image;
 using SIA.Models;
+using iText.Kernel.Colors;
 
 namespace SIA.Print
 {
@@ -157,7 +158,7 @@ namespace SIA.Print
 
                     document.Add(section1);
 
-                    //Agregarmos el motivo del informe
+                    //AGREGAMOS EL MOTIVO DEL INFORME
                     var section2 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
                     cell = _helpersPDF.CreateTableCellNoBorder();
 
@@ -198,13 +199,12 @@ namespace SIA.Print
                         }
                         else
                         {
-                            // Manejar casos no esperados
                             throw new InvalidOperationException($"Elemento no compatible: {element.GetType().Name}");
                         }
                     }
 
 
-                    //Agregarmos el motivo del informe
+                    //AGREGAMOS LA INTRODUCCIÓN Y EL OBJETIVO
                     var section3 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
                     cell = _helpersPDF.CreateTableCellNoBorder();
 
@@ -251,10 +251,243 @@ namespace SIA.Print
                         }
                         else
                         {
-                            // Manejar casos no esperados
                             throw new InvalidOperationException($"Elemento no compatible: {element.GetType().Name}");
                         }
                     }
+
+                    //AGREGAMOS EL ALCANCE
+                    var section4 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    cell = _helpersPDF.CreateTableCellNoBorder();
+
+                    section4.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat("2. Alcance", bfArialBd, 10)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetMarginTop(10)));
+
+                    document.Add(section4);
+
+                    var alcance = "";
+                    if (Infor != null && Infor.ALCANCE != null)
+                    {
+                        alcance = Infor.ALCANCE;
+                    }
+                    else
+                    {
+                        alcance = "<p>Nuestra revisión se realizó de conformidad con los manuales y políticas de la Fundación Micro Financiera HDH-OPDF haciendo su aplicación en todas las áreas de la Agencia que se encuentran en ejecución.</p><p><br></p><p>La Gerencia General es responsable de mantener los sistemas de control interno efectivos, la responsabilidad del Área de Auditoría Interna se limita a la revisión de los registros contenidos en los sistemas de la Fundación respecto a las operaciones efectuadas en su Oficina y la documentación de respaldo proporcionada por el personal y a la exposición de los resultados alcanzados basados en la revisión de dicha información.</p><p><br></p><p>De acuerdo a lo anterior, nuestro trabajo fue desarrollado basados en análisis sobre una muestra de las transacciones de 4 meses, por lo cual pueden existir desviaciones en el proceso auditado que no fueron identificadas por las técnicas de auditoría aplicadas en base a la NIA 530 Muestreo de Auditoría, esta norma permite al Auditor utilizar un enfoque de muestreo no estadístico, basado en las características del universo que se somete a prueba.</p><p><br></p><p>En tal sentido el alcance de la revisión corresponde al periodo comprendido entre el 01 de enero 2024 al 30 de abril del 2024, donde se verificó el cumplimiento con los manuales y políticas de la institución</p>";
+                    }
+
+                    elements = HtmlConverter.ConvertToElements(alcance);
+
+                    foreach (IElement element in elements)
+                    {
+                        if (element is Paragraph paragraph)
+                        {
+                            Paragraph styledParagraph = CrearParrafoConEstilo(paragraph, bfArial, bfArialBd);
+                            document.Add(styledParagraph);
+                        }
+                        else if (element is List list)
+                        {
+                            list = EstilizarListItem(list, bfArial, bfArialBd);
+                            document.Add(list);
+                        }
+                        else if (element is IBlockElement blockElement)
+                        {
+                            document.Add(blockElement);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"Elemento no compatible: {element.GetType().Name}");
+                        }
+                    }
+
+                    //AGREGAMOS EL RESULTADO GENERAL
+                    var section5 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    cell = _helpersPDF.CreateTableCellNoBorder();
+
+                    section5.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat("3. Resultados Generales", bfArialBd, 10)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetMarginTop(10)));
+
+                    document.Add(section5);
+
+                    // Crear la tabla de resultados generales
+                    var section5_Table = new Table(UnitValue.CreatePercentArray(new float[] { 20, 50, 30 }))
+                        .SetWidth(UnitValue.CreatePercentValue(100))
+                        .SetMarginTop(10)
+                        .SetHorizontalAlignment(HorizontalAlignment.CENTER)
+                        .SetBorder(Border.NO_BORDER)
+                        .SetPadding(5); 
+
+                    section5_Table.AddCell(new Cell()
+                        .Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("ID", bfArialBd, 10)
+                            .SetFontColor(_helpersPDF.ColorGris())))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                        .SetBackgroundColor(_helpersPDF.ColorGrisClaro()));
+
+                    section5_Table.AddCell(new Cell()
+                        .Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("Hallazgos", bfArialBd, 10)
+                            .SetFontColor(_helpersPDF.ColorGris())))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                        .SetBackgroundColor(_helpersPDF.ColorGrisClaro()));
+
+                    section5_Table.AddCell(new Cell()
+                        .Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("Prioridad", bfArialBd, 10)
+                            .SetFontColor(_helpersPDF.ColorGris())))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                        .SetBackgroundColor(_helpersPDF.ColorGrisClaro()));
+
+
+                    if (hallazgosAllData == null || hallazgosAllData.Count == 0)
+                    {
+                        section5_Table.AddCell(new Cell(1, 3)
+                        .Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("Sin hallazgos encontrados", bfArial, 10)
+                            .SetFontColor(_helpersPDF.ColorGris())))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1)));
+                    }
+                    else
+                    {
+                        foreach (var HALLAZGO in hallazgosAllData)
+                        {
+                            var riesgo = HALLAZGO.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO.NIVEL_RIESGO == 2 ? "MEDIO" : "ALTO";
+
+                            iText.Kernel.Colors.Color colorEstado = HALLAZGO.NIVEL_RIESGO == 1 ? _helpersPDF.ColorBajoTabla() : HALLAZGO.NIVEL_RIESGO == 2 ? _helpersPDF.ColorMedioTabla() : _helpersPDF.ColorAltoTabla();
+
+                            section5_Table.AddCell(new Cell()
+                                .Add(new Paragraph(
+                                    _helpersPDF.CreateTextFormat(@HALLAZGO.CODIGO_HALLAZGO.ToString(), bfArial, 10)
+                                    .SetFontColor(_helpersPDF.ColorGris())))
+                                .SetTextAlignment(TextAlignment.CENTER)
+                                .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1)));
+
+                            section5_Table.AddCell(new Cell()
+                                .Add(new Paragraph(
+                                    _helpersPDF.CreateTextFormat(@HALLAZGO.HALLAZGO, bfArial, 10)
+                                    .SetFontColor(_helpersPDF.ColorGris())))
+                                .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1)).SetPaddingLeft(6));
+
+                            section5_Table.AddCell(new Cell()
+                                .Add(new Paragraph(
+                                    _helpersPDF.CreateTextFormat(riesgo, bfArialBd, 9)
+                                    .SetFontColor(_helpersPDF.ColorBlanco())))
+                                .SetTextAlignment(TextAlignment.CENTER)
+                                .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                                .SetBackgroundColor(colorEstado));
+                        }
+                    }
+
+                    // Agregar la tabla al documento
+                    document.Add(section5_Table);
+
+                    //AGREGAMOS EL SEGUIMIENTO A INFORMES ANTERIORES
+                    var section6 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    cell = _helpersPDF.CreateTableCellNoBorder();
+
+                    section6.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat("4. Seguimientos a Informes Anteriores", bfArialBd, 10)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetMarginTop(18)));
+
+                    document.Add(section6);
+
+                    // Crear la tabla de seguimientos a informes anteriores
+                    var section6_Table = new Table(UnitValue.CreatePercentArray(new float[] { 20, 50, 30 }))
+                        .SetWidth(UnitValue.CreatePercentValue(100))
+                        .SetMarginTop(10)
+                        .SetHorizontalAlignment(HorizontalAlignment.CENTER)
+                        .SetBorder(Border.NO_BORDER)
+                        .SetPadding(5);
+
+                    section6_Table.AddCell(new Cell()
+                        .Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("ID", bfArialBd, 10)
+                            .SetFontColor(_helpersPDF.ColorGris())))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                        .SetBackgroundColor(_helpersPDF.ColorGrisClaro()));
+
+                    section6_Table.AddCell(new Cell()
+                        .Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("Hallazgos", bfArialBd, 10)
+                            .SetFontColor(_helpersPDF.ColorGris())))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                        .SetBackgroundColor(_helpersPDF.ColorGrisClaro()));
+
+                    section6_Table.AddCell(new Cell()
+                        .Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("Prioridad", bfArialBd, 10)
+                            .SetFontColor(_helpersPDF.ColorGris())))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                        .SetBackgroundColor(_helpersPDF.ColorGrisClaro()));
+
+
+                    if (hallazgosAnteriores == null || hallazgosAnteriores.Count == 0)
+                    {
+                        section6_Table.AddCell(new Cell(1, 3)
+                        .Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("Sin hallazgos encontrados", bfArial, 10)
+                            .SetFontColor(_helpersPDF.ColorGris())))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1)));
+                    }
+                    else
+                    {
+                        foreach (var HALLAZGO in hallazgosAnteriores)
+                        {
+                            var riesgo = HALLAZGO.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO.NIVEL_RIESGO == 2 ? "MEDIO" : "ALTO";
+
+                            iText.Kernel.Colors.Color colorEstado = HALLAZGO.NIVEL_RIESGO == 1 ? _helpersPDF.ColorBajoTabla() : HALLAZGO.NIVEL_RIESGO == 2 ? _helpersPDF.ColorMedioTabla() : _helpersPDF.ColorAltoTabla();
+
+                            section6_Table.AddCell(new Cell()
+                                .Add(new Paragraph(
+                                    _helpersPDF.CreateTextFormat(@HALLAZGO.CODIGO_HALLAZGO.ToString(), bfArial, 10)
+                                    .SetFontColor(_helpersPDF.ColorGris())))
+                                .SetTextAlignment(TextAlignment.CENTER)
+                                .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1)));
+
+                            section6_Table.AddCell(new Cell()
+                                .Add(new Paragraph(
+                                    _helpersPDF.CreateTextFormat(@HALLAZGO.HALLAZGO, bfArial, 10)
+                                    .SetFontColor(_helpersPDF.ColorGris())))
+                                .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1)).SetPaddingLeft(6));
+
+                            section6_Table.AddCell(new Cell()
+                                .Add(new Paragraph(
+                                    _helpersPDF.CreateTextFormat(riesgo, bfArialBd, 9)
+                                    .SetFontColor(_helpersPDF.ColorBlanco())))
+                                .SetTextAlignment(TextAlignment.CENTER)
+                                .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                                .SetBackgroundColor(colorEstado));
+                        }
+                    }
+
+                    // Agregar la tabla al documento
+                    document.Add(section6_Table);
+
 
                     document.Close();
 
@@ -347,6 +580,7 @@ namespace SIA.Print
 
             return list;
         }
+
     }
 
 }
