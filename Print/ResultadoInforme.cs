@@ -103,10 +103,10 @@ namespace SIA.Print
                     //CELDAS PARA UTILIZAR EN LAS TABLAS
                     Cell cell = new Cell();
 
-                    pdfDoc.AddEventHandler(PdfDocumentEvent.START_PAGE, new HeaderEventHandler(document, "1"));
+                    pdfDoc.AddEventHandler(PdfDocumentEvent.START_PAGE, new HeaderEventHandler(document, ""));
 
                     //AGREGAMOS EL FOOTER DE LAS PAGINAS
-                    pdfDoc.AddEventHandler(PdfDocumentEvent.START_PAGE, new TextFooterEventHandler(document));
+                    //pdfDoc.AddEventHandler(PdfDocumentEvent.START_PAGE, new TextFooterEventHandler(document));
 
                     //GENERAMOS UN ESPACIO PARA SER UTILIZADO DONDE SEA NECESARIO
                     Paragraph sectionSpacing = new Paragraph(" ").SetFontSize(4);
@@ -488,7 +488,126 @@ namespace SIA.Print
                     // Agregar la tabla al documento
                     document.Add(section6_Table);
 
+                    //AGREGAMOS LA CONCLUSION GENERAL
+                    if (Infor != null && Infor.MOSTRAR_CONCLUSION_GENERAL != null && Infor.MOSTRAR_CONCLUSION_GENERAL == 1)
+                    {
+                        var section7 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                        cell = _helpersPDF.CreateTableCellNoBorder();
 
+                        section7.AddCell(cell.Add(new Paragraph(
+                                    _helpersPDF.CreateTextFormat("5. Conclusión General", bfArialBd, 10)
+                                    .SetFontColor(_helpersPDF.ColorGris())
+                                    ).SetMarginTop(18)));
+
+                        document.Add(section7);
+
+                        var conclusion = "";
+                        if (Infor != null && Infor.TEXTO_CONCLUSION_GENERAL != null)
+                        {
+                            conclusion = Infor.TEXTO_CONCLUSION_GENERAL;
+                        }
+                        else
+                        {
+                            conclusion = "<p>Sin Conclusión.</p>";
+                        }
+
+                        elements = HtmlConverter.ConvertToElements(conclusion);
+
+                        foreach (IElement element in elements)
+                        {
+                            if (element is Paragraph paragraph)
+                            {
+                                Paragraph styledParagraph = CrearParrafoConEstilo(paragraph, bfArial, bfArialBd);
+                                document.Add(styledParagraph);
+                            }
+                            else if (element is List list)
+                            {
+                                list = EstilizarListItem(list, bfArial, bfArialBd);
+                                document.Add(list);
+                            }
+                            else if (element is IBlockElement blockElement)
+                            {
+                                document.Add(blockElement);
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException($"Elemento no compatible: {element.GetType().Name}");
+                            }
+                        }
+                    }
+
+                    //AGREGAMOS II. PROCEDIMIENTOS DE LA AUDITORÍA
+                    var section8 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    cell = _helpersPDF.CreateTableCellNoBorder();
+
+
+                    section8.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat("II. PROCEDIMIENTOS DE LA AUDITORÍA", bfArialBd, 13)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetTextAlignment(TextAlignment.CENTER).SetMarginTop(10)));
+
+                    document.Add(section8);
+
+                    var procedimientoAuditoria = "";
+                    if (Infor != null && Infor.PROCEDIMIENTOS_AUDITORIA != null)
+                    {
+                        procedimientoAuditoria = Infor.PROCEDIMIENTOS_AUDITORIA;
+                    }
+                    else
+                    {
+                        procedimientoAuditoria = "<div>Los procedimientos y técnicas utilizadas para la realización de este trabajo,</div><div>fueron los siguientes:</div>";
+                    }
+
+                    elements = HtmlConverter.ConvertToElements(procedimientoAuditoria);
+
+                    foreach (IElement element in elements)
+                    {
+                        if (element is Paragraph paragraph)
+                        {
+                            Paragraph styledParagraph = CrearParrafoConEstilo(paragraph, bfArial, bfArialBd);
+                            document.Add(styledParagraph);
+                        }
+                        else if (element is List list)
+                        {
+                            list = EstilizarListItem(list, bfArial, bfArialBd);
+                            document.Add(list);
+                        }
+                        else if (element is IBlockElement blockElement)
+                        {
+                            document.Add(blockElement);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"Elemento no compatible: {element.GetType().Name}");
+                        }
+                    }
+
+                    //AGREGAMOS III. RESULTADOS DE LA AUDITORÍA
+                    var section9 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    cell = _helpersPDF.CreateTableCellNoBorder();
+
+
+                    section9.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat("III. RESULTADOS DE LA AUDITORÍA", bfArialBd, 13)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetTextAlignment(TextAlignment.CENTER).SetMarginTop(10)));
+
+
+                    document.Add(section9);
+
+                    if (hallazgosAllData == null || hallazgosAllData.Count == 0)
+                    {
+                        //Sin hallazgos encontrados
+                    }
+                    else
+                    {
+                        foreach (var HALLAZGO in hallazgosAllData)
+                        {
+                            //section9.AddCell(cell.Add(new Paragraph(
+                            //            _helpersPDF.CreateTextFormat(HALLAZGO.ToUpper(), bfArialBd, 10)
+                            //            ).SetMarginTop(10)));
+                        }
+                    }
                     document.Close();
 
                     byte[] byteInfo = workStream.ToArray();
