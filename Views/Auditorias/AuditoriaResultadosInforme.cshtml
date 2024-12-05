@@ -44,7 +44,10 @@
             <button type="button" onclick="EnviarInforme()" class="btn btn-secondary btn-purple">Enviar Informe</button>
             <button type="button" onclick="HabilitarSeguimiento()" class="btn btn-secondary btn-purple">Habilitar Seguimiento</button>
             <button type="button" onclick="ConfirmarComentarios()" class="btn btn-secondary btn-green">Confirmar Comentarios</button>
-            <button type="button" onclick="Imprimir()" class="btn btn-secondary btn-purple">Imprimir</button>
+            <a href="~/print/Index?doc=resultadoInforme" target="_blank" class="btn btn-secondary btn-purple" style="width: 10%; cursor:pointer;">
+                <i class="fas fa-print" style="margin-right: 5px"></i>Imprimir
+             </a> 
+            @* <button type="button" href="~/print/Index?doc=ResultadoInforme&id=1" target="_blank" class="btn btn-secondary btn-purple">Imprimir</button> *@
         </div>
     </div>
 
@@ -224,7 +227,7 @@
                 </a>
                 <div>
                     <label for="toggleConclusion">Mostrar Conclusión</label>
-                    <label class="switch" style="margin-right: 20px">
+                     <label class="switch" style="margin-right: 20px">
                         <input type="checkbox" id="toggleConclusion" onclick="toggleConclusion(@id)" @(ViewBag.AU_TXT_INFOR_PRELIM != null && ViewBag.AU_TXT_INFOR_PRELIM.MOSTRAR_CONCLUSION_GENERAL != null && ViewBag.AU_TXT_INFOR_PRELIM.MOSTRAR_CONCLUSION_GENERAL == 1 ? "checked" : "") />
                         <span class="slider"></span>
                     </label>
@@ -507,7 +510,7 @@
                         <h4 class="title-green" style="text-align: center; flex: 1;">
                             @secc.TITULO
                         </h4>
-                        <button type="button" onclick="ModificarTextoRI('@secc.TITULO', '@titulo')" class="btn btn-primary">Editar Contenido</button>
+                        <button type="button" onclick="ModificarTextoRiI('@secc.TITULO', '@titulo')" class="btn btn-primary">Editar Contenido</button>
 
                         <button type="button" onclick="EliminarSeccion('@secc.CODIGO_SEC_INF')" class="btn btn-danger" style="margin-left: 5px; border-radius: 13px !important;">
                             <i class="fas fa-trash-alt"></i> Eliminar
