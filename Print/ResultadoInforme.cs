@@ -586,28 +586,405 @@ namespace SIA.Print
                     var section9 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
                     cell = _helpersPDF.CreateTableCellNoBorder();
 
-
                     section9.AddCell(cell.Add(new Paragraph(
                                 _helpersPDF.CreateTextFormat("III. RESULTADOS DE LA AUDITORÍA", bfArialBd, 13)
                                 .SetFontColor(_helpersPDF.ColorGris())
                                 ).SetTextAlignment(TextAlignment.CENTER).SetMarginTop(10)));
 
-
                     document.Add(section9);
 
                     if (hallazgosAllData == null || hallazgosAllData.Count == 0)
                     {
-                        //Sin hallazgos encontrados
+                        var section10 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                        cell = _helpersPDF.CreateTableCellNoBorder();
+
+
+                        section10.AddCell(cell.Add(new Paragraph(
+                                    _helpersPDF.CreateTextFormat("Sin hallazgos encontrados", bfArialBd, 13)
+                                    .SetFontColor(_helpersPDF.ColorGris())
+                                    ).SetTextAlignment(TextAlignment.CENTER).SetMarginTop(10)));
+
+                        document.Add(section10);
                     }
                     else
                     {
                         foreach (var HALLAZGO in hallazgosAllData)
                         {
-                            //section9.AddCell(cell.Add(new Paragraph(
-                            //            _helpersPDF.CreateTextFormat(HALLAZGO.ToUpper(), bfArialBd, 10)
-                            //            ).SetMarginTop(10)));
+                            var calif = HALLAZGO.NIVEL_RIESGO == 1 ? " - BAJO" : HALLAZGO.NIVEL_RIESGO == 2 ? " - MEDIO" : HALLAZGO.NIVEL_RIESGO == 3 ? " - ALTO" : "";
+                            iText.Kernel.Colors.Color colorEstado = HALLAZGO.NIVEL_RIESGO == 1 ? _helpersPDF.ColorBajoTabla() : HALLAZGO.NIVEL_RIESGO == 2 ? _helpersPDF.ColorMedioTabla() : _helpersPDF.ColorAltoTabla();
+
+                            var section11 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                            cell = _helpersPDF.CreateTableCellNoBorder();
+
+                            var paragraph11 = new Paragraph()
+                            .SetMarginTop(10);
+
+                            Text text1 = _helpersPDF.CreateTextFormat(HALLAZGO.HALLAZGO.ToUpper(), bfArialBd, 10);
+                            Text text2 = _helpersPDF.CreateTextFormat(calif, bfArialBd, 10).SetFontColor(colorEstado).SetItalic(); ;
+
+                            paragraph11.Add(text1);
+
+                            if (HALLAZGO.CALIFICACION == 2)
+                            {
+                                paragraph11.Add(text2);
+                            }
+
+                            section11.AddCell(new Cell()
+                                .Add(paragraph11)
+                                .SetBorder(Border.NO_BORDER));
+
+                            document.Add(section11);
+
+                            if (HALLAZGO.CALIFICACION == 1)
+                            {
+                                // Crear la tabla de seguimientos a informes anteriores
+                                var section12_Table = new Table(UnitValue.CreatePercentArray(new float[] { 25, 25, 25, 25 }))
+                                    .SetWidth(UnitValue.CreatePercentValue(100))
+                                    .SetMarginTop(10)
+                                    .SetHorizontalAlignment(HorizontalAlignment.CENTER)
+                                    .SetBorder(Border.NO_BORDER)
+                                    .SetPadding(5);
+
+                                section12_Table.AddCell(new Cell()
+                                    .Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Valor de Muestra", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())))
+                                    .SetTextAlignment(TextAlignment.CENTER)
+                                    .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                    .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                                    .SetBackgroundColor(_helpersPDF.ColorGrisClaro()));
+
+                                section12_Table.AddCell(new Cell()
+                                    .Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Muestra con Hallazgos", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())))
+                                    .SetTextAlignment(TextAlignment.CENTER)
+                                    .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                    .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                                    .SetBackgroundColor(_helpersPDF.ColorGrisClaro()));
+
+                                section12_Table.AddCell(new Cell()
+                                    .Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Desviación de Muestra", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())))
+                                    .SetTextAlignment(TextAlignment.CENTER)
+                                    .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                    .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                                    .SetBackgroundColor(_helpersPDF.ColorGrisClaro()));
+
+                                section12_Table.AddCell(new Cell()
+                                    .Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Nivel de Riesgo", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())))
+                                    .SetTextAlignment(TextAlignment.CENTER)
+                                    .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                    .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                                    .SetBackgroundColor(_helpersPDF.ColorGrisClaro()));
+
+                                section12_Table.AddCell(new Cell()
+                                        .Add(new Paragraph(
+                                            _helpersPDF.CreateTextFormat(@HALLAZGO.VALOR_MUESTRA.ToString(), bfArial, 10)
+                                            .SetFontColor(_helpersPDF.ColorGris())))
+                                        .SetTextAlignment(TextAlignment.CENTER)
+                                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                        .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1)));
+
+                                section12_Table.AddCell(new Cell()
+                                        .Add(new Paragraph(
+                                            _helpersPDF.CreateTextFormat(@HALLAZGO.MUESTRA_INCONSISTENTE.ToString(), bfArial, 10)
+                                            .SetFontColor(_helpersPDF.ColorGris())))
+                                        .SetTextAlignment(TextAlignment.CENTER)
+                                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                        .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1)).SetPaddingLeft(6));
+
+                                section12_Table.AddCell(new Cell()
+                                        .Add(new Paragraph(
+                                            _helpersPDF.CreateTextFormat(@HALLAZGO.DESVIACION_MUESTRA + " %", bfArial, 10)
+                                            .SetFontColor(_helpersPDF.ColorGris())))
+                                        .SetTextAlignment(TextAlignment.CENTER)
+                                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                        .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1)).SetPaddingLeft(6));
+
+                                section12_Table.AddCell(new Cell()
+                                    .Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat(HALLAZGO.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO.NIVEL_RIESGO == 2 ? "MEDIO" : HALLAZGO.NIVEL_RIESGO == 3 ? "ALTO" : "", bfArialBd, 9)
+                                        .SetFontColor(_helpersPDF.ColorBlanco())))
+                                    .SetTextAlignment(TextAlignment.CENTER)
+                                    .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                    .SetBorder(new SolidBorder(_helpersPDF.ColorGrisBordeTabla(), 1))
+                                    .SetBackgroundColor(colorEstado));
+
+                                // Agregar la tabla al documento
+                                document.Add(section12_Table);
+                            }
+
+                            var section13 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                            cell = _helpersPDF.CreateTableCellNoBorder();
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat(HALLAZGO.CONDICION, bfArial, 10)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetMarginTop(5)));
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Criterio", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetMarginTop(18)));
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat(HALLAZGO.CRITERIO, bfArial, 10)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetMarginTop(5)));
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Efectos", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetMarginTop(18)));
+
+                            foreach (var CAUSAS in HALLAZGO.Detalles)
+                            {
+                                if (CAUSAS.TIPO.Contains("efecto"))
+                                {
+                                    section13.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("• " + CAUSAS.DESCRIPCION, bfArial, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetMarginTop(5)));
+                                }
+                            }
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Causas", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetMarginTop(18)));
+
+                            foreach (var CAUSAS in HALLAZGO.Detalles)
+                            {
+                                if (CAUSAS.TIPO.Contains("causa"))
+                                {
+                                    section13.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("• " + CAUSAS.DESCRIPCION, bfArial, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetMarginTop(5)));
+                                }
+                            }
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Proceso Asociado", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetMarginTop(18)));
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Proceso de Consulta en Central de Riesgo", bfArial, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetMarginTop(5)));
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Acciones Requeridas", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetMarginTop(18)));
+
+                            foreach (var CAUSAS in HALLAZGO.Detalles)
+                            {
+                                if (CAUSAS.TIPO.Contains("causa"))
+                                {
+                                    section13.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("• Accion", bfArial, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetMarginTop(5)));
+
+                                    //section13.AddCell(cell.Add(new Paragraph(
+                                    //    _helpersPDF.CreateTextFormat("• " + CAUSAS.DESCRIPCION, bfArial, 10)
+                                    //    .SetFontColor(_helpersPDF.ColorGris())
+                                    //    ).SetMarginTop(5)));
+                                }
+                            }
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Contestación", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetMarginTop(18)));
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat("Contestación.......", bfArial, 10)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetMarginTop(5)));
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("Comentarios del Auditado", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetMarginTop(18)));
+
+                            section13.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat("Comentario.......", bfArial, 10)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetMarginTop(5)));
+
+                            document.Add(section13);
+
                         }
                     }
+
+                    var section14 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    cell = _helpersPDF.CreateTableCellNoBorder();
+
+
+                    section14.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat("IV. CONCLUSIONES", bfArialBd, 13)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetTextAlignment(TextAlignment.CENTER).SetMarginTop(10)));
+
+                    document.Add(section14);
+
+                    var conclusionesFinales = seccInformesPreli.FirstOrDefault(x => x.TITULO.Trim().Equals("IV. CONCLUSIONES", StringComparison.OrdinalIgnoreCase));
+                    if (conclusionesFinales != null)
+                    {
+                        elements = HtmlConverter.ConvertToElements(conclusionesFinales.TEXTO_SECCION);
+
+                        foreach (IElement element in elements)
+                        {
+                            if (element is Paragraph paragraph)
+                            {
+                                Paragraph styledParagraph = CrearParrafoConEstilo(paragraph, bfArial, bfArialBd);
+                                document.Add(styledParagraph);
+                            }
+                            else if (element is List list)
+                            {
+                                list = EstilizarListItem(list, bfArial, bfArialBd);
+                                document.Add(list);
+                            }
+                            else if (element is IBlockElement blockElement)
+                            {
+                                document.Add(blockElement);
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException($"Elemento no compatible: {element.GetType().Name}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        section14 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                        cell = _helpersPDF.CreateTableCellNoBorder();
+
+                        section14.AddCell(cell.Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("Sin conclusiones agregadas.......", bfArial, 10)
+                            .SetFontColor(_helpersPDF.ColorGris())
+                            ).SetMarginTop(5)));
+
+                        document.Add(section14);
+                    }
+
+                    var section15 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    cell = _helpersPDF.CreateTableCellNoBorder();
+
+                    section15.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat("V. RECOMENDACIONES DE LA AUDITORÍA", bfArialBd, 13)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetTextAlignment(TextAlignment.CENTER).SetMarginTop(10)));
+
+                    document.Add(section15);
+
+                    var RecomendacionesFinales = seccInformesPreli.FirstOrDefault(x => x.TITULO.Trim().Equals("V. RECOMENDACIONES DE LA AUDITORÍA", StringComparison.OrdinalIgnoreCase));
+                    if (RecomendacionesFinales != null)
+                    {
+                        elements = HtmlConverter.ConvertToElements(RecomendacionesFinales.TEXTO_SECCION);
+
+                        foreach (IElement element in elements)
+                        {
+                            if (element is Paragraph paragraph)
+                            {
+                                Paragraph styledParagraph = CrearParrafoConEstilo(paragraph, bfArial, bfArialBd);
+                                document.Add(styledParagraph);
+                            }
+                            else if (element is List list)
+                            {
+                                list = EstilizarListItem(list, bfArial, bfArialBd);
+                                document.Add(list);
+                            }
+                            else if (element is IBlockElement blockElement)
+                            {
+                                document.Add(blockElement);
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException($"Elemento no compatible: {element.GetType().Name}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        section15 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                        cell = _helpersPDF.CreateTableCellNoBorder();
+
+                        section15.AddCell(cell.Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("Sin recomendaciones agregadas.......", bfArial, 10)
+                            .SetFontColor(_helpersPDF.ColorGris())
+                            ).SetMarginTop(5)));
+
+                        document.Add(section15);
+                    }
+
+                    var section16 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                    cell = _helpersPDF.CreateTableCellNoBorder();
+
+                    section16.AddCell(cell.Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat("VI. COMENTARIOS DEL AUDITADO", bfArialBd, 13)
+                                .SetFontColor(_helpersPDF.ColorGris())
+                                ).SetTextAlignment(TextAlignment.CENTER).SetMarginTop(10)));
+
+                    section16.AddCell(cell.Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("Agregar Comentario...", bfArial, 10)
+                            .SetFontColor(_helpersPDF.ColorGris())
+                            ).SetMarginTop(5)));
+
+                    document.Add(section16);
+
+                    if (seccInformesPreli != null && seccInformesPreli.Count > 1)
+                    {
+                        foreach (var secc in seccInformesPreli)
+                        {
+                            if (secc.TITULO == "IV. CONCLUSIONES" || secc.TITULO == "V. RECOMENDACIONES DE LA AUDITORÍA")
+                            {
+                                continue;
+                            }
+
+                            var section17 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
+                            cell = _helpersPDF.CreateTableCellNoBorder();
+
+                            section17.AddCell(cell.Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat(secc.TITULO, bfArialBd, 13)
+                                        .SetFontColor(_helpersPDF.ColorGris())
+                                        ).SetTextAlignment(TextAlignment.CENTER).SetMarginTop(10)));
+
+                            document.Add(section17);
+
+                            elements = HtmlConverter.ConvertToElements(secc.TEXTO_SECCION);
+
+                            foreach (IElement element in elements)
+                            {
+                                if (element is Paragraph paragraph)
+                                {
+                                    Paragraph styledParagraph = CrearParrafoConEstilo(paragraph, bfArial, bfArialBd);
+                                    document.Add(styledParagraph);
+                                }
+                                else if (element is List list)
+                                {
+                                    list = EstilizarListItem(list, bfArial, bfArialBd);
+                                    document.Add(list);
+                                }
+                                else if (element is IBlockElement blockElement)
+                                {
+                                    document.Add(blockElement);
+                                }
+                                else
+                                {
+                                    throw new InvalidOperationException($"Elemento no compatible: {element.GetType().Name}");
+                                }
+                            }
+                        }
+                    }
+
                     document.Close();
 
                     byte[] byteInfo = workStream.ToArray();
@@ -626,7 +1003,7 @@ namespace SIA.Print
                 {
                     var existe = text.GetProperty<string>(95) == "bold";
 
-                    if (existe)
+                    if (existe) 
                     {
                         text.SetFont(bfArialBd);
                     }
