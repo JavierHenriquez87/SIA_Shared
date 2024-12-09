@@ -274,6 +274,55 @@
                 III. RESULTADOS DE LA AUDITORÍA
             </h4>
 
+            @if(ViewBag.PORCENTAJE_SUBSECCIONES != null && ViewBag.PORCENTAJE_SUBSECCIONES.Count != 0)
+            {
+                int conteo = 1;
+                string seccion = "";
+                decimal porcentaje = 0;
+
+                <table class="tabla-resumen">
+                    <tr>
+                        <th colspan="2" class="titulo">RESUMEN DE CONTROL - AGENCIA</th>
+                    </tr>
+
+                    @foreach (var PORCENTAJE_SUBSECCIONES in ViewBag.PORCENTAJE_SUBSECCIONES)
+                    {
+                        
+                        if (seccion == "")
+                        {
+                            seccion = PORCENTAJE_SUBSECCIONES.Seccion;
+                            <tr>
+                                <th class="subtitulo" colspan="1">@(PORCENTAJE_SUBSECCIONES.Seccion)</th>
+                                <th class="subtitulo">PUNTAJE GRADO DE CUMPLIMIENTO</th>
+                            </tr>
+                        }
+                        else if (seccion != PORCENTAJE_SUBSECCIONES.Seccion)
+                        {
+                            seccion = PORCENTAJE_SUBSECCIONES.Seccion;
+                            <tr>
+                                <th class="subtitulo" colspan="1" style="border-right: 0 !important;">@(PORCENTAJE_SUBSECCIONES.Seccion)</th>
+                                <th class="subtitulo" style="border-left: 0 !important;"></th>
+                            </tr>
+                        }
+
+                        <tr>
+                            <td>@conteo. @(PORCENTAJE_SUBSECCIONES.SubSeccion?.ToUpper())</td>
+                            <td class="celda-numerica-verde">@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento)%</td>
+                        </tr>
+
+                        conteo++;
+                        porcentaje += PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento;
+                    }
+
+                    <tr>
+                        <td colspan="1" class="puntaje-agencia">Puntaje de la Agencia ...</td>
+                        <td class="celda-numerica-amarillo">
+                            @(porcentaje != 0 ? Math.Round((decimal)porcentaje / (conteo - 1), 2) : 0)%
+                        </td>
+                    </tr>
+                </table>
+            }
+
             @{
                 if (ViewBag.HALLAZGOS == null || ViewBag.HALLAZGOS.Count == 0)
                 {

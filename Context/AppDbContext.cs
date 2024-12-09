@@ -107,5 +107,6 @@ namespace SIA.Context
         public virtual DbSet<Mg_cartas> MG_CARTAS { get; set; }
         public virtual DbSet<Au_txt_infor_prelim> AU_TXT_INFOR_PRELIM { get; set; }
         public virtual DbSet<Mg_secc_inf_preli> MG_SECC_INF_PRELI { get; set; }
+        public virtual DbSet<Porcentaje_SubSecciones> Porcentaje_SubSecciones { get; set; }
     }
 }

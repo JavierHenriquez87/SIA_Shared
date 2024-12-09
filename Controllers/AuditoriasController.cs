@@ -3066,6 +3066,50 @@ namespace SIA.Controllers
                 .OrderBy(d => d.CODIGO_SEC_INF)
                 .ToListAsync();
 
+            var query = @"
+                SELECT 
+                    s.descripcion_seccion AS Seccion,
+                    ss.descripcion AS SubSeccion,
+                    ROUND(
+                        (
+                            -- Suma ponderada de los porcentajes
+                            SUM(CASE WHEN r.cumple = 1 THEN 1 ELSE 0 END) * 100 + 
+                            SUM(CASE WHEN r.cumple_parcialmente = 1 THEN 0.5 ELSE 0 END) * 100
+                        ) / 
+                        NULLIF(
+                            -- Total de preguntas que no son 'No Aplica'
+                            COUNT(pc.codigo_pregunta) - SUM(CASE WHEN r.no_aplica = 1 THEN 1 ELSE 0 END), 
+                            0
+                        ), 
+                        2
+                    ) AS PorcentajeCumplimiento
+                FROM 
+                    mg_auditorias_cuestionarios a
+                INNER JOIN 
+                    mg_cuestionario_secciones cs ON a.codigo_auditoria_cuestionario = cs.codigo_cuestionario
+                INNER JOIN 
+                    mg_secciones s ON cs.codigo_seccion = s.codigo_seccion
+                INNER JOIN 
+                    mg_sub_secciones ss ON ss.codigo_seccion = s.codigo_seccion 
+                                        AND ss.codigo_cuestionario = cs.codigo_cuestionario
+                INNER JOIN 
+                    mg_preguntas_cuestionario pc ON pc.codigo_sub_seccion = ss.codigo_sub_seccion
+                                                    AND pc.codigo_cuestionario = cs.codigo_cuestionario
+                INNER JOIN 
+                    mg_respuestas_cuestionario r ON r.codigo_pregunta = pc.codigo_pregunta
+                WHERE 
+                    a.numero_auditoria_integral = {0}
+                    AND a.anio = {1}
+                GROUP BY 
+                    s.descripcion_seccion, ss.descripcion
+                ORDER BY 
+                    s.descripcion_seccion, ss.descripcion;
+            ";
+
+            var porcentajeSubSecciones = await _context.Porcentaje_SubSecciones
+                .FromSqlRaw(query, cod, anio)
+                .ToListAsync();
+
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
             ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
             ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
@@ -3073,6 +3117,7 @@ namespace SIA.Controllers
             ViewBag.HALLAZGOS = hallazgosAllData;
             ViewBag.HALLAZGOS_ANTERIORES = hallazgosAnteriores;
             ViewBag.SECC_INF_PRELI = seccInformesPreli;
+            ViewBag.PORCENTAJE_SUBSECCIONES = porcentajeSubSecciones;
 
             return View();
         }

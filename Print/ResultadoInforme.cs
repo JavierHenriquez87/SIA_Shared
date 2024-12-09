@@ -17,6 +17,7 @@ using Image = iText.Layout.Element.Image;
 using iText.IO.Image;
 using SIA.Models;
 using iText.Kernel.Colors;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SIA.Print
 {
@@ -85,6 +86,50 @@ namespace SIA.Print
                 .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
                 .Where(d => d.ANIO_AI == anio)
                 .OrderBy(d => d.CODIGO_SEC_INF)
+                .ToListAsync();
+
+            var query = @"
+                SELECT 
+                    s.descripcion_seccion AS Seccion,
+                    ss.descripcion AS SubSeccion,
+                    ROUND(
+                        (
+                            -- Suma ponderada de los porcentajes
+                            SUM(CASE WHEN r.cumple = 1 THEN 1 ELSE 0 END) * 100 + 
+                            SUM(CASE WHEN r.cumple_parcialmente = 1 THEN 0.5 ELSE 0 END) * 100
+                        ) / 
+                        NULLIF(
+                            -- Total de preguntas que no son 'No Aplica'
+                            COUNT(pc.codigo_pregunta) - SUM(CASE WHEN r.no_aplica = 1 THEN 1 ELSE 0 END), 
+                            0
+                        ), 
+                        2
+                    ) AS PorcentajeCumplimiento
+                FROM 
+                    mg_auditorias_cuestionarios a
+                INNER JOIN 
+                    mg_cuestionario_secciones cs ON a.codigo_auditoria_cuestionario = cs.codigo_cuestionario
+                INNER JOIN 
+                    mg_secciones s ON cs.codigo_seccion = s.codigo_seccion
+                INNER JOIN 
+                    mg_sub_secciones ss ON ss.codigo_seccion = s.codigo_seccion 
+                                        AND ss.codigo_cuestionario = cs.codigo_cuestionario
+                INNER JOIN 
+                    mg_preguntas_cuestionario pc ON pc.codigo_sub_seccion = ss.codigo_sub_seccion
+                                                    AND pc.codigo_cuestionario = cs.codigo_cuestionario
+                INNER JOIN 
+                    mg_respuestas_cuestionario r ON r.codigo_pregunta = pc.codigo_pregunta
+                WHERE 
+                    a.numero_auditoria_integral = {0}
+                    AND a.anio = {1}
+                GROUP BY 
+                    s.descripcion_seccion, ss.descripcion
+                ORDER BY 
+                    s.descripcion_seccion, ss.descripcion;
+            ";
+
+            var porcentajeSubSecciones = await _context.Porcentaje_SubSecciones
+                .FromSqlRaw(query, cod, anio)
                 .ToListAsync();
 
             MemoryStream workStream = new MemoryStream();
@@ -1078,5 +1123,4 @@ namespace SIA.Print
         }
 
     }
-
 }
