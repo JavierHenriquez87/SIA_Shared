@@ -307,7 +307,7 @@
 
                         <tr>
                             <td>@conteo. @(PORCENTAJE_SUBSECCIONES.SubSeccion?.ToUpper())</td>
-                            <td class="celda-numerica-@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 50.90 ? "rojo" : PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 65.90 ? "anaranjado" : PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 85.90 ? "amarillo" : "verde")">@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento)%</td>
+                            <td class="celda-porcentaje-@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 50.90m ? "rojo" : PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 65.90m ? "anaranjado" : PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 85.90m ? "amarillo" : "verde")">@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento)%</td>
                         </tr>
 
                         conteo++;
@@ -320,7 +320,7 @@
 
                     <tr>
                         <td colspan="1" class="puntaje-agencia">Puntaje de la Agencia ...</td>
-                        <td class="celda-numerica-@(porcentajeTotal <= 50.90 ? "rojo" : porcentajeTotal <= 65.90 ? "anaranjado" : porcentajeTotal <= 85.90 ? "amarillo" : "verde")">
+                        <td class="celda-porcentaje-@(porcentajeTotal <= 50.90 ? "rojo" : porcentajeTotal <= 65.90 ? "anaranjado" : porcentajeTotal <= 85.90 ? "amarillo" : "verde")">
                             @porcentajeTotal%
                         </td>
                     </tr>

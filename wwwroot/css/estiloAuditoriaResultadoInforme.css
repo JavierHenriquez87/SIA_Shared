@@ -246,4 +246,5 @@ input:checked + .slider {
 .celda-porcentaje-rojo {
     background-color: #fc0001;
     font-weight: bold;
+    color: #fff !important;
 }

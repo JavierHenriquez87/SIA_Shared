@@ -723,10 +723,15 @@ namespace SIA.Print
                             sectionTablaPorcentaje.AddCell(new Cell()
                                 .Add(new Paragraph(
                                     _helpersPDF.CreateTextFormat(porcentajeSubSeccion.PorcentajeCumplimiento + "%", bfArialBd, 10)
-                                    .SetFontColor(_helpersPDF.ColorBlanco())))
+                                    .SetFontColor((double)porcentajeSubSeccion.PorcentajeCumplimiento <= 50.90 ? _helpersPDF.ColorBlanco() : _helpersPDF.ColorGris())))
                                 .SetTextAlignment(TextAlignment.CENTER)
                                 .SetVerticalAlignment(VerticalAlignment.MIDDLE)
-                                .SetBackgroundColor(porcentajeSubSeccion.PorcentajeCumplimiento <= 50.90m ? _helpersPDF.ColorRojoPorcentajeTabla() : porcentajeSubSeccion.PorcentajeCumplimiento <= 65.90m ? _helpersPDF.ColorAnaranjadoPorcentajeTabla() : porcentajeSubSeccion.PorcentajeCumplimiento <= 85.90m ? _helpersPDF.ColorAmarilloPorcentajeTabla() : _helpersPDF.ColorVerdePorcentajeTabla())
+                                .SetBackgroundColor(
+                                    (double)porcentajeSubSeccion.PorcentajeCumplimiento <= 50.90 ? _helpersPDF.ColorRojoPorcentajeTabla() :
+                                    (double)porcentajeSubSeccion.PorcentajeCumplimiento <= 65.90 ? _helpersPDF.ColorAnaranjadoPorcentajeTabla() :
+                                    (double)porcentajeSubSeccion.PorcentajeCumplimiento <= 85.90 ? _helpersPDF.ColorAmarilloPorcentajeTabla() :
+                                    _helpersPDF.ColorVerdePorcentajeTabla()
+                                )
                                 .SetBorder(new SolidBorder(_helpersPDF.ColorVerdeBordeTabla(), 1)).SetPaddingLeft(6));
 
                             conteo++;
@@ -745,10 +750,15 @@ namespace SIA.Print
                         sectionTablaPorcentaje.AddCell(new Cell()
                             .Add(new Paragraph(
                                 _helpersPDF.CreateTextFormat(porcentajeTotal + "%", bfArialBd, 10)
-                                .SetFontColor(_helpersPDF.ColorGris())))
+                                .SetFontColor((double)porcentajeTotal <= 50.90 ? _helpersPDF.ColorBlanco() : _helpersPDF.ColorGris())))
                             .SetTextAlignment(TextAlignment.CENTER)
                             .SetVerticalAlignment(VerticalAlignment.MIDDLE)
-                            .SetBackgroundColor(porcentajeTotal <= 50.90 ? _helpersPDF.ColorRojoPorcentajeTabla() : porcentajeTotal <= 65.90 ? _helpersPDF.ColorAnaranjadoPorcentajeTabla() : porcentajeTotal <= 85.90 ? _helpersPDF.ColorAmarilloPorcentajeTabla() : _helpersPDF.ColorVerdePorcentajeTabla())
+                            .SetBackgroundColor(
+                                (double)porcentajeTotal <= 50.90 ? _helpersPDF.ColorRojoPorcentajeTabla() :
+                                (double)porcentajeTotal <= 65.90 ? _helpersPDF.ColorAnaranjadoPorcentajeTabla() :
+                                (double)porcentajeTotal <= 85.90 ? _helpersPDF.ColorAmarilloPorcentajeTabla() :
+                                _helpersPDF.ColorVerdePorcentajeTabla()
+                            )
                             .SetBorder(new SolidBorder(_helpersPDF.ColorVerdeBordeTabla(), 1)).SetPaddingLeft(6));
                     }
 
