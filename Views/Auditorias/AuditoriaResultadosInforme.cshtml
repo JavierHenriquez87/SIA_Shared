@@ -274,7 +274,7 @@
                 III. RESULTADOS DE LA AUDITORÍA
             </h4>
 
-            @if(ViewBag.PORCENTAJE_SUBSECCIONES != null && ViewBag.PORCENTAJE_SUBSECCIONES.Count != 0)
+            @if(ViewBag.PORCENTAJE_SUBSECCIONES != null && ViewBag.PORCENTAJE_SUBSECCIONES.Count > 0)
             {
                 int conteo = 1;
                 string seccion = "";
@@ -307,17 +307,21 @@
 
                         <tr>
                             <td>@conteo. @(PORCENTAJE_SUBSECCIONES.SubSeccion?.ToUpper())</td>
-                            <td class="celda-numerica-verde">@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento)%</td>
+                            <td class="celda-numerica-@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 50.90 ? "rojo" : PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 65.90 ? "anaranjado" : PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 85.90 ? "amarillo" : "verde")">@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento)%</td>
                         </tr>
 
                         conteo++;
                         porcentaje += PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento;
                     }
 
+                    @{
+                        double porcentajeTotal = (porcentaje != 0 ? Math.Round((double)porcentaje / (conteo - 1), 2) : 0);
+                    }
+
                     <tr>
                         <td colspan="1" class="puntaje-agencia">Puntaje de la Agencia ...</td>
-                        <td class="celda-numerica-amarillo">
-                            @(porcentaje != 0 ? Math.Round((decimal)porcentaje / (conteo - 1), 2) : 0)%
+                        <td class="celda-numerica-@(porcentajeTotal <= 50.90 ? "rojo" : porcentajeTotal <= 65.90 ? "anaranjado" : porcentajeTotal <= 85.90 ? "amarillo" : "verde")">
+                            @porcentajeTotal%
                         </td>
                     </tr>
                 </table>

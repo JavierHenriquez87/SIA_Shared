@@ -58,9 +58,63 @@ namespace SIA.Print
             return color;
         }
 
+        public Color ColorVerdeFondoTabla()
+        {
+            Color color = new DeviceRgb(20, 173, 79);
+            return color;
+        }
+
+        public Color ColorSubTituloFondoTabla()
+        {
+            Color color = new DeviceRgb(219, 238, 245);
+            return color;
+        }
+
+        public Color ColorVerdeLimonFondoTabla()
+        {
+            Color color = new DeviceRgb(146, 209, 79);
+            return color;
+        }
+
+        public Color ColorVerdeClaroFondoTabla()
+        {
+            Color color = new DeviceRgb(2, 173, 83);
+            return color;
+        }
+
         public Color ColorGrisBordeTabla()
         {
             Color color = new DeviceRgb(221, 221, 221);
+            return color;
+        }
+
+        public Color ColorVerdeBordeTabla()
+        {
+            Color color = new DeviceRgb(41, 150, 95); 
+            return color;
+        }
+
+        public Color ColorVerdePorcentajeTabla()
+        {
+            Color color = new DeviceRgb(2, 174, 80);
+            return color;
+        }
+
+        public Color ColorAmarilloPorcentajeTabla()
+        {
+            Color color = new DeviceRgb(254, 254, 1);
+            return color;
+        }
+
+        public Color ColorAnaranjadoPorcentajeTabla()
+        {
+            Color color = new DeviceRgb(255, 191, 0);
+            return color;
+        }
+
+        public Color ColorRojoPorcentajeTabla()
+        {
+            Color color = new DeviceRgb(252, 0, 2);
             return color;
         }
 

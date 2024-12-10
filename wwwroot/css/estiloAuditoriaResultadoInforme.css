@@ -221,3 +221,29 @@ input:checked + .slider {
     font-weight: bold;
     color: #fff;
 }
+
+.celda-numerica-verde {
+    background-color: #02ad4f;
+    font-weight: bold;
+    color: #fff;
+}
+
+.celda-porcentaje-verde {
+    background-color: #00af50;
+    font-weight: bold;
+}
+
+.celda-porcentaje-amarillo {
+    background-color: #fefe02;
+    font-weight: bold;
+}
+
+.celda-porcentaje-anaranjado {
+    background-color: #febe04;
+    font-weight: bold;
+}
+
+.celda-porcentaje-rojo {
+    background-color: #fc0001;
+    font-weight: bold;
+}

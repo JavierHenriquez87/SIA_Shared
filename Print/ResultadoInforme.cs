@@ -638,6 +638,122 @@ namespace SIA.Print
 
                     document.Add(section9);
 
+                    // Crear la tabla de resultados de control
+                    var sectionTablaPorcentaje = new Table(UnitValue.CreatePercentArray(new float[] { 50, 50 }))
+                        .SetWidth(UnitValue.CreatePercentValue(100))
+                        .SetMarginTop(10)
+                        .SetMarginLeft(50)
+                        .SetMarginRight(50)
+                        .SetHorizontalAlignment(HorizontalAlignment.CENTER)
+                        .SetBorder(Border.NO_BORDER)
+                        .SetPadding(5);
+
+
+                    if (porcentajeSubSecciones != null && porcentajeSubSecciones.Count > 0)
+                    {
+                        int conteo = 1;
+                        string seccion = "";
+                        decimal porcentaje = 0;
+
+                        sectionTablaPorcentaje.AddCell(new Cell(1, 2)
+                        .Add(new Paragraph(
+                            _helpersPDF.CreateTextFormat("RESUMEN DE CONTROL - AGENCIA", bfArialBd, 10)
+                            .SetFontColor(_helpersPDF.ColorBlanco())))
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                        .SetBackgroundColor(_helpersPDF.ColorVerdeFondoTabla())
+                        .SetBorder(new SolidBorder(_helpersPDF.ColorVerdeBordeTabla(), 1)));
+
+                        foreach (var porcentajeSubSeccion in porcentajeSubSecciones)
+                        {
+
+                            if (seccion == "")
+                            {
+                                seccion = porcentajeSubSeccion.Seccion;
+                                sectionTablaPorcentaje.AddCell(new Cell()
+                                .Add(new Paragraph(
+                                    _helpersPDF.CreateTextFormat(porcentajeSubSeccion.Seccion.ToString(), bfArialBd, 10)
+                                   .SetFontColor(_helpersPDF.ColorGris())))
+                                .SetTextAlignment(TextAlignment.CENTER)
+                                .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .SetBackgroundColor(_helpersPDF.ColorSubTituloFondoTabla())
+                                .SetBorder(new SolidBorder(_helpersPDF.ColorVerdeBordeTabla(), 1)));
+
+                                sectionTablaPorcentaje.AddCell(new Cell()
+                                    .Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("PUNTAJE GRADO DE CUMPLIMIENTO", bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())))
+                                    .SetTextAlignment(TextAlignment.CENTER)
+                                    .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                    .SetBackgroundColor(_helpersPDF.ColorSubTituloFondoTabla())
+                                    .SetBorder(new SolidBorder(_helpersPDF.ColorVerdeBordeTabla(), 1)).SetPaddingLeft(6));
+                            }
+                            else if (seccion != porcentajeSubSeccion.Seccion)
+                            {
+                                seccion = porcentajeSubSeccion.Seccion;
+                                sectionTablaPorcentaje.AddCell(new Cell()
+                                    .Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat(porcentajeSubSeccion.Seccion.ToString(), bfArialBd, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())))
+                                    .SetTextAlignment(TextAlignment.CENTER)
+                                    .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                    .SetBackgroundColor(_helpersPDF.ColorSubTituloFondoTabla())
+                                    .SetBorder(new SolidBorder(_helpersPDF.ColorVerdeBordeTabla(), 1))
+                                    .SetBorderRight(Border.NO_BORDER));
+
+                                sectionTablaPorcentaje.AddCell(new Cell()
+                                    .Add(new Paragraph(
+                                        _helpersPDF.CreateTextFormat("", bfArial, 10)
+                                        .SetFontColor(_helpersPDF.ColorGris())))
+                                    .SetTextAlignment(TextAlignment.CENTER)
+                                    .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                    .SetBackgroundColor(_helpersPDF.ColorSubTituloFondoTabla())
+                                    .SetBorder(new SolidBorder(_helpersPDF.ColorVerdeBordeTabla(), 1))
+                                    .SetBorderLeft(Border.NO_BORDER));
+                            }
+
+                            sectionTablaPorcentaje.AddCell(new Cell()
+                                 .Add(new Paragraph(
+                                     _helpersPDF.CreateTextFormat(conteo + "." + porcentajeSubSeccion.SubSeccion.ToString().ToUpper(), bfArial, 10)
+                                     .SetFontColor(_helpersPDF.ColorGris())))
+                                 .SetTextAlignment(TextAlignment.CENTER)
+                                 .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                 .SetBorder(new SolidBorder(_helpersPDF.ColorVerdeBordeTabla(), 1)));
+
+                            sectionTablaPorcentaje.AddCell(new Cell()
+                                .Add(new Paragraph(
+                                    _helpersPDF.CreateTextFormat(porcentajeSubSeccion.PorcentajeCumplimiento + "%", bfArialBd, 10)
+                                    .SetFontColor(_helpersPDF.ColorBlanco())))
+                                .SetTextAlignment(TextAlignment.CENTER)
+                                .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                                .SetBackgroundColor(porcentajeSubSeccion.PorcentajeCumplimiento <= 50.90m ? _helpersPDF.ColorRojoPorcentajeTabla() : porcentajeSubSeccion.PorcentajeCumplimiento <= 65.90m ? _helpersPDF.ColorAnaranjadoPorcentajeTabla() : porcentajeSubSeccion.PorcentajeCumplimiento <= 85.90m ? _helpersPDF.ColorAmarilloPorcentajeTabla() : _helpersPDF.ColorVerdePorcentajeTabla())
+                                .SetBorder(new SolidBorder(_helpersPDF.ColorVerdeBordeTabla(), 1)).SetPaddingLeft(6));
+
+                            conteo++;
+                            porcentaje += porcentajeSubSeccion.PorcentajeCumplimiento;
+                        }
+                        double porcentajeTotal = (porcentaje != 0 ? Math.Round((double)porcentaje / (conteo - 1), 2) : 0);
+                        sectionTablaPorcentaje.AddCell(new Cell()
+                            .Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat("Puntaje de la Agencia ...", bfArialBd, 10)
+                            .SetFontColor(_helpersPDF.ColorBlanco())))
+                            .SetTextAlignment(TextAlignment.CENTER)
+                            .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                            .SetBackgroundColor(_helpersPDF.ColorVerdeLimonFondoTabla())
+                            .SetBorder(new SolidBorder(_helpersPDF.ColorVerdeBordeTabla(), 1)));
+
+                        sectionTablaPorcentaje.AddCell(new Cell()
+                            .Add(new Paragraph(
+                                _helpersPDF.CreateTextFormat(porcentajeTotal + "%", bfArialBd, 10)
+                                .SetFontColor(_helpersPDF.ColorGris())))
+                            .SetTextAlignment(TextAlignment.CENTER)
+                            .SetVerticalAlignment(VerticalAlignment.MIDDLE)
+                            .SetBackgroundColor(porcentajeTotal <= 50.90 ? _helpersPDF.ColorRojoPorcentajeTabla() : porcentajeTotal <= 65.90 ? _helpersPDF.ColorAnaranjadoPorcentajeTabla() : porcentajeTotal <= 85.90 ? _helpersPDF.ColorAmarilloPorcentajeTabla() : _helpersPDF.ColorVerdePorcentajeTabla())
+                            .SetBorder(new SolidBorder(_helpersPDF.ColorVerdeBordeTabla(), 1)).SetPaddingLeft(6));
+                    }
+
+                    document.Add(sectionTablaPorcentaje);
+
                     if (hallazgosAllData == null || hallazgosAllData.Count == 0)
                     {
                         var section10 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
