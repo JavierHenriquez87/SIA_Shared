@@ -336,7 +336,7 @@ function CargarAuditoresEditar(encargado_auditoria) {
                 result.forEach(function (data) {
                     let opcion = document.createElement("option");
                     opcion.value = data.codigO_USUARIO;
-                    opcion.text = data.nombrE_USUARIO;
+                    opcion.text = data.nombre;
                     // Verificar si este es el auditor que debe estar seleccionado por defecto
                     if (data.codigO_USUARIO == encargado_auditoria) {
                         opcion.selected = true;

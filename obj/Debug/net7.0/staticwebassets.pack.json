@@ -129,6 +129,10 @@
       "PackagePath": "staticwebassets\\Scripts\\Auditorias\\DetalleDocAuditoria.js"
     },
     {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Auditorias\\MatrizHallazgos.js",
+      "PackagePath": "staticwebassets\\Scripts\\Auditorias\\MatrizHallazgos.js"
+    },
+    {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Auditorias\\PlanificacionAuditoria.js",
       "PackagePath": "staticwebassets\\Scripts\\Auditorias\\PlanificacionAuditoria.js"
     },
@@ -5535,6 +5539,10 @@
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\css\\estiloCuestionario.css",
       "PackagePath": "staticwebassets\\css\\estiloCuestionario.css"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\css\\estiloMatrizHallazgos.css",
+      "PackagePath": "staticwebassets\\css\\estiloMatrizHallazgos.css"
     },
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\lib\\summernote\\font\\summernote.eot",

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "W68RI/s8jV+duVRFw8v9RYuXvgJZNHZwOh0N/UogVxM=",
+  "Hash": "HVkG1WLyJMC89xBBnkbEPn+EbmvtqJ+KqjeyexWGfUs=",
   "Source": "SIA",
   "BasePath": "_content/SIA",
   "Mode": "Default",
@@ -25971,6 +25971,25 @@
       "OriginalItemSpec": "wwwroot\\css\\estiloCuestionario.css"
     },
     {
+      "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\css\\estiloMatrizHallazgos.css",
+      "SourceId": "SIA",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\",
+      "BasePath": "_content/SIA",
+      "RelativePath": "css/estiloMatrizHallazgos.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\estiloMatrizHallazgos.css"
+    },
+    {
       "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\css\\Planificacion_Auditoria.css",
       "SourceId": "SIA",
       "SourceType": "Discovered",
@@ -29560,6 +29579,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Scripts\\Auditorias\\DetalleDocAuditoria.js"
+    },
+    {
+      "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Auditorias\\MatrizHallazgos.js",
+      "SourceId": "SIA",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\",
+      "BasePath": "_content/SIA",
+      "RelativePath": "Scripts/Auditorias/MatrizHallazgos.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Scripts\\Auditorias\\MatrizHallazgos.js"
     },
     {
       "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Auditorias\\PlanificacionAuditoria.js",

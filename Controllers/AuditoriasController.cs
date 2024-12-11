@@ -3363,5 +3363,161 @@ namespace SIA.Controllers
             return Json("Ok");
         }
 
+        /// <summary>
+        /// Mostrar la matriz de hallazgos 
+        /// </summary>
+        /// <returns></returns>
+        [Route("/MatrizHallazgos")]
+        public async Task<IActionResult> MatrizHallazgos()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Obtener la matriz de hallazgo
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> GetMatrizHallazgos()
+        {
+            var estadoRequest = Request.Form["estado"].FirstOrDefault();
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][data]"].FirstOrDefault().ToUpper();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault().ToUpper();
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+            int recordsTotal = 0;
+
+            List<Au_auditorias_integrales> data = new List<Au_auditorias_integrales>();
+
+            if (!string.IsNullOrEmpty(searchValue) && searchValue.Count() >= 3)
+            {
+                if (sortColumnDirection.Equals("asc"))
+                {
+                    data = await _context.AU_AUDITORIAS_INTEGRALES
+                        .OrderByDescending(e => e.FECHA_CREACION)
+                        .Where(e => e.CODIGO_AUDITORIA.ToUpper().Contains(searchValue) || e.NOMBRE_AUDITORIA.ToUpper().Contains(searchValue))
+                        .Include(d => d.listado_hallazgos)
+                        .ThenInclude(h => h.Detalles)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .Select(a => new Au_auditorias_integrales
+                        {
+                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
+                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                            ANIO_AI = a.ANIO_AI,
+                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
+                            {
+                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                CONDICION = h.CONDICION,
+                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                {
+                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                    DESCRIPCION = d.DESCRIPCION,
+                                    TIPO = d.TIPO
+                                }).ToList()
+                            }).ToList()
+                        })
+                        .ToListAsync();
+                }
+                else
+                {
+                    data = await _context.AU_AUDITORIAS_INTEGRALES
+                        .OrderBy(e => e.FECHA_CREACION)
+                        .Where(e => e.CODIGO_AUDITORIA.ToUpper().Contains(searchValue) || e.NOMBRE_AUDITORIA.ToUpper().Contains(searchValue))
+                        .Include(d => d.listado_hallazgos)
+                        .ThenInclude(h => h.Detalles)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .Select(a => new Au_auditorias_integrales
+                        {
+                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
+                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                            ANIO_AI = a.ANIO_AI,
+                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
+                            {
+                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                CONDICION = h.CONDICION,
+                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                {
+                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                    DESCRIPCION = d.DESCRIPCION,
+                                    TIPO = d.TIPO
+                                }).ToList()
+                            }).ToList()
+                        })
+                        .ToListAsync();
+                }
+
+                recordsTotal = await _context.AU_AUDITORIAS_INTEGRALES
+                    .CountAsync(e => e.CODIGO_AUDITORIA.ToUpper().Contains(searchValue) || e.NOMBRE_AUDITORIA.ToUpper().Contains(searchValue));
+            }
+            else
+            {
+                if (sortColumnDirection.Equals("asc"))
+                {
+                    data = await _context.AU_AUDITORIAS_INTEGRALES
+                        .Include(d => d.listado_hallazgos)
+                        .ThenInclude(h => h.Detalles)
+                        .OrderByDescending(e => e.FECHA_CREACION)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .Select(a => new Au_auditorias_integrales
+                        {
+                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
+                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                            ANIO_AI = a.ANIO_AI,
+                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
+                            {
+                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                CONDICION = h.CONDICION,
+                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                {
+                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                    DESCRIPCION = d.DESCRIPCION,
+                                    TIPO = d.TIPO
+                                }).ToList()
+                            }).ToList()
+                        })
+                        .ToListAsync();
+                }
+                else
+                {
+                    data = await _context.AU_AUDITORIAS_INTEGRALES
+                        .Include(d => d.listado_hallazgos)
+                        .ThenInclude(h => h.Detalles)
+                        .OrderBy(e => e.FECHA_CREACION)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .Select(a => new Au_auditorias_integrales
+                        {
+                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
+                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                            ANIO_AI = a.ANIO_AI,
+                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
+                            {
+                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                CONDICION = h.CONDICION,
+                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                {
+                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                    DESCRIPCION = d.DESCRIPCION,
+                                    TIPO = d.TIPO
+                                }).ToList()
+                            }).ToList()
+                        })
+                        .ToListAsync();
+                }
+
+                recordsTotal = await _context.AU_AUDITORIAS_INTEGRALES
+                    .CountAsync();
+            }
+
+            var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
+            return Ok(jsonData);
+        }
     }
 }

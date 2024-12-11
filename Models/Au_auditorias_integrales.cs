@@ -59,5 +59,7 @@ namespace SIA.Models
         /*PROPIEDADES HELPERS*/
         [NotMapped]
         public int? CANTIDAD_AUD_ESPEC { get; set; }
+
+        public List<Mg_Hallazgos> listado_hallazgos { get; set; }
     }
 }
