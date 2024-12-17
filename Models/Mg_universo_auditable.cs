@@ -13,5 +13,6 @@ namespace SIA.Models
         public DateTime? FECHA_MODIFICACION { get; set; }
         public string? MODIFICADO_POR { get; set; }
 
+        public Au_auditorias_integrales AuditoriaIntegral { get; set; }
     }
 }

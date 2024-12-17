@@ -37,6 +37,23 @@ namespace SIA.Context
             .HasForeignKey(d => d.CODIGO_HALLAZGO);
 
             modelBuilder.Entity<Mg_Hallazgos>()
+            .HasOne(h => h.AuditoriaIntegral)
+            .WithMany(ai => ai.listado_hallazgos)
+            .HasForeignKey(h => new { h.NUMERO_AUDITORIA_INTEGRAL, h.ANIO_AI })
+            .HasPrincipalKey(ai => new { ai.NUMERO_AUDITORIA_INTEGRAL, ai.ANIO_AI });
+
+            modelBuilder.Entity<Au_auditorias>()
+            .HasOne(h => h.AuditoriaIntegral)
+            .WithMany(ai => ai.listado_auditorias)
+            .HasForeignKey(h => new { h.NUMERO_AUDITORIA_INTEGRAL, h.ANIO_AE })
+            .HasPrincipalKey(ai => new { ai.NUMERO_AUDITORIA_INTEGRAL, ai.ANIO_AI });
+
+            modelBuilder.Entity<Mg_Hallazgos>()
+            .HasMany(h => h.Detalles)
+            .WithOne(d => d.Hallazgo)
+            .HasForeignKey(d => d.CODIGO_HALLAZGO);
+
+            modelBuilder.Entity<Mg_Hallazgos>()
             .HasMany(h => h.Documentos)
             .WithOne(d => d.Hallazgo)
             .HasForeignKey(d => d.CODIGO_HALLAZGO);

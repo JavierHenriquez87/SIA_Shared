@@ -20,19 +20,112 @@
                     <a class="flex-sm-fill text-sm-center nav-link" aria-current="page" href="#" id="tabCompleta">TABLA COMPLETA</a>
                 </nav>
 
-                <table id="tbMatrizHallazgo" class="table table-bordered dt-responsive  nowrap w-100">
-                    <thead>
-                        <tr>
-                            <th>Codigo del hallazgo</th>
-                            <th>Condición</th>
-                            <th>Recomendación</th>
-                            <th>Anexos</th>
-                            <th>Acciones Preventivas y/o Correctivas</th>
-                            <th>Evidencia</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div id="divTablaResumida">
+                    <table id="tbMatrizHallazgo" class="table table-bordered dt-responsive  nowrap w-100">
+                        <thead>
+                            <tr>
+                                <th class="th-titulo-verde">
+                                    Codigo del hallazgo
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Condición
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Recomendación
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Anexos
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Acciones Preventivas y/o Correctivas
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Evidencia
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
 
+@*                 <div class="table-responsive" style="max-height: 500px;" id="divTablaCompleta" hidden>
+                    <table id="tbMatrizHallazgoCompleta" class="table table-bordered dt-responsive nowrap w-100" > *@
+                <div id="divTablaCompleta" style="max-height: 500px; overflow-y: auto;" hidden>
+                    <table id="tbMatrizHallazgoCompleta" class="table table-bordered nowrap">
+
+                        <thead>
+                            <tr>
+                                <th colspan="12" class="th-titulo-cafe">
+                                    HALLAZGO
+                                </th>
+                                <th colspan="8" class="th-titulo-cafe">
+                                    PLAN DE ACCIÓN
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="th-titulo-verde">
+                                    Correlativo
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Tipo de Auditoria
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Numero de Informe de Auditoria
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Fecha de Emisión Informe Final
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Unidad auditada
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Responsable de la unidad auditada
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Codigo del hallazgo
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Descripción
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Nivel de Riesgo
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Proceso
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Objetivo de Control Interno
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Objetivo estratégico
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Acciones Preventivas y/o Correctivas
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Fecha de Solución
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Fecha que Solucióno
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Dias de atraso
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Responsable
+                                </th>
+                                <th class="th-titulo-verde">
+                                    EVIDENCIA
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Unidad de apoyo
+                                </th>
+                                <th class="th-titulo-verde">
+                                    Estatus
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </div> <!-- end col -->

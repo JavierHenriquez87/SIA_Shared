@@ -56,10 +56,18 @@ namespace SIA.Models
         public string? SOLICITADA_POR { get; set; }
         public int ANIO_AI { get; set; }
 
+        [NotMapped]
+        public string? NOMBRE_UNIVERSO_AUDITABLE { get; set; }
+
         /*PROPIEDADES HELPERS*/
         [NotMapped]
         public int? CANTIDAD_AUD_ESPEC { get; set; }
 
-        public List<Mg_Hallazgos> listado_hallazgos { get; set; }
+        public ICollection<Mg_Hallazgos> listado_hallazgos { get; set; }
+
+        public ICollection<Au_auditorias> listado_auditorias { get; set; }
+
+        [ForeignKey("CODIGO_UNIVERSO_AUDITABLE")]
+        public Mg_universo_auditable universo_auditable { get; set; }
     }
 }

@@ -21,8 +21,12 @@ namespace SIA.Models
         public string? ENCARGADO_AUDITORIA { get; set; }
         public int? ANIO_AE { get; set; }
 
+        [NotMapped]
+        public string? TIPO_AUDITORIA { get; set; }
 
         [ForeignKey("CODIGO_TIPO_AUDITORIA")]
         public Mg_tipos_de_auditorias mg_tipos_de_auditorias { get; set; }
+
+        public Au_auditorias_integrales AuditoriaIntegral { get; set; }
     }
 }
