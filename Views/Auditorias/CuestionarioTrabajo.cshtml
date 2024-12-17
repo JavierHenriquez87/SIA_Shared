@@ -145,29 +145,30 @@
                                     var chk4 = "";
                                     var classradio = "status create percentage";
                                     var percent = "0%";
-
-                                    if (pregunta.RESPUESTA_PREGUNTA.CUMPLE == 1) {
+                                    if(pregunta.RESPUESTA_PREGUNTA != null)
+                                    {
+                                        if (pregunta.RESPUESTA_PREGUNTA?.CUMPLE == 1) {
                                         chk1 = "checked";
                                         chk2 = "";
                                         chk3 = "";
                                         chk4 = "";
                                         classradio = "status approved percentage";
                                         percent = "100%";
-                                    } else if (pregunta.RESPUESTA_PREGUNTA.NO_CUMPLE == 1) {
+                                    } else if (pregunta.RESPUESTA_PREGUNTA?.NO_CUMPLE == 1) {
                                         chk1 = "";
                                         chk2 = "checked";
                                         chk3 = "";
                                         chk4 = "";
                                         classradio = "status pending percentage";
                                         percent = "0%";
-                                    } else if (pregunta.RESPUESTA_PREGUNTA.CUMPLE_PARCIALMENTE == 1) {
+                                    } else if (pregunta.RESPUESTA_PREGUNTA?.CUMPLE_PARCIALMENTE == 1) {
                                         chk1 = "";
                                         chk2 = "";
                                         chk3 = "checked";
                                         chk4 = "";
                                         classradio = "status partially percentage";
                                         percent = "50%";
-                                    } else if (pregunta.RESPUESTA_PREGUNTA.NO_APLICA == 1) {
+                                    } else if (pregunta.RESPUESTA_PREGUNTA?.NO_APLICA == 1) {
                                         chk1 = "";
                                         chk2 = "";
                                         chk3 = "";
@@ -175,6 +176,8 @@
                                         classradio = "status create percentage";
                                         percent = "0%";
                                     }
+                                    }
+                                    
                                     <div class="col-md-6 col-sm-12 subseccion-@sub_sec.CODIGO_SUB_SECCION">
                                         <div class="card-tarjet">
                                             <div class="row">
@@ -191,7 +194,7 @@
                                                 <label for="na-@pregunta.CODIGO_PREGUNTA">N/A</label>
                                             </div>
                                             <div class="textarea-container">
-                                                <textarea id="textarea-@pregunta.CODIGO_PREGUNTA" name="textarea-@pregunta.CODIGO_PREGUNTA" data-codigo="@pregunta.CODIGO_PREGUNTA" class="observaciones-textarea">@pregunta.RESPUESTA_PREGUNTA.OBSERVACIONES</textarea>
+                                                <textarea id="textarea-@pregunta.CODIGO_PREGUNTA" name="textarea-@pregunta.CODIGO_PREGUNTA" data-codigo="@pregunta.CODIGO_PREGUNTA" class="observaciones-textarea">@pregunta.RESPUESTA_PREGUNTA?.OBSERVACIONES</textarea>
                                             </div>
                                             <div id="divPorcentaje-@pregunta.CODIGO_PREGUNTA" class="@classradio">
                                                 <b>Puntaje: </b><label id="porcentaje-@pregunta.CODIGO_PREGUNTA">@percent</label>

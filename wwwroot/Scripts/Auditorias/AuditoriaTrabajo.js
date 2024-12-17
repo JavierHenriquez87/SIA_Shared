@@ -24,20 +24,21 @@ async function GetCuestionario() {
                 result.forEach(function (seccion) {
                     seccion.sub_secciones.forEach(function (subSeccion) {
                         subSeccion.Preguntas_Cuestionarios.forEach(function (pregunta) {
-                            respuestasUsuario = {
-                                CODIGO_RESPUESTA: pregunta.RESPUESTA_PREGUNTA.CODIGO_RESPUESTA,
-                                CODIGO_PREGUNTA: pregunta.CODIGO_PREGUNTA,
-                                CUMPLE: pregunta.RESPUESTA_PREGUNTA.CUMPLE,
-                                NO_CUMPLE: pregunta.RESPUESTA_PREGUNTA.NO_CUMPLE,
-                                CUMPLE_PARCIALMENTE: pregunta.RESPUESTA_PREGUNTA.CUMPLE_PARCIALMENTE,
-                                NO_APLICA: pregunta.RESPUESTA_PREGUNTA.NO_APLICA,
-                                OBSERVACIONES: pregunta.RESPUESTA_PREGUNTA.OBSERVACIONES,
-                                CALIFICACIONES: pregunta.RESPUESTA_PREGUNTA.CALIFICACIONES,
-                                PUNTAJE: pregunta.RESPUESTA_PREGUNTA.PUNTAJE
-                            };
+                            if (pregunta.RESPUESTA_PREGUNTA != null) {
+                                respuestasUsuario = {
+                                    CODIGO_RESPUESTA: pregunta.RESPUESTA_PREGUNTA.CODIGO_RESPUESTA,
+                                    CODIGO_PREGUNTA: pregunta.CODIGO_PREGUNTA,
+                                    CUMPLE: pregunta.RESPUESTA_PREGUNTA.CUMPLE,
+                                    NO_CUMPLE: pregunta.RESPUESTA_PREGUNTA.NO_CUMPLE,
+                                    CUMPLE_PARCIALMENTE: pregunta.RESPUESTA_PREGUNTA.CUMPLE_PARCIALMENTE,
+                                    NO_APLICA: pregunta.RESPUESTA_PREGUNTA.NO_APLICA,
+                                    OBSERVACIONES: pregunta.RESPUESTA_PREGUNTA.OBSERVACIONES,
+                                    CALIFICACIONES: pregunta.RESPUESTA_PREGUNTA.CALIFICACIONES,
+                                    PUNTAJE: pregunta.RESPUESTA_PREGUNTA.PUNTAJE
+                                };
 
-                            preguntasObj.push(respuestasUsuario);
-
+                                preguntasObj.push(respuestasUsuario);
+                            }
                         });
                     });
                 });
