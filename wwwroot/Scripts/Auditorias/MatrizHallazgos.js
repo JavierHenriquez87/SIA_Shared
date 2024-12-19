@@ -17,27 +17,18 @@ async function GetAuditoriasIntegrales() {
             "deferRender": true,
             "columns": [
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "codigO_HALLAZGO",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.codigO_AUDITORIA + "-" + row.numerO_AUDITORIA_INTEGRAL + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.codigO_HALLAZGO + "</div>";
                     },
-                    "name": "CODIGO",
+                    "name": "CODIGO HALLAZGO",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "listado_hallazgos",
+                    "data": "condicion",
                     "render": function (data, type, row, meta) {
-                        if (row.listado_hallazgos && row.listado_hallazgos.length > 0) {
-                            // Recorrer los hallazgos y extraer las condiciones
-                            let condiciones = row.listado_hallazgos.map(function (hallazgo) {
-                                return hallazgo.condicion;
-                            }).join(", "); // Une las condiciones en una cadena separada por comas
-
-                            // Retornar las condiciones de los hallazgos
-                            return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + condiciones + "</div>";
-                        }
-                        return "No existen condiciones agregadas";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.condicion + "</div>";
                     },
                     "name": "CONDICION",
                     "autoWidth": true,
@@ -45,23 +36,8 @@ async function GetAuditoriasIntegrales() {
                     "width": "50%"
                 },
                 {
-                    "data": "listado_hallazgos", "render": function (data, type, row, meta) {
-                        if (!row.listado_hallazgos || row.listado_hallazgos.length === 0) {
-                            return "<div>No hay recomendacion</div>"; // Si no hay hallazgos, mostrar mensaje
-                        }
-
-                        let recomendaciones = row.listado_hallazgos.map(function (hallazgo) {
-                            return hallazgo.listado_detalles
-                                .filter(function (detalle) {
-                                    return detalle.tipo && detalle.tipo.toLowerCase().includes("recomendacion");
-                                })
-                                .map(function (detalle) {
-                                    return detalle.descripcion;
-                                })
-                                .join(", ");
-                        }).join("<br/>"); 
-
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + recomendaciones + "</div>";
+                    "data": "recomendacion", "render": function (data, type, row, meta) {
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.recomendacion + "</div>";
                     },
                     "name": "RECOMENDACION",
                     "autoWidth": true,
@@ -69,10 +45,31 @@ async function GetAuditoriasIntegrales() {
                     "width": "20%"
                 },
                 {
-                    "data": "numerO_AUDITORIA_INTEGRAL",
+                    "data": "anexos",
                     "render": function (data, type, row, meta) {
-                        return "";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.anexos + "</div>";
                     },
+                    "name": "ANEXOS",
+                    "autoWidth": true,
+                    "orderable": false,
+                    "width": "10%"
+                },
+                {
+                    "data": "accioneS_PREV_CORR",
+                    "render": function (data, type, row, meta) {
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.accioneS_PREV_CORR + "</div>";
+                    },
+                    "name": "ACCIONES_PREV_CORR",
+                    "autoWidth": true,
+                    "orderable": false,
+                    "width": "10%"
+                },
+                {
+                    "data": "evidencia",
+                    "render": function (data, type, row, meta) {
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.evidencia + "</div>";
+                    },
+                    "name": "EVIDENCIA",
                     "autoWidth": true,
                     "orderable": false,
                     "width": "10%"
@@ -106,182 +103,193 @@ async function GetAuditoriasIntegralesCompleta() {
             "deferRender": true,
             "columns": [
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "correlativo",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.codigO_AUDITORIA + "-" + row.numerO_AUDITORIA_INTEGRAL + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.correlativo + "</div>";
                     },
-                    "name": "CODIGO",
+                    "name": "correlativo",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "tipO_AUDITORIA",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " Cumplimiento " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.tipO_AUDITORIA + "</div>";
                     },
                     "name": "TIPO_AUDITORIA",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "numerO_INFORME",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " 31 " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.numerO_INFORME + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "NUMERO_INFORME",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "fechA_EMISION_INF_FINAL",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " 15/12/2023 " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.fechA_EMISION_INF_FINAL + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "FECHA_EMISION_INF_FINAL",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "unidaD_AUDITORIA",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " Auditoría Agencia La Esperanza " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.unidaD_AUDITORIA + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "UNIDAD_AUDITORIA",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "responsablE_UNI_AUDITORIA",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " Noe Javier Quintanilla Flores " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.responsablE_UNI_AUDITORIA + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "RESPONSABLE_UNI_AUDITORIA",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "codigO_HALLAZGO",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " AGE108-1 " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.codigO_HALLAZGO + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "CODIGO_HALLAZGO",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "descripcion",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " Documentación faltante en expedientes de cuentas de ahorro. " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.descripcion + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "DESCRIPCION",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "niveL_RIESGO",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " Alto" + "</div>";
+                        let riesgoEstatus = row.niveL_RIESGO == 1 ? "Bajo" : row.niveL_RIESGO == 2 ? "Medio" : row.niveL_RIESGO == 2 ? "Alto" : "";
+
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal; text-align: center;'>" + riesgoEstatus + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "NIVELL_RIESGO",
+                    "autoWidth": true,
+                    "width": "20%",
+                    "createdCell": function (td, cellData, rowData, row, col) {
+                        if (rowData.niveL_RIESGO == 1) {
+                            $(td).addClass('highlight-bajo');
+                        } else if (rowData.niveL_RIESGO == 2) {
+                            $(td).addClass('highlight-medio');
+                        } else if (rowData.niveL_RIESGO == 3) {
+                            $(td).addClass('highlight-alto');
+                        }
+                    }
+                },
+                {
+                    "data": "proceso",
+                    "render": function (data, type, row, meta) {
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.proceso + "</div>";
+                    },
+                    "name": "PROCESO",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "objetivO_CONTROL_INTERNO",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.objetivO_CONTROL_INTERNO + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "OBJECTIVO_CONTROL_INTERNO",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "objetivO_ESTRATEGICO",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.objetivO_ESTRATEGICO + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "OBJECTIVO_ESTRATEGICO",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "accioneS_PREV_CORRE",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.accioneS_PREV_CORRE + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "ACCIONES_PREV_CORRE",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "fechA_SOLUCION",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " NOTA: SE PRESENTAN 9 CUENTAS QUE NO SE PRESENTARON EN AUDITORIA REALIZADA" + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.fechA_SOLUCION + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "FECHA_SOLUCION",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "fechA_SOLUCIONO",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + "13/2/2024 " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.fechA_SOLUCIONO + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "FECHA_SOLUCIONO",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "diaS_ATRAZO",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " 13/2/2024 " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.diaS_ATRAZO + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "DIAS_ATRAZO",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "responsable",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " 30 " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.responsable + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "RESPONSABLE",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "evidencia",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " Noe Javier Quintanilla Flores " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.evidencia + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "EVIDENCIA",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "unidaD_APOYO",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + "  " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.unidaD_APOYO + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "UNIDAD_APOYO",
                     "autoWidth": true,
                     "width": "20%"
                 },
                 {
-                    "data": "codigO_AUDITORIA",
+                    "data": "estatus",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + "  " + "</div>";
+                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.estatus + "</div>";
                     },
-                    "name": "TIPO_AUDITORIA",
-                    "autoWidth": true,
-                    "width": "20%"
-                },
-                {
-                    "data": "codigO_AUDITORIA",
-                    "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + " Pendiente Fuera de plazo " + "</div>";
-                    },
-                    "name": "TIPO_AUDITORIA",
+                    "name": "ESTATUS",
                     "autoWidth": true,
                     "width": "20%"
                 },

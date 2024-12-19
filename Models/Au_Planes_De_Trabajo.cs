@@ -17,7 +17,9 @@
         public DateTime? FECHA_ACTUALIZACION { get; set; }
         public string? ACTUALIZADO_POR { get; set; }
         public int ANIO_AUDITORIA { get; set; }
-        
 
+        public Au_auditorias auditoria { get; set; }
+
+        public ICollection<Au_detalle_plan_de_trabajo> listado_detalles_plan_trabajo { get; set; }
     }
 }

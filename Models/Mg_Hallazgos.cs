@@ -33,7 +33,8 @@ namespace SIA.Models
         public ICollection<Mg_hallazgos_documentos> Documentos { get; set; }
         public ICollection<Mg_orientacion_calificacion> OrientacionCalificacion { get; set; }
 
-        public Au_auditorias_integrales AuditoriaIntegral { get; set; }
+        public Au_detalle_plan_de_trabajo detalle_plan_trabajo { get; set; }
+
         [NotMapped]
         public ICollection<Mg_hallazgos_detalles> listado_detalles { get; set; }
     }

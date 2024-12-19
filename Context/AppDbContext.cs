@@ -31,22 +31,29 @@ namespace SIA.Context
             modelBuilder.Entity<Mg_hallazgos_detalles>().HasKey(e => new { e.CODIGO_HALLAZGO, e.TIPO });
             modelBuilder.Entity<Mg_cuestionario_secciones>().HasKey(e => new { e.CODIGO_CUESTIONARIO, e.CODIGO_SECCION });
 
-            modelBuilder.Entity<Mg_Hallazgos>()
-            .HasMany(h => h.Detalles)
-            .WithOne(d => d.Hallazgo)
-            .HasForeignKey(d => d.CODIGO_HALLAZGO);
-
-            modelBuilder.Entity<Mg_Hallazgos>()
-            .HasOne(h => h.AuditoriaIntegral)
-            .WithMany(ai => ai.listado_hallazgos)
-            .HasForeignKey(h => new { h.NUMERO_AUDITORIA_INTEGRAL, h.ANIO_AI })
-            .HasPrincipalKey(ai => new { ai.NUMERO_AUDITORIA_INTEGRAL, ai.ANIO_AI });
-
             modelBuilder.Entity<Au_auditorias>()
             .HasOne(h => h.AuditoriaIntegral)
             .WithMany(ai => ai.listado_auditorias)
             .HasForeignKey(h => new { h.NUMERO_AUDITORIA_INTEGRAL, h.ANIO_AE })
             .HasPrincipalKey(ai => new { ai.NUMERO_AUDITORIA_INTEGRAL, ai.ANIO_AI });
+
+            modelBuilder.Entity<Au_Planes_De_Trabajo>()
+            .HasOne(h => h.auditoria)
+            .WithMany(p => p.listado_planes_trabajo)
+            .HasForeignKey(h => new { h.NUMERO_AUDITORIA_INTEGRAL, h.NUMERO_AUDITORIA, h.ANIO_AUDITORIA })
+            .HasPrincipalKey(p => new { p.NUMERO_AUDITORIA_INTEGRAL, p.NUMERO_AUDITORIA, p.ANIO_AE });
+
+            modelBuilder.Entity<Au_detalle_plan_de_trabajo>()
+            .HasOne(h => h.plan_trabajo)
+            .WithMany(d => d.listado_detalles_plan_trabajo)
+            .HasForeignKey(h => new { h.NUMERO_AUDITORIA_INTEGRAL, h.NUMERO_PDT, h.NUMERO_AUDITORIA, h.ANIO_AI })
+            .HasPrincipalKey(d => new { d.NUMERO_AUDITORIA_INTEGRAL, d.NUMERO_PDT, d.NUMERO_AUDITORIA, d.ANIO_AUDITORIA });
+
+            modelBuilder.Entity<Mg_Hallazgos>()
+            .HasOne(h => h.detalle_plan_trabajo)
+            .WithMany(ai => ai.listado_hallazgos)
+            .HasForeignKey(h => new { h.NUMERO_AUDITORIA_INTEGRAL, h.NUMERO_PDT, h.CODIGO_ACTIVIDAD, h.NUMERO_AUDITORIA, h.ANIO_AI })
+            .HasPrincipalKey(d => new { d.NUMERO_AUDITORIA_INTEGRAL, d.NUMERO_PDT, d.CODIGO_ACTIVIDAD, d.NUMERO_AUDITORIA, d.ANIO_AI });
 
             modelBuilder.Entity<Mg_Hallazgos>()
             .HasMany(h => h.Detalles)

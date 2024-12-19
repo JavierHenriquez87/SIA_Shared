@@ -3391,63 +3391,105 @@ namespace SIA.Controllers
             int skip = start != null ? Convert.ToInt32(start) : 0;
             int recordsTotal = 0;
 
-            List<Au_auditorias_integrales> data = new List<Au_auditorias_integrales>();
+            List<Au_auditorias_integrales> info = new List<Au_auditorias_integrales>();
 
             if (!string.IsNullOrEmpty(searchValue) && searchValue.Count() >= 3)
             {
                 if (sortColumnDirection.Equals("asc"))
                 {
-                    data = await _context.AU_AUDITORIAS_INTEGRALES
+                    info = await _context.AU_AUDITORIAS_INTEGRALES
                         .OrderByDescending(e => e.FECHA_CREACION)
                         .Where(e => e.CODIGO_AUDITORIA.ToUpper().Contains(searchValue) || e.NOMBRE_AUDITORIA.ToUpper().Contains(searchValue))
-                        .Include(h => h.listado_hallazgos)
-                        .ThenInclude(d => d.Detalles)
+                        .Include(d => d.listado_auditorias)
+                        .ThenInclude(a => a.mg_tipos_de_auditorias)
+                        .Include(d => d.listado_auditorias)
+                        .ThenInclude(h => h.listado_planes_trabajo)
+                        .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                        .ThenInclude(h => h.listado_hallazgos)
+                        .Include(u => u.universo_auditable)
                         .Skip(skip)
                         .Take(pageSize)
-                        .Select(a => new Au_auditorias_integrales
+                        .Select(ai => new Au_auditorias_integrales
                         {
-                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
-                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
-                            ANIO_AI = a.ANIO_AI,
-                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
+                            NUMERO_AUDITORIA_INTEGRAL = ai.NUMERO_AUDITORIA_INTEGRAL,
+                            CODIGO_AUDITORIA = ai.CODIGO_AUDITORIA,
+                            ANIO_AI = ai.ANIO_AI,
+                            IF_FECHA_EMITIDO = ai.IF_FECHA_EMITIDO,
+                            NOMBRE_UNIVERSO_AUDITABLE = ai.universo_auditable.NOMBRE,
+                            CODIGO_UNIVERSO_AUDITABLE = ai.CODIGO_UNIVERSO_AUDITABLE,
+                            listado_auditorias = ai.listado_auditorias.Select(a => new Au_auditorias
                             {
-                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
-                                CONDICION = h.CONDICION,
-                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                                NOMBRE_AUDITORIA = a.NOMBRE_AUDITORIA,
+                                TIPO_AUDITORIA = a.mg_tipos_de_auditorias.DESCRIPCION,
+                                listado_planes_trabajo = a.listado_planes_trabajo.Select(p => new Au_Planes_De_Trabajo
                                 {
-                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
-                                    DESCRIPCION = d.DESCRIPCION,
-                                    TIPO = d.TIPO
+                                    listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
+                                    {
+                                        listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
+                                        {
+                                            CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                            CONDICION = h.CONDICION,
+                                            NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                            listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                            {
+                                                CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                                DESCRIPCION = d.DESCRIPCION,
+                                                TIPO = d.TIPO
+                                            }).ToList()
+                                        }).ToList()
+                                    }).ToList()
                                 }).ToList()
-                            }).ToList()
+                            }).ToList(),
                         })
                         .ToListAsync();
                 }
                 else
                 {
-                    data = await _context.AU_AUDITORIAS_INTEGRALES
+                    info = await _context.AU_AUDITORIAS_INTEGRALES
                         .OrderBy(e => e.FECHA_CREACION)
                         .Where(e => e.CODIGO_AUDITORIA.ToUpper().Contains(searchValue) || e.NOMBRE_AUDITORIA.ToUpper().Contains(searchValue))
-                        .Include(d => d.listado_hallazgos)
-                        .ThenInclude(h => h.Detalles)
+                        .Include(d => d.listado_auditorias)
+                        .ThenInclude(a => a.mg_tipos_de_auditorias)
+                        .Include(d => d.listado_auditorias)
+                        .ThenInclude(h => h.listado_planes_trabajo)
+                        .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                        .ThenInclude(h => h.listado_hallazgos)
+                        .Include(u => u.universo_auditable)
                         .Skip(skip)
                         .Take(pageSize)
-                        .Select(a => new Au_auditorias_integrales
+                        .Select(ai => new Au_auditorias_integrales
                         {
-                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
-                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
-                            ANIO_AI = a.ANIO_AI,
-                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
+                            NUMERO_AUDITORIA_INTEGRAL = ai.NUMERO_AUDITORIA_INTEGRAL,
+                            CODIGO_AUDITORIA = ai.CODIGO_AUDITORIA,
+                            ANIO_AI = ai.ANIO_AI,
+                            IF_FECHA_EMITIDO = ai.IF_FECHA_EMITIDO,
+                            NOMBRE_UNIVERSO_AUDITABLE = ai.universo_auditable.NOMBRE,
+                            CODIGO_UNIVERSO_AUDITABLE = ai.CODIGO_UNIVERSO_AUDITABLE,
+                            listado_auditorias = ai.listado_auditorias.Select(a => new Au_auditorias
                             {
-                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
-                                CONDICION = h.CONDICION,
-                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                                NOMBRE_AUDITORIA = a.NOMBRE_AUDITORIA,
+                                TIPO_AUDITORIA = a.mg_tipos_de_auditorias.DESCRIPCION,
+                                listado_planes_trabajo = a.listado_planes_trabajo.Select(p => new Au_Planes_De_Trabajo
                                 {
-                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
-                                    DESCRIPCION = d.DESCRIPCION,
-                                    TIPO = d.TIPO
+                                    listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
+                                    {
+                                        listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
+                                        {
+                                            CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                            CONDICION = h.CONDICION,
+                                            NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                            listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                            {
+                                                CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                                DESCRIPCION = d.DESCRIPCION,
+                                                TIPO = d.TIPO
+                                            }).ToList()
+                                        }).ToList()
+                                    }).ToList()
                                 }).ToList()
-                            }).ToList()
+                            }).ToList(),
                         })
                         .ToListAsync();
                 }
@@ -3459,61 +3501,139 @@ namespace SIA.Controllers
             {
                 if (sortColumnDirection.Equals("asc"))
                 {
-                    data = await _context.AU_AUDITORIAS_INTEGRALES
-                        .Include(d => d.listado_hallazgos)
-                        .ThenInclude(h => h.Detalles)
+                    info = await _context.AU_AUDITORIAS_INTEGRALES
+                        .Include(d => d.listado_auditorias)
+                        .ThenInclude(a => a.mg_tipos_de_auditorias)
+                        .Include(d => d.listado_auditorias)
+                        .ThenInclude(h => h.listado_planes_trabajo)
+                        .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                        .ThenInclude(h => h.listado_hallazgos)
+                        .Include(u => u.universo_auditable)
                         .OrderByDescending(e => e.FECHA_CREACION)
                         .Skip(skip)
                         .Take(pageSize)
-                        .Select(a => new Au_auditorias_integrales
+                        .Select(ai => new Au_auditorias_integrales
                         {
-                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
-                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
-                            ANIO_AI = a.ANIO_AI,
-                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
+                            NUMERO_AUDITORIA_INTEGRAL = ai.NUMERO_AUDITORIA_INTEGRAL,
+                            CODIGO_AUDITORIA = ai.CODIGO_AUDITORIA,
+                            ANIO_AI = ai.ANIO_AI,
+                            IF_FECHA_EMITIDO = ai.IF_FECHA_EMITIDO,
+                            NOMBRE_UNIVERSO_AUDITABLE = ai.universo_auditable.NOMBRE,
+                            CODIGO_UNIVERSO_AUDITABLE = ai.CODIGO_UNIVERSO_AUDITABLE,
+                            listado_auditorias = ai.listado_auditorias.Select(a => new Au_auditorias
                             {
-                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
-                                CONDICION = h.CONDICION,
-                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                                NOMBRE_AUDITORIA = a.NOMBRE_AUDITORIA,
+                                TIPO_AUDITORIA = a.mg_tipos_de_auditorias.DESCRIPCION,
+                                listado_planes_trabajo = a.listado_planes_trabajo.Select(p => new Au_Planes_De_Trabajo
                                 {
-                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
-                                    DESCRIPCION = d.DESCRIPCION,
-                                    TIPO = d.TIPO
+                                    listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
+                                    {
+                                        listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
+                                        {
+                                            CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                            CONDICION = h.CONDICION,
+                                            NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                            listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                            {
+                                                CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                                DESCRIPCION = d.DESCRIPCION,
+                                                TIPO = d.TIPO
+                                            }).ToList()
+                                        }).ToList()
+                                    }).ToList()
                                 }).ToList()
-                            }).ToList()
+                            }).ToList(),
                         })
                         .ToListAsync();
                 }
                 else
                 {
-                    data = await _context.AU_AUDITORIAS_INTEGRALES
-                        .Include(d => d.listado_hallazgos)
-                        .ThenInclude(h => h.Detalles)
+                    info = await _context.AU_AUDITORIAS_INTEGRALES
+                        .Include(d => d.listado_auditorias)
+                        .ThenInclude(a => a.mg_tipos_de_auditorias)
+                        .Include(d => d.listado_auditorias)
+                        .ThenInclude(h => h.listado_planes_trabajo)
+                        .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                        .ThenInclude(h => h.listado_hallazgos)
+                        .Include(u => u.universo_auditable)
                         .OrderBy(e => e.FECHA_CREACION)
                         .Skip(skip)
                         .Take(pageSize)
-                        .Select(a => new Au_auditorias_integrales
-                        {
-                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
-                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
-                            ANIO_AI = a.ANIO_AI,
-                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
-                            {
-                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
-                                CONDICION = h.CONDICION,
-                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
-                                {
-                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
-                                    DESCRIPCION = d.DESCRIPCION,
-                                    TIPO = d.TIPO
-                                }).ToList()
-                            }).ToList()
-                        })
+                         .Select(ai => new Au_auditorias_integrales
+                         {
+                             NUMERO_AUDITORIA_INTEGRAL = ai.NUMERO_AUDITORIA_INTEGRAL,
+                             CODIGO_AUDITORIA = ai.CODIGO_AUDITORIA,
+                             ANIO_AI = ai.ANIO_AI,
+                             IF_FECHA_EMITIDO = ai.IF_FECHA_EMITIDO,
+                             NOMBRE_UNIVERSO_AUDITABLE = ai.universo_auditable.NOMBRE,
+                             CODIGO_UNIVERSO_AUDITABLE = ai.CODIGO_UNIVERSO_AUDITABLE,
+                             listado_auditorias = ai.listado_auditorias.Select(a => new Au_auditorias
+                             {
+                                 CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                                 NOMBRE_AUDITORIA = a.NOMBRE_AUDITORIA,
+                                 TIPO_AUDITORIA = a.mg_tipos_de_auditorias.DESCRIPCION,
+                                 listado_planes_trabajo = a.listado_planes_trabajo.Select(p => new Au_Planes_De_Trabajo
+                                 {
+                                     listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
+                                     {
+                                         listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
+                                         {
+                                             CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                             CONDICION = h.CONDICION,
+                                             NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                             listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                             {
+                                                 CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                                 DESCRIPCION = d.DESCRIPCION,
+                                                 TIPO = d.TIPO
+                                             }).ToList()
+                                         }).ToList()
+                                     }).ToList()
+                                 }).ToList()
+                             }).ToList(),
+                         })
                         .ToListAsync();
                 }
 
                 recordsTotal = await _context.AU_AUDITORIAS_INTEGRALES
                     .CountAsync();
+            }
+
+            List<MatrizHallazgosResumen> data = new List<MatrizHallazgosResumen>();
+
+            foreach (var AuIntegral in info)
+            {
+                foreach (var auditoria in AuIntegral.listado_auditorias)
+                {
+                    foreach (var planTrabajo in auditoria.listado_planes_trabajo)
+                    {
+                        foreach (var detallePlan in planTrabajo.listado_detalles_plan_trabajo)
+                        {
+                            foreach (var hallazgo in detallePlan.listado_hallazgos)
+                            {
+                                string recomendaciones = "";
+                                foreach (var detalles in hallazgo.listado_detalles)
+                                {
+                                    if (detalles.TIPO.ToLower().Contains("recomendacion"))
+                                    {
+                                        recomendaciones = recomendaciones == "" ? detalles.DESCRIPCION : recomendaciones + ", " + detalles.DESCRIPCION;
+                                    }
+                                }
+
+                                data.Add(new MatrizHallazgosResumen
+                                {
+                                    CODIGO_HALLAZGO = AuIntegral.CODIGO_AUDITORIA + "-"+ AuIntegral.NUMERO_AUDITORIA_INTEGRAL,
+                                    CONDICION = hallazgo.CONDICION,
+                                    RECOMENDACION = recomendaciones,
+                                    ANEXOS = "FALTA...",
+                                    ACCIONES_PREV_CORR = "FALTA...",
+                                    EVIDENCIA = "FALTA..."
+                                });
+                            }
+                        }
+                    }
+                }
             }
 
             var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
@@ -3538,89 +3658,139 @@ namespace SIA.Controllers
             int skip = start != null ? Convert.ToInt32(start) : 0;
             int recordsTotal = 0;
 
-            List<Au_auditorias_integrales> data = new List<Au_auditorias_integrales>();
+            List<Au_auditorias_integrales> listMatriz = new List<Au_auditorias_integrales>();
 
             if (!string.IsNullOrEmpty(searchValue) && searchValue.Count() >= 3)
             {
                 if (sortColumnDirection.Equals("asc"))
                 {
-                    data = await _context.AU_AUDITORIAS_INTEGRALES
+                    listMatriz = await _context.AU_AUDITORIAS_INTEGRALES
                         .OrderByDescending(e => e.FECHA_CREACION)
                         .Where(e => e.CODIGO_AUDITORIA.ToUpper().Contains(searchValue) || e.NOMBRE_AUDITORIA.ToUpper().Contains(searchValue))
-                        .Include(d => d.listado_hallazgos)
-                        .ThenInclude(h => h.Detalles)
                         .Include(d => d.listado_auditorias)
-                        .ThenInclude(h => h.mg_tipos_de_auditorias)
+                            .ThenInclude(a => a.mg_tipos_de_auditorias)
+                        .Include(d => d.listado_auditorias)
+                            .ThenInclude(h => h.listado_planes_trabajo)
+                                .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                                    .ThenInclude(h => h.listado_hallazgos)
+                        .Include(d => d.listado_auditorias)
+                            .ThenInclude(h => h.listado_planes_trabajo)
+                                .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                                    .ThenInclude(u => u.mg_usuarios)
                         .Include(u => u.universo_auditable)
                         .Skip(skip)
                         .Take(pageSize)
-                        .Select(a => new Au_auditorias_integrales
+                        .Select(ai => new Au_auditorias_integrales
                         {
-                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
-                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
-                            ANIO_AI = a.ANIO_AI,
-                            IF_FECHA_EMITIDO = a.IF_FECHA_EMITIDO,
-                            NOMBRE_UNIVERSO_AUDITABLE = a.universo_auditable.NOMBRE,
-                            CODIGO_UNIVERSO_AUDITABLE = a.CODIGO_UNIVERSO_AUDITABLE,
-                            listado_auditorias = a.listado_auditorias.Select(h => new Au_auditorias
+                            NUMERO_AUDITORIA_INTEGRAL = ai.NUMERO_AUDITORIA_INTEGRAL,
+                            CODIGO_AUDITORIA = ai.CODIGO_AUDITORIA,
+                            ANIO_AI = ai.ANIO_AI,
+                            IF_FECHA_EMITIDO = ai.IF_FECHA_EMITIDO,
+                            NOMBRE_UNIVERSO_AUDITABLE = ai.universo_auditable.NOMBRE,
+                            CODIGO_UNIVERSO_AUDITABLE = ai.CODIGO_UNIVERSO_AUDITABLE,
+                            listado_auditorias = ai.listado_auditorias.Select(a => new Au_auditorias
                             {
-                                CODIGO_AUDITORIA = h.CODIGO_AUDITORIA,
-                                NOMBRE_AUDITORIA = h.NOMBRE_AUDITORIA,
-                                TIPO_AUDITORIA = h.mg_tipos_de_auditorias.DESCRIPCION
-                            }).ToList(),
-                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
-                            {
-                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
-                                CONDICION = h.CONDICION,
-                                NIVEL_RIESGO = h.NIVEL_RIESGO,
-                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                                NUMERO_AUDITORIA = a.NUMERO_AUDITORIA,
+                                NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
+                                ANIO_AE = a.ANIO_AE,
+                                NOMBRE_AUDITORIA = a.NOMBRE_AUDITORIA,
+                                TIPO_AUDITORIA = a.mg_tipos_de_auditorias.DESCRIPCION,
+                                listado_planes_trabajo = a.listado_planes_trabajo.Select(p => new Au_Planes_De_Trabajo
                                 {
-                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
-                                    DESCRIPCION = d.DESCRIPCION,
-                                    TIPO = d.TIPO
+                                    NUMERO_PDT = p.NUMERO_PDT,
+                                    NUMERO_AUDITORIA = p.NUMERO_AUDITORIA,
+                                    NUMERO_AUDITORIA_INTEGRAL = p.NUMERO_AUDITORIA_INTEGRAL,
+                                    ANIO_AUDITORIA = p.ANIO_AUDITORIA,
+                                    listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
+                                    {
+                                        CODIGO_ACTIVIDAD = d.CODIGO_ACTIVIDAD,
+                                        NUMERO_PDT = d.NUMERO_PDT,
+                                        NUMERO_AUDITORIA = d.NUMERO_AUDITORIA,
+                                        NUMERO_AUDITORIA_INTEGRAL = d.NUMERO_AUDITORIA_INTEGRAL,
+                                        ANIO_AI = d.ANIO_AI,
+                                        NOMBRE_USUARIO_ASIGNADO = d.mg_usuarios.NOMBRE_USUARIO,
+                                        listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
+                                        {
+                                            CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                            CONDICION = h.CONDICION,
+                                            NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                            listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                            {
+                                                CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                                DESCRIPCION = d.DESCRIPCION,
+                                                TIPO = d.TIPO
+                                            }).ToList()
+                                        }).ToList()
+                                    }).ToList()
                                 }).ToList()
-                            }).ToList()
+                            }).ToList(),
                         })
                         .ToListAsync();
                 }
                 else
                 {
-                    data = await _context.AU_AUDITORIAS_INTEGRALES
+                    listMatriz = await _context.AU_AUDITORIAS_INTEGRALES
                         .OrderBy(e => e.FECHA_CREACION)
                         .Where(e => e.CODIGO_AUDITORIA.ToUpper().Contains(searchValue) || e.NOMBRE_AUDITORIA.ToUpper().Contains(searchValue))
-                        .Include(d => d.listado_hallazgos)
-                        .ThenInclude(h => h.Detalles)
                         .Include(d => d.listado_auditorias)
-                        .ThenInclude(h => h.mg_tipos_de_auditorias)
+                            .ThenInclude(a => a.mg_tipos_de_auditorias)
+                        .Include(d => d.listado_auditorias)
+                            .ThenInclude(h => h.listado_planes_trabajo)
+                                .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                                    .ThenInclude(h => h.listado_hallazgos)
+                        .Include(d => d.listado_auditorias)
+                            .ThenInclude(h => h.listado_planes_trabajo)
+                                .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                                    .ThenInclude(u => u.mg_usuarios)
                         .Include(u => u.universo_auditable)
                         .Skip(skip)
                         .Take(pageSize)
-                        .Select(a => new Au_auditorias_integrales
+                        .Select(ai => new Au_auditorias_integrales
                         {
-                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
-                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
-                            ANIO_AI = a.ANIO_AI,
-                            IF_FECHA_EMITIDO = a.IF_FECHA_EMITIDO,
-                            NOMBRE_UNIVERSO_AUDITABLE = a.universo_auditable.NOMBRE,
-                            CODIGO_UNIVERSO_AUDITABLE = a.CODIGO_UNIVERSO_AUDITABLE,
-                            listado_auditorias = a.listado_auditorias.Select(h => new Au_auditorias
+                            NUMERO_AUDITORIA_INTEGRAL = ai.NUMERO_AUDITORIA_INTEGRAL,
+                            CODIGO_AUDITORIA = ai.CODIGO_AUDITORIA,
+                            ANIO_AI = ai.ANIO_AI,
+                            IF_FECHA_EMITIDO = ai.IF_FECHA_EMITIDO,
+                            NOMBRE_UNIVERSO_AUDITABLE = ai.universo_auditable.NOMBRE,
+                            CODIGO_UNIVERSO_AUDITABLE = ai.CODIGO_UNIVERSO_AUDITABLE,
+                            listado_auditorias = ai.listado_auditorias.Select(a => new Au_auditorias
                             {
-                                CODIGO_AUDITORIA = h.CODIGO_AUDITORIA,
-                                NOMBRE_AUDITORIA = h.NOMBRE_AUDITORIA,
-                                TIPO_AUDITORIA = h.mg_tipos_de_auditorias.DESCRIPCION
-                            }).ToList(),
-                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
-                            {
-                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
-                                CONDICION = h.CONDICION,
-                                NIVEL_RIESGO = h.NIVEL_RIESGO,
-                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                                NUMERO_AUDITORIA = a.NUMERO_AUDITORIA,
+                                NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
+                                ANIO_AE = a.ANIO_AE,
+                                NOMBRE_AUDITORIA = a.NOMBRE_AUDITORIA,
+                                TIPO_AUDITORIA = a.mg_tipos_de_auditorias.DESCRIPCION,
+                                listado_planes_trabajo = a.listado_planes_trabajo.Select(p => new Au_Planes_De_Trabajo
                                 {
-                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
-                                    DESCRIPCION = d.DESCRIPCION,
-                                    TIPO = d.TIPO
+                                    NUMERO_PDT = p.NUMERO_PDT,
+                                    NUMERO_AUDITORIA = p.NUMERO_AUDITORIA,
+                                    NUMERO_AUDITORIA_INTEGRAL = p.NUMERO_AUDITORIA_INTEGRAL,
+                                    ANIO_AUDITORIA = p.ANIO_AUDITORIA,
+                                    listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
+                                    {
+                                        CODIGO_ACTIVIDAD = d.CODIGO_ACTIVIDAD,
+                                        NUMERO_PDT = d.NUMERO_PDT,
+                                        NUMERO_AUDITORIA = d.NUMERO_AUDITORIA,
+                                        NUMERO_AUDITORIA_INTEGRAL = d.NUMERO_AUDITORIA_INTEGRAL,
+                                        ANIO_AI = d.ANIO_AI,
+                                        NOMBRE_USUARIO_ASIGNADO = d.mg_usuarios.NOMBRE_USUARIO,
+                                        listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
+                                        {
+                                            CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                            CONDICION = h.CONDICION,
+                                            NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                            listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                            {
+                                                CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                                DESCRIPCION = d.DESCRIPCION,
+                                                TIPO = d.TIPO
+                                            }).ToList()
+                                        }).ToList()
+                                    }).ToList()
                                 }).ToList()
-                            }).ToList()
+                            }).ToList(),
                         })
                         .ToListAsync();
                 }
@@ -3632,87 +3802,178 @@ namespace SIA.Controllers
             {
                 if (sortColumnDirection.Equals("asc"))
                 {
-                    data = await _context.AU_AUDITORIAS_INTEGRALES
-                        .Include(d => d.listado_hallazgos)
-                        .ThenInclude(h => h.Detalles)
+                    listMatriz = await _context.AU_AUDITORIAS_INTEGRALES
                         .Include(d => d.listado_auditorias)
-                        .ThenInclude(h => h.mg_tipos_de_auditorias)
+                            .ThenInclude(a => a.mg_tipos_de_auditorias)
+                        .Include(d => d.listado_auditorias)
+                            .ThenInclude(h => h.listado_planes_trabajo)
+                                .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                                    .ThenInclude(h => h.listado_hallazgos)
+                        .Include(d => d.listado_auditorias)
+                            .ThenInclude(h => h.listado_planes_trabajo)
+                                .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                                    .ThenInclude(u => u.mg_usuarios)
                         .Include(u => u.universo_auditable)
                         .OrderByDescending(e => e.FECHA_CREACION)
                         .Skip(skip)
                         .Take(pageSize)
-                        .Select(a => new Au_auditorias_integrales
+                        .Select(ai => new Au_auditorias_integrales
                         {
-                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
-                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
-                            ANIO_AI = a.ANIO_AI,
-                            IF_FECHA_EMITIDO = a.IF_FECHA_EMITIDO,
-                            NOMBRE_UNIVERSO_AUDITABLE = a.universo_auditable.NOMBRE,
-                            CODIGO_UNIVERSO_AUDITABLE = a.CODIGO_UNIVERSO_AUDITABLE,
-                            listado_auditorias = a.listado_auditorias.Select(h => new Au_auditorias
+                            NUMERO_AUDITORIA_INTEGRAL = ai.NUMERO_AUDITORIA_INTEGRAL,
+                            CODIGO_AUDITORIA = ai.CODIGO_AUDITORIA,
+                            ANIO_AI = ai.ANIO_AI,
+                            IF_FECHA_EMITIDO = ai.IF_FECHA_EMITIDO,
+                            NOMBRE_UNIVERSO_AUDITABLE = ai.universo_auditable.NOMBRE,
+                            CODIGO_UNIVERSO_AUDITABLE = ai.CODIGO_UNIVERSO_AUDITABLE,
+                            listado_auditorias = ai.listado_auditorias.Select(a => new Au_auditorias
                             {
-                                CODIGO_AUDITORIA = h.CODIGO_AUDITORIA,
-                                NOMBRE_AUDITORIA = h.NOMBRE_AUDITORIA,
-                                TIPO_AUDITORIA = h.mg_tipos_de_auditorias.DESCRIPCION
-                            }).ToList(),
-                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
-                            {
-                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
-                                CONDICION = h.CONDICION,
-                                NIVEL_RIESGO = h.NIVEL_RIESGO,
-                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                                NUMERO_AUDITORIA = a.NUMERO_AUDITORIA,
+                                NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
+                                ANIO_AE = a.ANIO_AE,
+                                NOMBRE_AUDITORIA = a.NOMBRE_AUDITORIA,
+                                TIPO_AUDITORIA = a.mg_tipos_de_auditorias.DESCRIPCION,
+                                listado_planes_trabajo = a.listado_planes_trabajo.Select(p => new Au_Planes_De_Trabajo
                                 {
-                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
-                                    DESCRIPCION = d.DESCRIPCION,
-                                    TIPO = d.TIPO
+                                    NUMERO_PDT = p.NUMERO_PDT,
+                                    NUMERO_AUDITORIA = p.NUMERO_AUDITORIA,
+                                    NUMERO_AUDITORIA_INTEGRAL = p.NUMERO_AUDITORIA_INTEGRAL,
+                                    ANIO_AUDITORIA = p.ANIO_AUDITORIA,
+                                    listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
+                                    {
+                                        CODIGO_ACTIVIDAD = d.CODIGO_ACTIVIDAD,
+                                        NUMERO_PDT = d.NUMERO_PDT,
+                                        NUMERO_AUDITORIA = d.NUMERO_AUDITORIA,
+                                        NUMERO_AUDITORIA_INTEGRAL = d.NUMERO_AUDITORIA_INTEGRAL,
+                                        ANIO_AI = d.ANIO_AI,
+                                        NOMBRE_USUARIO_ASIGNADO = d.mg_usuarios.NOMBRE_USUARIO,
+                                        listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
+                                        {
+                                            CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                            CONDICION = h.CONDICION,
+                                            NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                            listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                            {
+                                                CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                                DESCRIPCION = d.DESCRIPCION,
+                                                TIPO = d.TIPO
+                                            }).ToList()
+                                        }).ToList()
+                                    }).ToList()
                                 }).ToList()
-                            }).ToList()
+                            }).ToList(),
                         })
                         .ToListAsync();
                 }
                 else
                 {
-                    data = await _context.AU_AUDITORIAS_INTEGRALES
-                        .Include(d => d.listado_hallazgos)
-                        .ThenInclude(h => h.Detalles)
+                    listMatriz = await _context.AU_AUDITORIAS_INTEGRALES
                         .Include(d => d.listado_auditorias)
-                        .ThenInclude(h => h.mg_tipos_de_auditorias)
+                            .ThenInclude(a => a.mg_tipos_de_auditorias)
+                        .Include(d => d.listado_auditorias)
+                            .ThenInclude(h => h.listado_planes_trabajo)
+                                .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                                    .ThenInclude(h => h.listado_hallazgos)
+                        .Include(d => d.listado_auditorias)
+                            .ThenInclude(h => h.listado_planes_trabajo)
+                                .ThenInclude(h => h.listado_detalles_plan_trabajo)
+                                    .ThenInclude(u => u.mg_usuarios)
                         .Include(u => u.universo_auditable)
                         .OrderBy(e => e.FECHA_CREACION)
                         .Skip(skip)
                         .Take(pageSize)
-                        .Select(a => new Au_auditorias_integrales
-                        {
-                            NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
-                            CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
-                            ANIO_AI = a.ANIO_AI,
-                            IF_FECHA_EMITIDO = a.IF_FECHA_EMITIDO,
-                            NOMBRE_UNIVERSO_AUDITABLE = a.universo_auditable.NOMBRE,
-                            CODIGO_UNIVERSO_AUDITABLE = a.CODIGO_UNIVERSO_AUDITABLE,
-                            listado_auditorias = a.listado_auditorias.Select(h => new Au_auditorias
-                            {
-                                CODIGO_AUDITORIA = h.CODIGO_AUDITORIA,
-                                NOMBRE_AUDITORIA = h.NOMBRE_AUDITORIA,
-                                TIPO_AUDITORIA = h.mg_tipos_de_auditorias.DESCRIPCION
-                            }).ToList(),
-                            listado_hallazgos = a.listado_hallazgos.Select(h => new Mg_Hallazgos
-                            {
-                                CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
-                                CONDICION = h.CONDICION,
-                                NIVEL_RIESGO = h.NIVEL_RIESGO,
-                                listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
-                                {
-                                    CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
-                                    DESCRIPCION = d.DESCRIPCION,
-                                    TIPO = d.TIPO
-                                }).ToList()
-                            }).ToList()
-                        })
+                         .Select(ai => new Au_auditorias_integrales
+                         {
+                             NUMERO_AUDITORIA_INTEGRAL = ai.NUMERO_AUDITORIA_INTEGRAL,
+                             CODIGO_AUDITORIA = ai.CODIGO_AUDITORIA,
+                             ANIO_AI = ai.ANIO_AI,
+                             IF_FECHA_EMITIDO = ai.IF_FECHA_EMITIDO,
+                             NOMBRE_UNIVERSO_AUDITABLE = ai.universo_auditable.NOMBRE,
+                             CODIGO_UNIVERSO_AUDITABLE = ai.CODIGO_UNIVERSO_AUDITABLE,
+                             listado_auditorias = ai.listado_auditorias.Select(a => new Au_auditorias
+                             {
+                                 CODIGO_AUDITORIA = a.CODIGO_AUDITORIA,
+                                 NUMERO_AUDITORIA = a.NUMERO_AUDITORIA,
+                                 NUMERO_AUDITORIA_INTEGRAL = a.NUMERO_AUDITORIA_INTEGRAL,
+                                 ANIO_AE = a.ANIO_AE,
+                                 NOMBRE_AUDITORIA = a.NOMBRE_AUDITORIA,
+                                 TIPO_AUDITORIA = a.mg_tipos_de_auditorias.DESCRIPCION,
+                                 listado_planes_trabajo = a.listado_planes_trabajo.Select(p => new Au_Planes_De_Trabajo
+                                 {
+                                     NUMERO_PDT = p.NUMERO_PDT,
+                                     NUMERO_AUDITORIA = p.NUMERO_AUDITORIA,
+                                     NUMERO_AUDITORIA_INTEGRAL = p.NUMERO_AUDITORIA_INTEGRAL,
+                                     ANIO_AUDITORIA = p.ANIO_AUDITORIA,
+                                     listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
+                                     {
+                                         CODIGO_ACTIVIDAD = d.CODIGO_ACTIVIDAD,
+                                         NUMERO_PDT = d.NUMERO_PDT,
+                                         NUMERO_AUDITORIA = d.NUMERO_AUDITORIA,
+                                         NUMERO_AUDITORIA_INTEGRAL = d.NUMERO_AUDITORIA_INTEGRAL,
+                                         ANIO_AI = d.ANIO_AI,
+                                         NOMBRE_USUARIO_ASIGNADO = d.mg_usuarios.NOMBRE_USUARIO,
+                                         listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
+                                         {
+                                             CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
+                                             CONDICION = h.CONDICION,
+                                             NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                             listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
+                                             {
+                                                 CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
+                                                 DESCRIPCION = d.DESCRIPCION,
+                                                 TIPO = d.TIPO
+                                             }).ToList()
+                                         }).ToList()
+                                     }).ToList()
+                                 }).ToList()
+                             }).ToList(),
+                         })
                         .ToListAsync();
                 }
 
                 recordsTotal = await _context.AU_AUDITORIAS_INTEGRALES
                     .CountAsync();
+            }
+
+            List<MatrizHallazgos> data = new List<MatrizHallazgos>();
+
+            foreach(var AuIntegral in listMatriz)
+            {
+                foreach(var auditoria in AuIntegral.listado_auditorias)
+                {
+                    foreach (var planTrabajo in auditoria.listado_planes_trabajo)
+                    {
+                        foreach (var detallePlan in planTrabajo.listado_detalles_plan_trabajo)
+                        {
+                            foreach (var hallazgo in detallePlan.listado_hallazgos)
+                            {
+                                data.Add(new MatrizHallazgos
+                                {
+                                    CORRELATIVO = AuIntegral.CODIGO_AUDITORIA,
+                                    TIPO_AUDITORIA = auditoria.TIPO_AUDITORIA,
+                                    NUMERO_INFORME = AuIntegral.NUMERO_AUDITORIA_INTEGRAL,
+                                    FECHA_EMISION_INF_FINAL = AuIntegral.IF_FECHA_EMITIDO,
+                                    UNIDAD_AUDITORIA = AuIntegral.NOMBRE_UNIVERSO_AUDITABLE,
+                                    RESPONSABLE_UNI_AUDITORIA = "Falta..",
+                                    CODIGO_HALLAZGO = AuIntegral.CODIGO_UNIVERSO_AUDITABLE + "-" + hallazgo.CODIGO_HALLAZGO,
+                                    DESCRIPCION = "Falta..",
+                                    NIVEL_RIESGO = hallazgo.NIVEL_RIESGO,
+                                    PROCESO = "Falta..",
+                                    OBJETIVO_CONTROL_INTERNO = "Falta..",
+                                    OBJETIVO_ESTRATEGICO = "Falta..",
+                                    ACCIONES_PREV_CORRE = "Falta..",
+                                    FECHA_SOLUCION = null,
+                                    FECHA_SOLUCIONO = null,
+                                    DIAS_ATRAZO = 0,
+                                    RESPONSABLE = detallePlan.NOMBRE_USUARIO_ASIGNADO,
+                                    EVIDENCIA = "Falta..",
+                                    UNIDAD_APOYO = "Falta..",
+                                    ESTATUS = "Falta.."
+                                });
+                            }
+                        }
+                    }
+                }
             }
 
             var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };

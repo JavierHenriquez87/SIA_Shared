@@ -33,5 +33,6 @@ namespace SIA.Models
 
         [ForeignKey("CODIGO_AGENCIA")]
         public Mg_agencias mg_agencias { get; set; }
+
     }
 }

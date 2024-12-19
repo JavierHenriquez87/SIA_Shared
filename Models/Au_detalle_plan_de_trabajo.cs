@@ -17,6 +17,8 @@ namespace SIA.Models
         public DateTime? FECHA_ACTUALIZACION { get; set; }
         public string? ACTUALIZADO_POR { get; set; }
 
+        [NotMapped]
+        public string? NOMBRE_USUARIO_ASIGNADO { get; set; }
 
         [ForeignKey("CODIGO_ACTIVIDAD")]
         public Mg_actividades mg_actividades { get; set; }
@@ -24,5 +26,8 @@ namespace SIA.Models
         [ForeignKey("CODIGO_USUARIO_ASIGNADO")]
         public Mg_usuarios mg_usuarios { get; set; }
 
+        public ICollection<Mg_Hallazgos> listado_hallazgos { get; set; }
+
+        public Au_Planes_De_Trabajo plan_trabajo { get; set; }
     }
 }

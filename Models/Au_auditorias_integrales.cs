@@ -63,8 +63,6 @@ namespace SIA.Models
         [NotMapped]
         public int? CANTIDAD_AUD_ESPEC { get; set; }
 
-        public ICollection<Mg_Hallazgos> listado_hallazgos { get; set; }
-
         public ICollection<Au_auditorias> listado_auditorias { get; set; }
 
         [ForeignKey("CODIGO_UNIVERSO_AUDITABLE")]

@@ -28,5 +28,7 @@ namespace SIA.Models
         public Mg_tipos_de_auditorias mg_tipos_de_auditorias { get; set; }
 
         public Au_auditorias_integrales AuditoriaIntegral { get; set; }
+
+        public ICollection<Au_Planes_De_Trabajo> listado_planes_trabajo { get; set; }
     }
 }

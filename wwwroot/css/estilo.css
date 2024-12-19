@@ -192,9 +192,9 @@ h3, h5 {
 
 
 select.form-control {
-    -webkit-appearance: menulist; /* Safari/Chrome */
-    -moz-appearance: menulist; /* Firefox */
-    appearance: menulist; /* Estilo predeterminado de los navegadores */
+    /*-webkit-appearance: menulist;  Safari/Chrome */
+    /*-moz-appearance: menulist;  Firefox */
+    /*appearance: menulist;  Estilo predeterminado de los navegadores */
 }
 
 .table-primary {
