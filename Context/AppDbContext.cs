@@ -74,7 +74,7 @@ namespace SIA.Context
             modelBuilder.Entity<Mg_secciones>()
             .HasMany(s => s.sub_secciones)
             .WithOne(sub => sub.Seccion)
-            .HasForeignKey(sub => sub.CODIGO_SECCION);
+            .HasForeignKey(sub => sub.CODIGO_SECCION );
 
             modelBuilder.Entity<Mg_sub_secciones>()
             .HasMany(s => s.Preguntas_Cuestionarios)

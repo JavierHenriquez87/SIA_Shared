@@ -1495,7 +1495,7 @@ namespace SIA.Controllers
                     .FirstOrDefaultAsync();
 
                 List<Mg_secciones> secciones = await _context.MG_SECCIONES
-                        .Include(x => x.sub_secciones)
+                        .Include(x => x.sub_secciones.Where(x => x.CODIGO_CUESTIONARIO == data.CODIGO_CUESTIONARIO))
                         .ThenInclude(x => x.Preguntas_Cuestionarios)
                         .ToListAsync();
 
@@ -1552,7 +1552,7 @@ namespace SIA.Controllers
 
             //Obtenemos las preguntas del cuestionario
             List<Mg_secciones> secciones = await _context.MG_SECCIONES
-                        .Include(x => x.sub_secciones)
+                        .Include(x => x.sub_secciones.Where(x => x.CODIGO_CUESTIONARIO == data.CODIGO_CUESTIONARIO))
                         .ThenInclude(x => x.Preguntas_Cuestionarios)
                         .ToListAsync();
 
