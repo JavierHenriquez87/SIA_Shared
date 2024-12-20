@@ -274,57 +274,63 @@
                 III. RESULTADOS DE LA AUDITORÍA
             </h4>
 
-            @if(ViewBag.PORCENTAJE_SUBSECCIONES != null && ViewBag.PORCENTAJE_SUBSECCIONES.Count > 0)
+            @if (ViewBag.RESULTADOS_AUDITORIAS != null && ViewBag.RESULTADOS_AUDITORIAS.Count > 0)
             {
-                int conteo = 1;
-                string seccion = "";
-                decimal porcentaje = 0;
+                foreach (var resultadoAuditoria in ViewBag.RESULTADOS_AUDITORIAS)
+                {
+                    int conteo = 1;
+                    string seccion = "";
+                    decimal porcentaje = 0;
 
-                <table class="tabla-resumen">
-                    <tr>
-                        <th colspan="2" class="titulo">RESUMEN DE CONTROL - AGENCIA</th>
-                    </tr>
+                    <table class="tabla-resumen">
+                        <tr>
+                            <th colspan="2" class="titulo">RESUMEN DE CONTROL - AGENCIA</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2" class="titulo">@resultadoAuditoria.DESCRIPCION.ToUpper()</th>
+                        </tr>
 
-                    @foreach (var PORCENTAJE_SUBSECCIONES in ViewBag.PORCENTAJE_SUBSECCIONES)
-                    {
-                        
-                        if (seccion == "")
+                        @foreach (var PORCENTAJE_SUBSECCIONES in resultadoAuditoria.listPorcentajeSubSecciones)
                         {
-                            seccion = PORCENTAJE_SUBSECCIONES.Seccion;
+
+                            if (seccion == "")
+                            {
+                                seccion = PORCENTAJE_SUBSECCIONES.Seccion;
+                                <tr>
+                                    <th class="subtitulo" colspan="1">@(PORCENTAJE_SUBSECCIONES.Seccion)</th>
+                                    <th class="subtitulo">PUNTAJE GRADO DE CUMPLIMIENTO</th>
+                                </tr>
+                            }
+                            else if (seccion != PORCENTAJE_SUBSECCIONES.Seccion)
+                            {
+                                seccion = PORCENTAJE_SUBSECCIONES.Seccion;
+                                <tr>
+                                    <th class="subtitulo" colspan="1" style="border-right: 0 !important;">@(PORCENTAJE_SUBSECCIONES.Seccion)</th>
+                                    <th class="subtitulo" style="border-left: 0 !important;"></th>
+                                </tr>
+                            }
+
                             <tr>
-                                <th class="subtitulo" colspan="1">@(PORCENTAJE_SUBSECCIONES.Seccion)</th>
-                                <th class="subtitulo">PUNTAJE GRADO DE CUMPLIMIENTO</th>
+                                <td>@conteo. @(PORCENTAJE_SUBSECCIONES.SubSeccion?.ToUpper())</td>
+                                <td class="celda-porcentaje-@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 50.90m ? "rojo" : PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 65.90m ? "anaranjado" : PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 85.90m ? "amarillo" : "verde")">@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento)%</td>
                             </tr>
+
+                            conteo++;
+                            porcentaje += PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento;
                         }
-                        else if (seccion != PORCENTAJE_SUBSECCIONES.Seccion)
-                        {
-                            seccion = PORCENTAJE_SUBSECCIONES.Seccion;
-                            <tr>
-                                <th class="subtitulo" colspan="1" style="border-right: 0 !important;">@(PORCENTAJE_SUBSECCIONES.Seccion)</th>
-                                <th class="subtitulo" style="border-left: 0 !important;"></th>
-                            </tr>
+
+                        @{
+                            double porcentajeTotal = (porcentaje != 0 ? Math.Round((double)porcentaje / (conteo - 1), 2) : 0);
                         }
 
                         <tr>
-                            <td>@conteo. @(PORCENTAJE_SUBSECCIONES.SubSeccion?.ToUpper())</td>
-                            <td class="celda-porcentaje-@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 50.90m ? "rojo" : PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 65.90m ? "anaranjado" : PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento <= 85.90m ? "amarillo" : "verde")">@(PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento)%</td>
+                            <td colspan="1" class="puntaje-agencia">Puntaje de la Agencia ...</td>
+                            <td class="celda-porcentaje-@(porcentajeTotal <= 50.90 ? "rojo" : porcentajeTotal <= 65.90 ? "anaranjado" : porcentajeTotal <= 85.90 ? "amarillo" : "verde")">
+                                @porcentajeTotal%
+                            </td>
                         </tr>
-
-                        conteo++;
-                        porcentaje += PORCENTAJE_SUBSECCIONES.PorcentajeCumplimiento;
-                    }
-
-                    @{
-                        double porcentajeTotal = (porcentaje != 0 ? Math.Round((double)porcentaje / (conteo - 1), 2) : 0);
-                    }
-
-                    <tr>
-                        <td colspan="1" class="puntaje-agencia">Puntaje de la Agencia ...</td>
-                        <td class="celda-porcentaje-@(porcentajeTotal <= 50.90 ? "rojo" : porcentajeTotal <= 65.90 ? "anaranjado" : porcentajeTotal <= 85.90 ? "amarillo" : "verde")">
-                            @porcentajeTotal%
-                        </td>
-                    </tr>
-                </table>
+                    </table>
+                }
             }
 
             @{

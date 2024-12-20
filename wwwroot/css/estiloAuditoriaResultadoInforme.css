@@ -182,7 +182,7 @@ input:checked + .slider {
 .tabla-resumen {
     border-collapse: collapse;
     width: 60%;
-    margin: 20px auto;
+    margin: 10px auto;
     text-align: center;
     font-size: 14px;
 }

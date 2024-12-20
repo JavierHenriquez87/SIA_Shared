@@ -2972,93 +2972,24 @@ namespace SIA.Controllers
                 .Include(d => d.Documentos)
                 .ToListAsync();
 
-
-
-
-            //******************
-
-
-
-
-
             //Obtenemos el o los cuestionarios agregados a la auditoria
-            var data = await _context.MG_AUDITORIAS_CUESTIONARIOS
+            var dataCuestionarios = await _context.MG_AUDITORIAS_CUESTIONARIOS
                     .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == cod)
                     .Where(e => e.ANIO == anio)
                     .Where(e => e.CODIGO_ESTADO == 3)
                     .ToListAsync();
 
-            List<Mg_secciones> secciones = new List<Mg_secciones>();
+            //List<Mg_secciones> secciones = new List<Mg_secciones>();
 
-            // Iteramos sobre los cuestionarios
-            foreach (var item in data)
-            {
-                secciones = await _context.MG_SECCIONES
-                    .Include(x => x.sub_secciones
-                    .Where(sub => sub.CODIGO_CUESTIONARIO == item.CODIGO_CUESTIONARIO))
-                    .ThenInclude(x => x.Preguntas_Cuestionarios)
-                    .ToListAsync();
-
-                //    // Iteramos sobre las secciones
-                //    foreach (var itemSection in secciones)
-                //    {
-                //        //Obtenemos las respuestas del cuestionario
-                //        var respuestasData = await _context.MG_RESPUESTAS_CUESTIONARIO
-                //                    .Where(e => e.CODIGO_AUDITORIA_CUESTIONARIO == itemSection.CODIGO_SECCION)
-                //                    .ToListAsync();
-
-                //        foreach (var item in secciones)
-                //        {
-                //            foreach (var item2 in item.sub_secciones)
-                //            {
-                //                var totalPuntos = 0;
-                //                var numPreguntas = 0;
-                //                foreach (var item3 in item2.Preguntas_Cuestionarios)
-                //                {
-                //                    var respuesta = respuestasData.FirstOrDefault(r => r.CODIGO_PREGUNTA == item3.CODIGO_PREGUNTA);
-
-                //                    item3.RESPUESTA_PREGUNTA = respuesta;
-
-                //                    if (respuesta?.CUMPLE == 1)
-                //                    {
-                //                        totalPuntos += 100;
-                //                        numPreguntas++;
-                //                    }
-                //                    else if (respuesta?.CUMPLE_PARCIALMENTE == 1)
-                //                    {
-                //                        totalPuntos += 50;
-                //                        numPreguntas++;
-                //                    }
-                //                    else if (respuesta?.NO_CUMPLE == 1)
-                //                    {
-                //                        totalPuntos += 0;
-                //                        numPreguntas++;
-                //                    }
-                //                    else if (respuesta?.NO_APLICA == 1)
-                //                    {
-                //                        totalPuntos += 0;
-                //                    }
-                //                    else
-                //                    {
-                //                        totalPuntos += 0;
-                //                    }
-                //                }
-                //                // Calcular el promedio
-                //                item2.PORCENTAJE = numPreguntas > 0 ? (double)totalPuntos / numPreguntas : 0;
-                //            }
-                //        }
-                //    }
-            }
-
-
-
-
-
-            //ViewBag.DATA_CUESTIONARIO = secciones;
-
-
-
-            //********************
+            //// Iteramos sobre los cuestionarios
+            //foreach (var item in data)
+            //{
+            //    secciones = await _context.MG_SECCIONES
+            //        .Include(x => x.sub_secciones
+            //        .Where(sub => sub.CODIGO_CUESTIONARIO == item.CODIGO_CUESTIONARIO))
+            //        .ThenInclude(x => x.Preguntas_Cuestionarios)
+            //        .ToListAsync();
+            //}
 
             var seccInformesPreli = await _context.MG_SECC_INF_PRELI
                 .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
@@ -3066,49 +2997,64 @@ namespace SIA.Controllers
                 .OrderBy(d => d.CODIGO_SEC_INF)
                 .ToListAsync();
 
-            var query = @"
-                SELECT 
-                    s.descripcion_seccion AS Seccion,
-                    ss.descripcion AS SubSeccion,
-                    ROUND(
-                        (
-                            -- Suma ponderada de los porcentajes
-                            SUM(CASE WHEN r.cumple = 1 THEN 1 ELSE 0 END) * 100 + 
-                            SUM(CASE WHEN r.cumple_parcialmente = 1 THEN 0.5 ELSE 0 END) * 100
-                        ) / 
-                        NULLIF(
-                            -- Total de preguntas que no son 'No Aplica'
-                            COUNT(pc.codigo_pregunta) - SUM(CASE WHEN r.no_aplica = 1 THEN 1 ELSE 0 END), 
-                            0
-                        ), 
-                        2
-                    ) AS PorcentajeCumplimiento
-                FROM 
-                    mg_auditorias_cuestionarios a
-                INNER JOIN 
-                    mg_cuestionario_secciones cs ON a.codigo_auditoria_cuestionario = cs.codigo_cuestionario
-                INNER JOIN 
-                    mg_secciones s ON cs.codigo_seccion = s.codigo_seccion
-                INNER JOIN 
-                    mg_sub_secciones ss ON ss.codigo_seccion = s.codigo_seccion 
-                                        AND ss.codigo_cuestionario = cs.codigo_cuestionario
-                INNER JOIN 
-                    mg_preguntas_cuestionario pc ON pc.codigo_sub_seccion = ss.codigo_sub_seccion
-                                                    AND pc.codigo_cuestionario = cs.codigo_cuestionario
-                INNER JOIN 
-                    mg_respuestas_cuestionario r ON r.codigo_pregunta = pc.codigo_pregunta
-                WHERE 
-                    a.numero_auditoria_integral = {0}
-                    AND a.anio = {1}
-                GROUP BY 
-                    s.descripcion_seccion, ss.descripcion
-                ORDER BY 
-                    s.descripcion_seccion, ss.descripcion;
-            ";
+            List<ResultadoAuditoria> resultadosAuditorias = new List<ResultadoAuditoria>();
 
-            var porcentajeSubSecciones = await _context.Porcentaje_SubSecciones
-                .FromSqlRaw(query, cod, anio)
-                .ToListAsync();
+            foreach (var dataCuestionario in dataCuestionarios)
+            {
+                var cuestionario = await _context.AU_CUESTIONARIOS.FirstOrDefaultAsync(d => d.CODIGO_CUESTIONARIO == dataCuestionario.CODIGO_CUESTIONARIO);
+
+                var query = @"
+                    SELECT 
+                        s.descripcion_seccion AS Seccion,
+                        ss.descripcion AS SubSeccion,
+                        ROUND(
+                            (
+                                -- Suma ponderada de los porcentajes
+                                SUM(CASE WHEN r.cumple = 1 THEN 1 ELSE 0 END) * 100 + 
+                                SUM(CASE WHEN r.cumple_parcialmente = 1 THEN 0.5 ELSE 0 END) * 100
+                            ) / 
+                            NULLIF(
+                                -- Total de preguntas que no son 'No Aplica'
+                                COUNT(pc.codigo_pregunta) - SUM(CASE WHEN r.no_aplica = 1 THEN 1 ELSE 0 END), 
+                                0
+                            ), 
+                            2
+                        ) AS PorcentajeCumplimiento
+                    FROM 
+                        mg_auditorias_cuestionarios a
+                    INNER JOIN 
+                        mg_cuestionario_secciones cs ON a.codigo_cuestionario = cs.codigo_cuestionario
+                    INNER JOIN 
+                        mg_secciones s ON cs.codigo_seccion = s.codigo_seccion
+                    INNER JOIN 
+                        mg_sub_secciones ss ON ss.codigo_seccion = s.codigo_seccion 
+                                            AND ss.codigo_cuestionario = cs.codigo_cuestionario
+                    INNER JOIN 
+                        mg_preguntas_cuestionario pc ON pc.codigo_sub_seccion = ss.codigo_sub_seccion
+                                                        AND pc.codigo_cuestionario = cs.codigo_cuestionario
+                    INNER JOIN 
+                        mg_respuestas_cuestionario r ON r.codigo_pregunta = pc.codigo_pregunta 
+                                                        AND r.codigo_auditoria_cuestionario = a.codigo_auditoria_cuestionario
+                    WHERE 
+                        a.numero_auditoria_integral = {0}
+                        AND a.anio = {1}
+                        AND a.codigo_cuestionario = {2}
+                    GROUP BY 
+                        s.descripcion_seccion, ss.descripcion
+                    ORDER BY 
+                        s.descripcion_seccion, ss.descripcion;
+                ";
+
+                var porcentaje = await _context.Porcentaje_SubSecciones
+                    .FromSqlRaw(query, cod, anio, dataCuestionario.CODIGO_CUESTIONARIO)
+                    .ToListAsync();
+
+                resultadosAuditorias.Add(new ResultadoAuditoria {
+                    CODIGO_CUESTIONARIO = cuestionario.CODIGO_CUESTIONARIO,
+                    DESCRIPCION = cuestionario.NOMBRE_CUESTIONARIO,
+                    listPorcentajeSubSecciones = porcentaje
+                });
+            }
 
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
             ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
@@ -3117,7 +3063,7 @@ namespace SIA.Controllers
             ViewBag.HALLAZGOS = hallazgosAllData;
             ViewBag.HALLAZGOS_ANTERIORES = hallazgosAnteriores;
             ViewBag.SECC_INF_PRELI = seccInformesPreli;
-            ViewBag.PORCENTAJE_SUBSECCIONES = porcentajeSubSecciones;
+            ViewBag.RESULTADOS_AUDITORIAS = resultadosAuditorias;
 
             return View();
         }
