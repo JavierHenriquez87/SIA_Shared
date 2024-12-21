@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "HVkG1WLyJMC89xBBnkbEPn+EbmvtqJ+KqjeyexWGfUs=",
+  "Hash": "LU8J7q6F7Dem0/zpeeclmazs6b7ZzbeHBGrYMCbatNg=",
   "Source": "SIA",
   "BasePath": "_content/SIA",
   "Mode": "Default",
@@ -29657,12 +29657,12 @@
       "OriginalItemSpec": "wwwroot\\Scripts\\Auditorias\\ProgramaTrabajo.js"
     },
     {
-      "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Configuracion\\Cuestionarios.js",
+      "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Configuracion\\Agencias.js",
       "SourceId": "SIA",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\",
       "BasePath": "_content/SIA",
-      "RelativePath": "Scripts/Configuracion/Cuestionarios.js",
+      "RelativePath": "Scripts/Configuracion/Agencias.js",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -29673,7 +29673,26 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Scripts\\Configuracion\\Cuestionarios.js"
+      "OriginalItemSpec": "wwwroot\\Scripts\\Configuracion\\Agencias.js"
+    },
+    {
+      "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Configuracion\\Cuestionario.js",
+      "SourceId": "SIA",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\",
+      "BasePath": "_content/SIA",
+      "RelativePath": "Scripts/Configuracion/Cuestionario.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Scripts\\Configuracion\\Cuestionario.js"
     },
     {
       "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Configuraciones\\Cuestionarios.js",

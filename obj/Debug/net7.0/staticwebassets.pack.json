@@ -145,8 +145,12 @@
       "PackagePath": "staticwebassets\\Scripts\\Auditorias\\ProgramarAuditoria.js"
     },
     {
-      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Configuracion\\Cuestionarios.js",
-      "PackagePath": "staticwebassets\\Scripts\\Configuracion\\Cuestionarios.js"
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Configuracion\\Agencias.js",
+      "PackagePath": "staticwebassets\\Scripts\\Configuracion\\Agencias.js"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Configuracion\\Cuestionario.js",
+      "PackagePath": "staticwebassets\\Scripts\\Configuracion\\Cuestionario.js"
     },
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Scripts\\Configuraciones\\Cuestionarios.js",

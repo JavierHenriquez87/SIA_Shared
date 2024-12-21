@@ -83,7 +83,7 @@ function NuevoCuestionario() {
 
                 // Limpiar todas las opciones del select
                 selectSeccion.innerHTML = '';
-                // Volver a agregar solo la opción inicial
+                // Volver a agregar solo la opciÃ³n inicial
                 selectSeccion.appendChild(opcionInicial);
 
                 // Recorremos el objeto resultante y llenamos la tabla
@@ -154,7 +154,7 @@ function ModificarCuestionario(codigo, nombre) {
 
                 // Limpiar todas las opciones del select
                 selectSeccion.innerHTML = '';
-                // Volver a agregar solo la opción inicial
+                // Volver a agregar solo la opciÃ³n inicial
                 selectSeccion.appendChild(opcionInicial);
 
                 // Recorremos el objeto resultante y llenamos la tabla
@@ -165,7 +165,7 @@ function ModificarCuestionario(codigo, nombre) {
                     selectSeccion.appendChild(option);
 
                     if (seccion.sub_secciones.length > 0) {
-                        //Si la sección tiene una sub seccion la agregamos
+                        //Si la secciÃ³n tiene una sub seccion la agregamos
                         AgregarSeccionCuestionario(seccion.CODIGO_SECCION, seccion.DESCRIPCION_SECCION);
                         let subSectionId = 1;
 
@@ -227,7 +227,7 @@ $(document).on('click', '.btnAddSubsection', function () {
                 <tbody></tbody>
             </table>
             <button type="button" class="btnAddPregunta btn btn-secondary" data-section="${sectionId}" data-subsection="subsection-${sectionId}-${subsectionCount}">Agregar Pregunta</button>
-            <button type="button" class="btnEliminarSubseccion btn btn-danger" data-subsection="subsection-${sectionId}-${subsectionCount}">Eliminar Subsección</button>
+            <button type="button" class="btnEliminarSubseccion btn btn-danger" data-subsection="subsection-${sectionId}-${subsectionCount}">Eliminar SubsecciÃ³n</button>
             <hr>
         </div>
     `;
@@ -235,7 +235,7 @@ $(document).on('click', '.btnAddSubsection', function () {
     $(`#subsections-${sectionId}`).append(newSubsectionHtml);
 });
 
-// Evento para eliminar la subsección
+// Evento para eliminar la subsecciÃ³n
 $(document).on('click', '.btnEliminarSubseccion', function () {
     const subsectionId = $(this).data('subsection');
     $(`#${subsectionId}`).remove();
@@ -324,10 +324,10 @@ function MantenimientoSecciones() {
                 result.forEach(function (seccion, index) {
                     var index = index + 1;
 
-                    // Agregar la sección principal
+                    // Agregar la secciÃ³n principal
                     $('#tbVerSecciones').append(
                         `<tr id="section-${index}" class="table table-bordered dt-responsive nowrap w-100">
-                            <td style="width: 5%; text-align:center;">${index}</td> <!-- Columna para el índice -->
+                            <td style="width: 5%; text-align:center;">${index}</td> <!-- Columna para el Ã­ndice -->
                             <th colspan="1" style="text-align:center;">${seccion.DESCRIPCION_SECCION}</th>
                             <td style="width: 10%; text-align:center;">
                                 <button type="button" class="btn btn-danger btn-sm" 
@@ -358,17 +358,17 @@ function MantenimientoSecciones() {
 
 }
 
-// AGREGAR SECCIONES EN LA ADMINISTRACIÓN DE SECCIONES
+// AGREGAR SECCIONES EN LA ADMINISTRACIÃ“N DE SECCIONES
 //==========================================================================================
 function btnAgregarSeccion() {
     // Obtener el valor del input
     var nombreSeccion = $('#nombreSeccion').val();
 
-    // Validar que no esté vacío
+    // Validar que no estÃ© vacÃ­o
     if (nombreSeccion.trim() === "") {
         Swal.fire(
             'Error!',
-            'El nombre de la sección no puede estar vacío.',
+            'El nombre de la secciÃ³n no puede estar vacÃ­o.',
             'error'
         );
         return;
@@ -393,7 +393,7 @@ function btnAgregarSeccion() {
         error: function () {
             Swal.fire(
                 'Error!',
-                'Ocurrió un error al agregar la solicitud.',
+                'OcurriÃ³ un error al agregar la solicitud.',
                 'error'
             );
         }
@@ -422,7 +422,7 @@ function eliminarSeccion(codigo) {
         error: function () {
             Swal.fire(
                 'Error!',
-                'Ocurrió un error al agregar la solicitud.',
+                'OcurriÃ³ un error al agregar la solicitud.',
                 'error'
             );
         }
@@ -437,7 +437,7 @@ function btSeleccionarSeccion() {
     if (select.value == '0') {
         Swal.fire(
             'Error!',
-            'Por favor, seleccione una sección antes de continuar.',
+            'Por favor, seleccione una secciÃ³n antes de continuar.',
             'error'
         );
     }
@@ -448,7 +448,7 @@ function btSeleccionarSeccion() {
 
 function AgregarSeccionCuestionario(codigo, descripcion) {
     let sectionId = `section-${codigo}`;
-    // Agregar la sección principal
+    // Agregar la secciÃ³n principal
     $('#tbVerCuestionarioPreguntas').append(
         `<tr class="table-primary">
             <th colspan="2" style="text-align:center;">${descripcion}</th>
@@ -460,7 +460,7 @@ function AgregarSeccionCuestionario(codigo, descripcion) {
                     <div id="subsections-${sectionId}" class="subsections-container">
                                     
                     </div>
-                    <button type="button" class="btnAddSubsection btn btn-add" data-section="${sectionId}"><span class="plus-sign">+</span> <span class="add-section">AGREGAR SUB SECCIÓN</span></button>
+                    <button type="button" class="btnAddSubsection btn btn-add" data-section="${sectionId}"><span class="plus-sign">+</span> <span class="add-section">AGREGAR SUB SECCIÃ“N</span></button>
                     <hr>
                 </div>
             </td>
@@ -475,11 +475,11 @@ function AgregarSeccionCuestionario(codigo, descripcion) {
     seccionesArray.push(nuevaSeccion);
 
     const select = document.getElementById('selectSeccion');
-    // Seleccionar y eliminar la opción directamente por su valor
+    // Seleccionar y eliminar la opciÃ³n directamente por su valor
     const optionToRemove = select.querySelector(`option[value="${codigo}"]`);
     optionToRemove.remove();
 
-    // Seleccionar la opción predeterminada (posición 0)
+    // Seleccionar la opciÃ³n predeterminada (posiciÃ³n 0)
     select.selectedIndex = 0;
 }
 
@@ -511,12 +511,12 @@ async function GuardarCuestionario(codigo = 0) {
         const subsectionTitle = $(this).find('.subsection-title').val();
         const codigoSeccion = sectionId.replace('section-', '');
 
-        // Si el campo no está vacío, agregarlo al arreglo
+        // Si el campo no estÃ¡ vacÃ­o, agregarlo al arreglo
         if (subsectionTitle.trim() !== '') {
             $(this).find('.question-input').each(function () {
                 const descripcionPregunta = $(this).val().trim();
 
-                // Si la pregunta no está vacía, agregarla al arreglo de preguntas
+                // Si la pregunta no estÃ¡ vacÃ­a, agregarla al arreglo de preguntas
                 if (descripcionPregunta !== '') {
                     preguntas.push({
                         DESCRIPCION: descripcionPregunta,
@@ -610,13 +610,13 @@ async function GuardarCuestionario(codigo = 0) {
 //==========================================================================================
 function EliminarCuestionario(codigo, nombre) {
     Swal.fire({
-        title: '¿Estás seguro?',
-        text: `¿Quieres eliminar el cuestionario "${nombre}"?`,
+        title: 'Â¿EstÃ¡s seguro?',
+        text: `Â¿Quieres eliminar el cuestionario "${nombre}"?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Sí, eliminar!',
+        confirmButtonText: 'SÃ­, eliminar!',
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
@@ -632,7 +632,7 @@ function EliminarCuestionario(codigo, nombre) {
                             `El cuestionario "${nombre}" ha sido eliminado.`,
                             'success'
                         );
-                        // Actualizar la tabla o la interfaz aquí
+                        // Actualizar la tabla o la interfaz aquÃ­
                         $('#tbCuestionarios').DataTable().ajax.reload(); // Recarga la tabla
                     } else {
                         Swal.fire(
@@ -645,7 +645,7 @@ function EliminarCuestionario(codigo, nombre) {
                 error: function () {
                     Swal.fire(
                         'Error!',
-                        'Hubo un problema al procesar tu solicitud. Intenta de nuevo más tarde.',
+                        'Hubo un problema al procesar tu solicitud. Intenta de nuevo mÃ¡s tarde.',
                         'error'
                     );
                 }

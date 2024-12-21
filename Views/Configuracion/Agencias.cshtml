@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Agencias";
+    ViewBag.pTitle = "Agencias";
+    ViewBag.pageTitle = "Agencias";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+               @*  <div class=" d-flex align-items-end justify-content-end">
+                    <button type="button" style="margin-bottom: 30px" onClick="NuevoCuestionario()" class="btn btn-primary">
+                        Nuevo Cuestionario
+                    </button>
+                </div> *@
+                <table id="tbAgencias" class="table table-bordered dt-responsive  nowrap w-100">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Agencia</th>
+                            <th>Jefe Agencia</th>
+                            <th style="width: 100px;">Acciones</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div> 
+
+@section scripts {
+    <script src="~/Scripts/Configuracion/Agencias.js"></script>
+}

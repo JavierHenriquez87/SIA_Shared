@@ -12,11 +12,11 @@ namespace SIA.Models
         public DateTime? FECHA_ADICIONA { get; set; }
         public string USUARIO_ADICIONA { get; set; }
         public DateTime? FECHA_MODIFICA { get; set; }
-        public string USUARIO_MODIFICA { get; set; }
+        public string? USUARIO_MODIFICA { get; set; }
         public string? DIRECCION { get; set; }
-        public string ALIAS { get; set; }
+        public string? ALIAS { get; set; }
         public string? CODIGO_CNBS { get; set; }
-        public string TIPO_OFICINA { get; set; }
+        public string? TIPO_OFICINA { get; set; }
         public string? AGENCIA { get; set; }
     }
 }

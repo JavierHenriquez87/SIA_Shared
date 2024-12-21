@@ -764,5 +764,121 @@ namespace SIA.Controllers
                 return Json(new { success = false, message = "Ocurrió un error: " + ex.Message });
             }
         }
+
+
+
+        //********************************************************************************
+        // AGENCIAS
+        //********************************************************************************
+        /// <summary>
+        /// Mantenimiento a Agencias
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Agencias()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Obtener listado de las agencias
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> GetAgencias()
+        {
+            var estadoRequest = Request.Form["estado"].FirstOrDefault();
+            var draw = Request.Form["draw"].FirstOrDefault();
+            var start = Request.Form["start"].FirstOrDefault();
+            var length = Request.Form["length"].FirstOrDefault();
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][data]"].FirstOrDefault().ToUpper();
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+            var searchValue = Request.Form["search[value]"].FirstOrDefault().ToUpper();
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+            int recordsTotal = 0;
+
+            List<Mg_agencias> data = new List<Mg_agencias>();
+
+            if (!string.IsNullOrEmpty(searchValue) && searchValue.Count() >= 3)
+            {
+                if (sortColumnDirection.Equals("asc"))
+                {
+                    data = await _context.MG_AGENCIAS
+                        .Where(e => e.CODIGO_AGENCIA != 0)
+                        .Where(e => e.NOMBRE_AGENCIA.ToUpper().Contains(searchValue) || e.JEFE_AGENCIA.ToUpper().Contains(searchValue))
+                        .OrderBy(e => e.CODIGO_AGENCIA)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .ToListAsync();
+                }
+                else
+                {
+                    data = await _context.MG_AGENCIAS
+                        .Where(e => e.CODIGO_AGENCIA != 0)
+                        .Where(e => e.NOMBRE_AGENCIA.ToUpper().Contains(searchValue) || e.JEFE_AGENCIA.ToUpper().Contains(searchValue))
+                        .OrderByDescending(e => e.CODIGO_AGENCIA)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .ToListAsync();
+                }
+
+                recordsTotal = await _context.MG_AGENCIAS
+                    .CountAsync(e => e.NOMBRE_AGENCIA.ToUpper().Contains(searchValue) || e.JEFE_AGENCIA.ToUpper().Contains(searchValue));
+            }
+            else
+            {
+                if (sortColumnDirection.Equals("asc"))
+                {
+                    data = await _context.MG_AGENCIAS
+                        .Where(e => e.CODIGO_AGENCIA != 0)
+                        .OrderBy(e => e.CODIGO_AGENCIA)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .ToListAsync();
+                }
+                else
+                {
+                    data = await _context.MG_AGENCIAS
+                        .Where(e => e.CODIGO_AGENCIA != 0)
+                        .OrderByDescending(e => e.CODIGO_AGENCIA)
+                        .Skip(skip)
+                        .Take(pageSize)
+                        .ToListAsync();
+                }
+
+                recordsTotal = await _context.MG_AGENCIAS
+                    .CountAsync();
+            }
+
+            var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
+            return Ok(jsonData);
+        }
+
+        /// Modificar Jefe Agencia
+        /// </summary>
+        /// <param name="nombreJefe"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> ModificarJefeAgencia(int codigo, string nombreJefe)
+        {
+            try
+            {
+                var agencia = await _context.MG_AGENCIAS.FirstOrDefaultAsync(x => x.CODIGO_AGENCIA == codigo);
+                if (agencia != null)
+                {
+                    agencia.JEFE_AGENCIA = nombreJefe;
+                    agencia.FECHA_MODIFICA = DateTime.Now;
+                    agencia.USUARIO_MODIFICA = HttpContext.Session.GetString("user");
+                    await _context.SaveChangesAsync();
+
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Error" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
     }
 }
