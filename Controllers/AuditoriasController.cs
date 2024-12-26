@@ -2254,6 +2254,25 @@ namespace SIA.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Cargar información de orientaciones de calificaciones
+        /// </summary>
+        /// <param name="calificacion"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> OrientacionCalificacion(int calificacion)
+        {
+            try
+            {
+                var orientaciones = await _context.MG_ORIENTACION_CALIFICACION.Where(x => x.NIVEL_RIESGO == calificacion && x.ESTADO == "A").Select(x => x.ORIENTACION).ToListAsync();
+
+                return Json(new { success = true, data = orientaciones });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
 
         /// <summary>
         /// Metodo para decodificar los datos codificados de la URL
@@ -2566,9 +2585,13 @@ namespace SIA.Controllers
                     nivel_riesgo = string.IsNullOrEmpty(nivelRiesgoStr) ? 1 : int.Parse(nivelRiesgoStr);
                 }
 
+
                 var Hallazgo = await _context.MG_HALLAZGOS
                                     .Where(u => u.CODIGO_HALLAZGO == codigo_hallazgo)
                                     .FirstOrDefaultAsync();
+
+                _context.MG_HALLAZGOS.Remove(Hallazgo);
+                _context.SaveChanges();
 
                 Hallazgo.HALLAZGO = formularioData["hallazgo"];
                 Hallazgo.CALIFICACION = calificacion;
@@ -2581,7 +2604,7 @@ namespace SIA.Controllers
                 Hallazgo.FECHA_MODIFICACION = DateTime.Now;
                 Hallazgo.MODIFICADO_POR = HttpContext.Session.GetString("user");
 
-                _context.Update(Hallazgo);
+                _context.Add(Hallazgo);
 
                 var detallesAEliminar = await _context.MG_HALLAZGOS_DETALLES
                                       .Where(d => d.CODIGO_HALLAZGO == codigo_hallazgo)

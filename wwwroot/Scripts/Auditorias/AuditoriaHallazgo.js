@@ -555,7 +555,8 @@ document.querySelectorAll('.risk-level-options .card').forEach(function (element
         // Ocultar las opciones de nivel de riesgo
         document.getElementById('riskLevels').style.display = 'none';
 
-        console.log(formularioData);
+        OrientacionCalificacion();
+        //console.log(formularioData);
     });
 });
 
@@ -774,20 +775,48 @@ function obtenerIcono(tipo) {
 function MostrarCualitativo() {
 
     $('#divcuantitativo').hide();
-    //$('#valor_muestra').val("");
-    //$('#muestra_inconsistente').val("");
-    //$('#desviacion_muestra').val("");
-
     $('#divcualitativo').show();
+    OrientacionCalificacion();
 }
 
 function MostrarCuantitativo() {
 
     $('#divcuantitativo').show();
-    //$('#valor_muestra').val("0");
-    //$('#muestra_inconsistente').val("0");
-    //$('#desviacion_muestra').val("0%");
     $('#divcualitativo').hide();
+}
+
+function OrientacionCalificacion() {
+    const valorRiesgo = document.getElementById('selectedRisk2').getAttribute('data-risk');
+    let calificacion = valorRiesgo === 'bajo' ? 1 : valorRiesgo === 'medio' ? 2 : 3;
+    $.ajax({
+        url: '/Auditorias/OrientacionCalificacion',
+        type: 'POST',
+        data: {
+            calificacion
+        },
+        success: function (response) {
+            if (response.success) {
+                let textoOrientacion = "-" + response.data.join('\n-');
+
+                // Llenar el textarea
+                $('#orientacion_calificacion').val(textoOrientacion);
+            } else {
+                // Mostrar un mensaje de error
+                Swal.fire(
+                    'Error',
+                    'Error al obtener las orientaciones: ' + response.message,
+                    'error'
+                );
+            }
+        },
+        error: function (xhr, status, error) {
+            Swal.fire(
+                'Error',
+                'Error en la solicitud: ' + error,
+                'error'
+            );
+        }
+    });
 }
 
 function EliminarDocumento(codigoHallazgoDocumento) {
