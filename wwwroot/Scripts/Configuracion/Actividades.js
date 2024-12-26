@@ -76,7 +76,7 @@ function GetActividades() {
 
                         buttons += "<a style='cursor: pointer; href='#' title='Editar Actividad' onClick='ModificarActividad(\"" + row.codigO_ACTIVIDAD + "\")'> <i class='fas fa-edit' style='color: black;'></i></a>";
 
-                        buttons += " | <a style='cursor: pointer; href='#' title='Inactivar Actividad' onClick='InactivarActividad(\"" + row.codigO_ACTIVIDAD + "\")'> <i class='fas fa-trash' style='color: black;'></i></a>";
+                        buttons += " | <a style='cursor: pointer; href='#' title='Inactivar Actividad' onClick='InactivarActividad(\"" + row.codigO_ACTIVIDAD + "\", \"" + row.codigO_ESTADO + "\")'> <i class='fas fa-eye' style='color: black;'></i></a>";
 
                         buttons += "</div>";
 
@@ -354,7 +354,8 @@ function GuardarActividadEditada() {
 
 //FUNCION PARAINACTIVAR UNA ACTIVIDAD
 //==========================================================================================
-function InactivarActividad(codigoActividad) {
+function InactivarActividad(codigoActividad, codigoEstado) {
+    let textoEstado = codigoEstado == "A" ? "inactivar" : "activar";
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -365,8 +366,8 @@ function InactivarActividad(codigoActividad) {
     });
 
     swalWithBootstrapButtons.fire({
-        title: "Inactivar Actividad",
-        text: "¿Desea inactivar esta actividad?",
+        title: "Modificar Actividad",
+        text: "¿Desea " + textoEstado + " esta actividad?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Sí",
@@ -386,7 +387,7 @@ function InactivarActividad(codigoActividad) {
                     if (result == "error") {
                         Swal.fire(
                             'Error!',
-                            'Ocurrió un error al inactivar la actividad',
+                            'Ocurrió un error al ' + textoEstado + ' la actividad',
                             'error'
                         )
                     }
@@ -404,7 +405,7 @@ function InactivarActividad(codigoActividad) {
                 error: function (xhr, textStatus, errorThrown) {
                     Swal.fire(
                         'Error!',
-                        'Su registro no se puede inactivar  ' + xhr.responseText,
+                        'Su registro no se puede modificar  ' + xhr.responseText,
                         'error'
                     )
                 }
