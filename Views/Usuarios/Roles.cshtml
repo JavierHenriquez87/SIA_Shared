@@ -27,9 +27,11 @@
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
+@* @await Html.PartialAsync("partialView/_mainRol") *@
 
-@await Html.PartialAsync("partialView/_mainRol")
+@await Html.PartialAsync("partialView/_mainMenuRol")
 
 @section scripts{
-    <script src="~/Scripts/Usuarios/Roles.js"></script>
+    @* <script src="~/Scripts/Usuarios/Roles.js"></script> *@
+    <script src="~/Scripts/Usuarios/MenuRoles.js"></script>
 }

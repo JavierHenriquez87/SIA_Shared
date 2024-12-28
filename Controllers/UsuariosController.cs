@@ -295,22 +295,22 @@ namespace SIA.Controllers
             int skip = start != null ? Convert.ToInt32(start) : 0;
             int recordsTotal = 0;
 
-            List<Mg_roles_del_sistema> data = new List<Mg_roles_del_sistema>();
+            List<Mg_roles> data = new List<Mg_roles>();
 
             if (!string.IsNullOrEmpty(searchValue) && searchValue.Count() >= 3)
             {
                 if (sortColumnDirection.Equals("asc"))
                 {
-                    data = await _context.MG_ROLES_DEL_SISTEMA
+                    data = await _context.MG_ROLES
                         .OrderByDescending(e => e.CODIGO_ROL)
-                        .Where(e => e.NOMBRE_ROL.ToUpper().Contains(searchValue))
+                        .Where(e => e.NOMBRE.ToUpper().Contains(searchValue) && e.CODIGO_APLICACION == "SIA")
                         .Skip(skip).Take(pageSize).ToListAsync();
                 }
                 else
                 {
-                    data = await _context.MG_ROLES_DEL_SISTEMA
+                    data = await _context.MG_ROLES
                         .OrderBy(e => e.CODIGO_ROL)
-                        .Where(e => e.NOMBRE_ROL.ToUpper().Contains(searchValue))
+                        .Where(e => e.NOMBRE.ToUpper().Contains(searchValue) && e.CODIGO_APLICACION == "SIA")
                         .Skip(skip).Take(pageSize).ToListAsync();
                 }
 
@@ -320,18 +320,20 @@ namespace SIA.Controllers
             {
                 if (sortColumnDirection.Equals("asc"))
                 {
-                    data = await _context.MG_ROLES_DEL_SISTEMA
+                    data = await _context.MG_ROLES
                         .OrderByDescending(e => e.CODIGO_ROL)
+                        .Where(e => e.CODIGO_APLICACION == "SIA")
                         .Skip(skip).Take(pageSize).ToListAsync();
                 }
                 else
                 {
-                    data = await _context.MG_ROLES_DEL_SISTEMA
+                    data = await _context.MG_ROLES
                         .OrderBy(e => e.CODIGO_ROL)
+                        .Where(e => e.CODIGO_APLICACION == "SIA")
                         .Skip(skip).Take(pageSize).ToListAsync();
                 }
 
-                recordsTotal = await _context.MG_ROLES_DEL_SISTEMA.CountAsync();
+                recordsTotal = await _context.MG_ROLES.CountAsync();
             }
 
             var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
@@ -339,7 +341,7 @@ namespace SIA.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Editar_Rol(string idRol)
+        public async Task<IActionResult> Editar_Rol(int idRol)
         {
             try
             {
@@ -349,10 +351,9 @@ namespace SIA.Controllers
                 }
 
                 //Obtenemos todos los submenus para mostrarlos en el modal de agregar nuevo rol
-                List<Mg_permisos_submenus> menu = await _context.MG_PERMISOS_SUBMENUS
-                    .Include(x => x.Submenus)
+                List<Mg_menus_segun_rol> menu = await _context.MG_MENUS_SEGUN_ROL
                     .OrderBy(e => e.CODIGO_ROL)
-                    .Where(x => x.CODIGO_ROL == idRol)
+                    .Where(x => x.CODIGO_ROL == idRol && x.CODIGO_APLICACION == "SIA")
                     .ToListAsync();
 
                 var result = new
@@ -370,6 +371,19 @@ namespace SIA.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> VerificarNombreRolMenu(string? NOMBRE)
+        {
+            int nombreRol = await _context.MG_ROLES.CountAsync(x => x.NOMBRE.ToUpper() == NOMBRE.ToUpper());
+
+            if (nombreRol >= 1)
+            {
+                return new JsonResult("nombreRol");
+            }
+
+            return new JsonResult("false");
+        }
+
+        [HttpPost]
         public async Task<IActionResult> VerificarNombreRol(string? NOMBRE_ROL)
         {
             int nombreRol = await _context.MG_ROLES_DEL_SISTEMA.CountAsync(x => x.NOMBRE_ROL.ToUpper() == NOMBRE_ROL.ToUpper());
@@ -383,16 +397,120 @@ namespace SIA.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> GuardarMenuRol(string NOMBRE_ROL, string ACCESOS)
+        {
+            int maxRoles = await _context.MG_ROLES
+                    .MaxAsync(a => a.CODIGO_ROL) ?? 0;
+
+            Mg_roles rol = new()
+            {
+                CODIGO_APLICACION = "SIA",
+                CODIGO_ROL = maxRoles + 1,
+                CODIGO_ESTADO = 1,
+                NOMBRE = NOMBRE_ROL.ToUpper(),
+                CREADO_POR = HttpContext.Session.GetString("user"),
+                FECHA_CREACION = DateTime.Now
+            };
+
+            _context.Add(rol);
+
+            try
+            {
+                //Guardamos el rol
+                await _context.SaveChangesAsync();
+
+                var lstMenus = JsonConvert.DeserializeObject<Mg_menus_segun_rol[]>(ACCESOS);
+
+                foreach (var item in lstMenus)
+                {
+                    Mg_menus_segun_rol menusRol = new()
+                    {
+                        CODIGO_ROL = maxRoles + 1,
+                        CODIGO_MENU = item.CODIGO_MENU,
+                        CODIGO_APLICACION = "SIA",
+                        CODIGO_ESTADO = 1,
+                        CREADO_POR = HttpContext.Session.GetString("user"),
+                        FECHA_CREACION = DateTime.Now,
+                    };
+                    _context.Add(menusRol);
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _context.Remove(rol);
+
+                await _context.MG_MENUS_SEGUN_ROL
+                        .Where(x => x.CODIGO_ROL == maxRoles + 1)
+                        .ExecuteDeleteAsync();
+
+                await _context.SaveChangesAsync();
+
+                Console.WriteLine(ex.Message);
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("agregado");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GuardarRolEditado(string NOMBRE_ROL, string ACCESOS, int CODIGO_ROL)
+        {
+            var rol = await _context.MG_ROLES.FirstOrDefaultAsync(x => x.CODIGO_ROL == CODIGO_ROL);
+            rol.NOMBRE = NOMBRE_ROL.ToUpper();
+            rol.MODIFICADO_POR = HttpContext.Session.GetString("user");
+            rol.FECHA_MODIFICACION = DateTime.Now;
+
+            _context.Entry(rol).CurrentValues.SetValues(rol);
+            try
+            {
+                //Guardamos el rol editado
+                await _context.SaveChangesAsync();
+
+                //Eliminamos los roles
+                await _context.MG_MENUS_SEGUN_ROL
+                        .Where(x => x.CODIGO_ROL == CODIGO_ROL)
+                        .ExecuteDeleteAsync();
+
+                var lstMenus = JsonConvert.DeserializeObject<Mg_menus_segun_rol[]>(ACCESOS);
+
+                foreach (var item in lstMenus)
+                {
+                    Mg_menus_segun_rol menusRol = new()
+                    {
+                        CODIGO_ROL = CODIGO_ROL,
+                        CODIGO_MENU = item.CODIGO_MENU,
+                        CODIGO_APLICACION = "SIA",
+                        CODIGO_ESTADO = 1,
+                        CREADO_POR = HttpContext.Session.GetString("user"),
+                        FECHA_CREACION = DateTime.Now,
+                    };
+                    _context.Add(menusRol);
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("agregado");
+        }
+
+        [HttpPost]
         public async Task<IActionResult> VerificarCodigoYNombreRol(string? CODIGO_ROL, string? NOMBRE_ROL)
         {
-            int codigoRol = await _context.MG_ROLES_DEL_SISTEMA.CountAsync(x => x.CODIGO_ROL.ToUpper() == CODIGO_ROL.ToUpper());
+            //int codigoRol = await _context.MG_ROLES_DEL_SISTEMA.CountAsync(x => x.CODIGO_ROL.ToUpper() == CODIGO_ROL.ToUpper());
             int nombreRol = await _context.MG_ROLES_DEL_SISTEMA.CountAsync(x => x.NOMBRE_ROL.ToUpper() == NOMBRE_ROL.ToUpper());
 
-            if (codigoRol >= 1)
-            {
-                return new JsonResult("codigoRol");
-            }
-            else if (nombreRol >= 1)
+            //if (codigoRol >= 1)
+            //{
+            //    return new JsonResult("codigoRol");
+            //}
+            //else 
+            if (nombreRol >= 1)
             {
                 return new JsonResult("nombreRol");
             }
@@ -401,14 +519,19 @@ namespace SIA.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Guardar_Rol_Nuevo(string NOMBRE_ROL, string ACCESOS, string CODIGO_ROL)
+        public async Task<IActionResult> Guardar_Rol_Nuevo(string NOMBRE_ROL, string ACCESOS, int CODIGO_ROL)
         {
-            Mg_roles_del_sistema rol = new()
+            int maxRoles = await _context.MG_ROLES
+                    .MaxAsync(a => a.CODIGO_ROL) ?? 0;
+
+            Mg_roles rol = new()
             {
-                CODIGO_ROL = CODIGO_ROL,
-                NOMBRE_ROL = NOMBRE_ROL.ToUpper(),
-                USUARIO_ADICIONA = HttpContext.Session.GetString("user"),
-                FECHA_ADICIONA = DateTime.Now
+                CODIGO_APLICACION = "SIA",
+                CODIGO_ROL = maxRoles + 1,
+                CODIGO_ESTADO = 1,
+                NOMBRE = NOMBRE_ROL.ToUpper(),
+                CREADO_POR = HttpContext.Session.GetString("user"),
+                FECHA_CREACION = DateTime.Now
             };
 
             _context.Add(rol);
@@ -424,8 +547,9 @@ namespace SIA.Controllers
                 {
                     Mg_permisos_submenus submenus = new()
                     {
-                        CODIGO_ROL = CODIGO_ROL,
-                        CODIGO_OPCION = item.CODIGO_OPCION,
+                        CODIGO_ROL = maxRoles + 1,
+                        CODIGO_OPCION = item.CODIGO_SUB_MENU,
+                        CODIGO_APLICACION = "SIA",
                         USUARIO_ADICIONA = HttpContext.Session.GetString("user"),
                         FECHA_ADICIONA = DateTime.Now,
                         LECTURA = item.LECTURA,
@@ -444,7 +568,7 @@ namespace SIA.Controllers
                 _context.Remove(rol);
 
                 await _context.MG_PERMISOS_SUBMENUS
-                        .Where(x => x.CODIGO_ROL == CODIGO_ROL)
+                        .Where(x => x.CODIGO_ROL == maxRoles + 1)
                         .ExecuteDeleteAsync();
 
                 await _context.SaveChangesAsync();
@@ -457,12 +581,12 @@ namespace SIA.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Guardar_Rol_Editado(string NOMBRE_ROL, string ACCESOS, string CODIGO_ROL)
+        public async Task<IActionResult> Guardar_Rol_Editado(string NOMBRE_ROL, string ACCESOS, int CODIGO_ROL)
         {
-            var rol = await _context.MG_ROLES_DEL_SISTEMA.FirstOrDefaultAsync(x => x.CODIGO_ROL == CODIGO_ROL);
-            rol.NOMBRE_ROL = NOMBRE_ROL.ToUpper();
-            rol.USUARIO_MODIFICA = HttpContext.Session.GetString("user");
-            rol.FECHA_MODIFICA = DateTime.Now;
+            var rol = await _context.MG_ROLES.FirstOrDefaultAsync(x => x.CODIGO_ROL == CODIGO_ROL);
+            rol.NOMBRE = NOMBRE_ROL.ToUpper();
+            rol.CREADO_POR = HttpContext.Session.GetString("user");
+            rol.FECHA_CREACION = DateTime.Now;
 
             _context.Entry(rol).CurrentValues.SetValues(rol);
             try
@@ -486,6 +610,7 @@ namespace SIA.Controllers
                     {
                         CODIGO_ROL = CODIGO_ROL,
                         CODIGO_OPCION = item.CODIGO_OPCION,
+                        CODIGO_APLICACION = "SIA",
                         USUARIO_ADICIONA = rolSubmenu == null ? HttpContext.Session.GetString("user") : rolSubmenu.USUARIO_ADICIONA,
                         FECHA_ADICIONA = rolSubmenu == null ? DateTime.Now : rolSubmenu.FECHA_ADICIONA,
                         USUARIO_MODIFICA = HttpContext.Session.GetString("user"),

@@ -62,9 +62,6 @@ function NuevoRol() {
     var modalTitle = document.getElementById('titleNuevoRol');
     modalTitle.textContent = 'Nuevo Rol';
 
-    //Array donde se guardaran todos los accesos que asignen al rol
-    $accesosSubMenus = [];
-
     //Ponemos todos los check como inactivos
     document.querySelectorAll('.contenedor input[type=checkbox]').forEach(function (checkElement) {
         checkElement.checked = false;
@@ -89,97 +86,40 @@ function NuevoRol() {
     $('#divRol').modal('show');
 }
 
-//==========================================================================================
-
-$('.checkLecEsc').on('change', function () {
-    var isChecked = $(this).prop('checked'); // Obtener el estado del checkbox (true o false)
-    var codigoSubmenu = parseInt($(this).attr('data')); // Obtener el ID del submenu
-    var permissionType = $(this).data('permission-type'); // Obtener el tipo de permiso
-
-    var existingObjectIndex = $accesosSubMenus.findIndex(function (item) {
-        return item.CODIGO_SUB_MENU === codigoSubmenu;
-    });
-
-    if (existingObjectIndex !== -1) {
-        // Actualizar el objeto existente con la nueva propiedad
-        $accesosSubMenus[existingObjectIndex][permissionType] = isChecked ? 1 : null;
-    }
-    else {
-        // El checkbox está marcado, por lo que se presionó
-        var nuevoRegistro = { CODIGO_SUB_MENU: codigoSubmenu };
-        nuevoRegistro[permissionType] = 1;
-        // Agregar el nuevo objeto al array
-        $accesosSubMenus.push(nuevoRegistro);
-    }
-});
-
-//==========================================================================================
-
-$('.checkSubMenu').on('click', function () {
-    var $fila = $(this).closest('.row'); // Obtener la fila padre
-    var isChecked = $(this).prop('checked');
-    var codigoSubmenu = parseInt($(this).attr('data')); // Obtener el ID del submenu
-
-    if (!isChecked) {
-        var existingObjectIndex = $accesosSubMenus.findIndex(function (item) {
-            return item.CODIGO_SUB_MENU === codigoSubmenu;
-        });
-        $accesosSubMenus.splice(existingObjectIndex, 1);
-    }
-    // Buscar checkboxes secundarios dentro de la fila y ajustar su estado
-    $fila.find('.checkLecEsc').each(function () {
-        var $checkbox = $(this);
-        if (isChecked) {
-            // Activar el checkbox y recordar su estado original
-            $checkbox.prop('disabled', $checkbox.hasClass('disabledCheck'));
-
-            var checkboxId = $checkbox.attr('id');
-            if (checkboxId == "leer" + codigoSubmenu) {
-                $checkbox.prop('checked', true);
-                
-                $checkbox.prop('disabled', true);
-                // El checkbox está marcado, por lo que se presionó
-                var nuevoRegistro = { CODIGO_SUB_MENU: codigoSubmenu };
-                nuevoRegistro["LECTURA"] = 1;
-                // Agregar el nuevo objeto al array
-                $accesosSubMenus.push(nuevoRegistro);
-            }
-            else {
-                $checkbox.prop('checked', false);
-            }
-        } else {
-            // Desactivar el checkbox y recordar su estado original
-            $checkbox.prop('disabled', true);
-            $checkbox.prop('checked', false);
-        }
-    });
-
-
-});
 
 //FUNCION PARA GUARDAR EL ROL NUEVO
 //==========================================================================================
 
-async function GuardarRolNuevo() {
+async function GuardarRol() {
     $nombreRol = $("#nombreRol").val();
-    $valorCodigoRol = $("#codigoRol").val();
 
-    $resp = await validarCodigoYNombreRolDuplicado($valorCodigoRol, $nombreRol);
+    $resp = await validarNombreRolDuplicado($nombreRol);
     $resp2 = await validacionesRol();
+
+    var menuSeleccionados = [];
+    var checkboxes = document.querySelectorAll('.checkSubMenu');
+
+    checkboxes.forEach(function (checkbox) {
+        if (checkbox.checked) {
+            menuSeleccionados.push({
+                CODIGO_APLICACION: "SIA",
+                CODIGO_MENU: checkbox.getAttribute('data'),
+            });
+        }
+    });
 
     if ($resp == false && $resp2 == false) {
         Swal.showLoading();
 
         $.ajax({
             method: 'POST',
-            url: 'Guardar_Rol_Nuevo',
-            data: { NOMBRE_ROL: $nombreRol, ACCESOS: JSON.stringify($accesosSubMenus), CODIGO_ROL: $valorCodigoRol },
+            url: 'GuardarMenuRol',
+            data: { NOMBRE_ROL: $nombreRol, ACCESOS: JSON.stringify(menuSeleccionados) },
             success: function (respuesta) {
                 if (respuesta == "agregado") {
                     //Ocultamos el modal
                     $('#divRol').modal('hide');
-                    //Borramos los array donde se guardaron los submenus
-                    $accesosSubMenus = [];
+
                     //Borramos la data del dataTable
                     $('#tbRoles').dataTable().fnDestroy();
                     //Volvemos a cargar la tabla con el nuevo dato
@@ -201,6 +141,7 @@ async function GuardarRolNuevo() {
         });
     }
 }
+
 
 //FUNCION PARA CARGAR LA INFORMACION DEL ROL
 //==========================================================================================
@@ -236,55 +177,11 @@ function ModificarRol(idRol, nombreRol) {
                 var menu = result.menu;
                 for (var i = 0; i < menu.length; i++) {
                     var menuItem = menu[i];
-                    var nombre = menuItem.submenus.nombre;
-                    if (nombre != "Index") {
-                        //Chequeamos el elemento que tenemos guardado
-                        document.getElementById(nombre).checked = true;
+                    // Buscar el checkbox por el código de menú y marcarlo
+                    var checkbox = document.querySelector('[data="' + menuItem.codigO_MENU + '"]');
 
-                        //Creamos el objeto que guardara nuestro registro
-                        var nuevoRegistro = { CODIGO_SUB_MENU: menuItem.codigO_SUB_MENU };
-
-                        //Obtenemos las referencias a los componentes
-                        var leer = document.getElementById('leer' + menuItem.codigO_SUB_MENU);
-                        var crear = document.getElementById('crear' + menuItem.codigO_SUB_MENU);
-                        var modificar = document.getElementById('modificar' + menuItem.codigO_SUB_MENU);
-                        var autorizar = document.getElementById('autorizar' + menuItem.codigO_SUB_MENU);
-                        var eliminar = document.getElementById('eliminar' + menuItem.codigO_SUB_MENU);
-
-                        //Chequeamos el check necesario y llenamos el objeto
-                        if (menuItem.lectura != null) {
-                            leer.checked = true;
-                            nuevoRegistro['LECTURA'] = 1;
-                        }
-                        if (menuItem.crear != null) {
-                            crear.checked = true;
-                            nuevoRegistro['CREAR'] = 1;
-                        }
-                        if (menuItem.modificar != null) {
-                            modificar.checked = true;
-                            nuevoRegistro['MODIFICAR'] = 1;
-                        }
-                        if (menuItem.autorizar != null) {
-                            autorizar.checked = true;
-                            nuevoRegistro['AUTORIZAR'] = 1;
-                        }
-                        if (menuItem.eliminar != null) {
-                            eliminar.checked = true;
-                            nuevoRegistro['ELIMINAR'] = 1;
-                        }
-
-                        //Guardamos en el objeto el registro que hemos llenado en nuestro objeto
-                        $accesosSubMenus.push(nuevoRegistro);
-
-                        //Habilitamos todos los check
-                        leer.disabled = true;
-                        crear.disabled = false;
-                        modificar.disabled = false;
-                        autorizar.disabled = false;
-                        eliminar.disabled = false;
-                    }
-                    else {
-                        //document.getElementById('codigoRol').textContent = menuItem.codigO_ROL;
+                    if (checkbox) {
+                        checkbox.checked = true;
                     }
                 }
 
@@ -323,6 +220,7 @@ function ModificarRol(idRol, nombreRol) {
     });
 }
 
+
 //FUNCION PARA GUARDAR EL ROL QUE SE HA EDITADO
 //==========================================================================================
 
@@ -338,13 +236,26 @@ async function GuardarRolEditado() {
 
     $resp2 = await validacionesRol();
 
+    var menuSeleccionados = [];
+    var checkboxes = document.querySelectorAll('.checkSubMenu');
+
+    checkboxes.forEach(function (checkbox) {
+        if (checkbox.checked) {
+            menuSeleccionados.push({
+                CODIGO_APLICACION: "SIA",
+                CODIGO_MENU: checkbox.getAttribute('data'),
+                CODIGO_ROL: $valorCodigoRol
+            });
+        }
+    });
+
     if ($resp == false && $resp2 == false) {
         Swal.showLoading();
 
         $.ajax({
             method: 'POST',
-            url: 'Guardar_Rol_Editado',
-            data: { NOMBRE_ROL: $nombreRol, ACCESOS: JSON.stringify($accesosSubMenus), CODIGO_ROL: $valorCodigoRol },
+            url: 'GuardarRolEditado',
+            data: { NOMBRE_ROL: $nombreRol, ACCESOS: JSON.stringify(menuSeleccionados), CODIGO_ROL: $valorCodigoRol },
             success: function (respuesta) {
                 if (respuesta == "agregado") {
                     //Ocultamos el modal
@@ -381,51 +292,16 @@ async function GuardarRolEditado() {
     }
 }
 
-
 //==========================================================================================
 
-function validarCodigoYNombreRolDuplicado($idRol, $nombreRol) {
-    if ($idRol != "" && $nombreRol != "") {
-        return new Promise((resolve, reject) => {
-            //Validamos que el nombre del rol no exista
-            $.ajax({
-                method: 'POST',
-                url: 'VerificarCodigoYNombreRol',
-                data: { CODIGO_ROL: $idRol, NOMBRE_ROL: $nombreRol },
-                success: function (respuesta) {
-                    if (respuesta == 'codigoRol') {
-                        $("#validacionRol").text("El codigo del rol ya existe");
-                        document.getElementById('validacionRol').style.display = 'block';
-                        resolve(true);
-                    }
-                    else if (respuesta == 'nombreRol') {
-                        $("#validacionRol").text("El nombre del rol ya existe");
-                        document.getElementById('validacionRol').style.display = 'block';
-                        resolve(true);
-                    }
-                    else {
-                        $("#validacionRol").text("");
-                        document.getElementById('validacionRol').style.display = 'none';
-                        resolve(false);
-                    }
-                }
-            });
-        });
-    }
-    else {
-        return false;
-    }
-}
-//==========================================================================================
-
-function validarNombreRolDuplicado($idRol, $nombreRol) {
+function validarNombreRolDuplicado($nombreRol) {
     if ($nombreRol != "") {
         return new Promise((resolve, reject) => {
             //Validamos que el nombre del rol no exista
             $.ajax({
                 method: 'POST',
-                url: 'VerificarNombreRol',
-                data: { NOMBRE_ROL: $nombreRol },
+                url: 'VerificarNombreRolMenu',
+                data: { NOMBRE: $nombreRol },
                 success: function (respuesta) {
                     if (respuesta == 'nombreRol') {
                         $("#validacionRol").text("El nombre del rol ya existe");
@@ -452,21 +328,7 @@ function validacionesRol() {
     $nombre_rol = $("#nombreRol").val();
     $contadorSubmenus = 0;
 
-    //if ($codigoRol.length == 0) {
-    //    Swal.fire({
-    //        title: "Informacion incompleta",
-    //        text: "Debe digitar el codigo del rol",
-    //        icon: "warning",
-    //        confirmButtonText: 'Aceptar',
-    //        allowEscapeKey: false,
-    //        allowOutsideClick: false,
-    //        showConfirmButton: true
-    //    });
-
-    //    return true;
-    //}
-    //else
-        if ($nombre_rol.length == 0) {
+    if ($nombre_rol.length == 0) {
         Swal.fire({
             title: "Informacion incompleta",
             text: "Debe digitar el nombre del rol",
@@ -479,16 +341,20 @@ function validacionesRol() {
 
         return true;
     }
-    //Contamos el numero de checkbox que han sido seleccionados
-    //Si el contador es 0 es porque no ha seleccionado ningun checbox y le pedira al usuario seleccionar al menos uno
-    $('.contenedor  input[type=checkbox]:checked').each(function () {
-        $contadorSubmenus++;
+
+    var seleccionados = 0;
+    var checkboxes = document.querySelectorAll('.checkSubMenu');
+
+    checkboxes.forEach(function (checkbox) {
+        if (checkbox.checked) {
+            seleccionados++;
+        }
     });
 
-    if ($contadorSubmenus == 0) {
+    if (seleccionados == 0) {
         Swal.fire({
             title: "Informacion incompleta",
-            text: "Seleccione al menos un acceso para el nuevo rol",
+            text: "Seleccione al menos un acceso para el rol",
             icon: "warning",
             confirmButtonText: 'Aceptar',
             allowEscapeKey: false,

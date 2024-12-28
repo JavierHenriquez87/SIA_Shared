@@ -2031,7 +2031,7 @@ namespace SIA.Controllers
                 {
 
                     query = query.OrderByDescending(e => e.CODIGO_USUARIO_ASIGNADO == userLogeado) // Primero ordena para que el usuario logueado esté primero
-                        .ThenByDescending(e => e.CODIGO_USUARIO_ASIGNADO) // Luego ordena ascendentemente por el código de usuario asignado
+                       .ThenByDescending(e => e.CODIGO_USUARIO_ASIGNADO) // Luego ordena ascendentemente por el código de usuario asignado
                         .ThenByDescending(e => e.mg_actividades.NOMBRE_ACTIVIDAD) // Finalmente, ordena ascendentemente por el nombre de la actividad
                         .Skip(skip)
                         .Take(pageSize);

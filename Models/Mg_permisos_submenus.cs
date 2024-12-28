@@ -13,7 +13,7 @@ namespace SIA.Models
         public string CODIGO_APLICACION { get; set; }
         public int CODIGO_MENU { get; set; }
         public int CODIGO_OPCION { get; set; }
-        public string CODIGO_ROL { get; set; }
+        public int CODIGO_ROL { get; set; }
         public int? LECTURA { get; set; }
         public int? AUTORIZAR { get; set; }
         public int? ELIMINAR { get; set; }
@@ -24,10 +24,13 @@ namespace SIA.Models
         public DateTime? FECHA_MODIFICA { get; set; }
         public string? USUARIO_MODIFICA { get; set; }
 
-        //[ForeignKey("CODIGO_APLICACION, CODIGO_ROL")]
-        //public virtual Mg_roles roles { get; set; }
+        [ForeignKey("CODIGO_APLICACION, CODIGO_ROL")]
+        public virtual Mg_roles roles { get; set; }
 
         [ForeignKey("CODIGO_APLICACION, CODIGO_MENU, CODIGO_OPCION")]
         public virtual Mg_sub_menus Submenus { get; set; }
+
+        [NotMapped]
+        public int CODIGO_SUB_MENU { get; set; }
     }
 }

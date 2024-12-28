@@ -1,0 +1,70 @@
+﻿@using System.Text.Json;
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor;
+
+@{
+    string menuJson = HttpContextAccessor.HttpContext.Session.GetString("menu");
+    List<Mg_menus_segun_rol> menu = JsonSerializer.Deserialize<List<Mg_menus_segun_rol>>(menuJson);
+    var numMenu = 1;
+    int codMenu = 0;
+}
+
+<!-- Modal nuevo Usuario-->
+<div class="modal fade" id="divRol" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="--bs-modal-width: 600px;">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titleNuevoRol">Nuevo Rol</h5>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="input-group">
+                            <span id="nombreRolEdit" style="display:none;"></span>
+                            @* <span class="input-group-text"><i class="las la-chess la-2x">&nbsp</i>Codigo Rol</span> *@
+                            <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="Rol" id="codigoRol" placeholder="Digite el codigo del rol" required="" maxlength="5" hidden>
+                            &nbsp;&nbsp;
+                            <span class="input-group-text"><i class="las la-chess la-2x">&nbsp</i>Nombre del Rol</span>
+                            <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" name="Nombre Rol" id="nombreRol" placeholder="Digite el nombre del rol" required="" maxlength="100">
+                        </div>
+                    </div>
+                    <span style="color:darkred; display: none" id="validacionRol"></span>
+                </div>
+
+                <div class="contenedor" style="height: 360px;  overflow-x: hidden;">
+                    @{
+                        foreach (var item in menu)
+                        {
+                            if (item.Menu.CODIGO_MENU != codMenu)
+                            {
+                                codMenu = item.Menu.CODIGO_MENU;
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
+                                        <label for="@item.Menu.CODIGO_MENU" class="input-group-text d-flex align-items-center justify-content-between" style="background-color: #2a3042 !important; color: white; cursor: pointer;">
+                                            <span>
+                                                <i class="las @item.Menu.ICONO la-1x">&nbsp;</i>@item.Menu.NOMBRE
+                                            </span>
+                                            <div class="form-check form-switch" style="margin-left: 4px;">
+                                                <input type="checkbox" name="@item.Menu.NOMBRE" id="@item.Menu.CODIGO_MENU"
+                                                       class="form-check-input checkSubMenu"
+                                                       data="@item.Menu.CODIGO_MENU"
+                                                       dataName="@item.Menu.NOMBRE"
+                                                       style="pointer-events: none; width: 35px; height: 17px">
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onClick="GuardarRol()" id="btnGuardarRol">Guardar Rol</button>
+                <button type="button" class="btn btn-success" style="display: none;" onClick="GuardarRolEditado()" id="btnEditarRol">Editar Rol</button>
+            </div>
+        </div>
+    </div>
+</div>

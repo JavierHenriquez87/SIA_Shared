@@ -1,8 +1,8 @@
 // Obtiene la información de los usuarios
 GetUsuarios();
-CargarAgencias();
+//CargarAgencias();
 CargarRoles()
-CargarCargos()
+//CargarCargos()
 
 function GetUsuarios() {
     $(document).ready(function () {
