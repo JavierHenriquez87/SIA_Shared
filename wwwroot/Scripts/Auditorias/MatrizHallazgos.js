@@ -159,7 +159,8 @@ async function GetAuditoriasIntegralesCompleta() {
                 {
                     "data": "codigO_HALLAZGO",
                     "render": function (data, type, row, meta) {
-                        return "<div style='width: 100%; height: 100%; overflow: hidden; white-space: normal;'>" + row.codigO_HALLAZGO + "</div>";
+                        let buttons = "<a style='cursor: pointer;' href='#' title='Ir Actividad' onClick='IrActividadAsignada(\"" + row.codigO_ACTIVIDAD + "\", \"" + row.numerO_PDT + "\", \"" + row.codigO_USUARIO_ASIGNADO + "\", \"" + row.numerO_AUDITORIA_INTEGRAL + "\", \"" + row.aniO_AI + "\")'>" + row.codigO_HALLAZGO + "</a>";
+                        return buttons;
                     },
                     "name": "CODIGO_HALLAZGO",
                     "autoWidth": true,
@@ -382,3 +383,34 @@ tabCompleta.addEventListener('click', function (e) {
         tablaLLena = true;
     }
 });
+
+//FUNCION PARA IR A LA PANTALLA DE HALLAZGOS DE UNA ACTIVIDAD
+//==========================================================================================
+function IrActividadAsignada(codigo_actividad, numero_pdt, codigo_usuario_asignado, numero_auditoria_integral, anio_ai) {
+    $.ajax({
+        method: 'POST',
+        url: '/Auditorias/ActualizarVariablesSession',
+        data: {
+            numero_auditoria_integral,
+            anio_ai
+        }, 
+        success: function (respuesta) {
+            codigo_actividad = encodeBase64(codigo_actividad);
+            numero_pdt = encodeBase64(numero_pdt);
+            codigo_usuario_asignado = encodeBase64(codigo_usuario_asignado);
+            window.location.href = 'Auditorias/AuditoriaResultados?ca=' + codigo_actividad + '&pdt=' + numero_pdt + '&us=' + codigo_usuario_asignado;
+        },
+        error: function () {
+            Swal.fire(
+                'Error!',
+                'Hubo un problema al procesar su solicitud.',
+                'error'
+            );
+        }
+    });
+}
+
+//FUNCION PARA CODIFICAR A BASE64 LOS DATOS DE LA URL
+function encodeBase64(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+}

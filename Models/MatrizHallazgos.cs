@@ -27,5 +27,11 @@ namespace SIA.Models
         public string EVIDENCIA { get; set; }
         public string UNIDAD_APOYO { get; set; }
         public string ESTATUS { get; set; }
+        public int CODIGO_ACTIVIDAD { get; set; }
+        public int NUMERO_PDT { get; set; }
+        public string CODIGO_USUARIO_ASIGNADO { get; set; }
+        public int NUMERO_AUDITORIA_INTEGRAL { get; set; }
+        public int ANIO_AI { get; set; }
+
     }
 }

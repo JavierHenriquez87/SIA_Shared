@@ -3395,6 +3395,7 @@ namespace SIA.Controllers
                                 {
                                     listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
                                     {
+                                        CODIGO_ACTIVIDAD = d.CODIGO_ACTIVIDAD,
                                         listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
                                         {
                                             CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
@@ -3444,6 +3445,7 @@ namespace SIA.Controllers
                                 {
                                     listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
                                     {
+                                        CODIGO_ACTIVIDAD = d.CODIGO_ACTIVIDAD,
                                         listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
                                         {
                                             CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
@@ -3498,6 +3500,7 @@ namespace SIA.Controllers
                                 {
                                     listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
                                     {
+                                        CODIGO_ACTIVIDAD = d.CODIGO_ACTIVIDAD,
                                         listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
                                         {
                                             CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
@@ -3546,6 +3549,7 @@ namespace SIA.Controllers
                                  {
                                      listado_detalles_plan_trabajo = p.listado_detalles_plan_trabajo.Select(d => new Au_detalle_plan_de_trabajo
                                      {
+                                         CODIGO_ACTIVIDAD = d.CODIGO_ACTIVIDAD,
                                          listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
                                          {
                                              CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
@@ -3678,12 +3682,14 @@ namespace SIA.Controllers
                                         NUMERO_AUDITORIA = d.NUMERO_AUDITORIA,
                                         NUMERO_AUDITORIA_INTEGRAL = d.NUMERO_AUDITORIA_INTEGRAL,
                                         ANIO_AI = d.ANIO_AI,
+                                        CODIGO_USUARIO_ASIGNADO = d.CODIGO_USUARIO_ASIGNADO,
                                         NOMBRE_USUARIO_ASIGNADO = d.mg_usuarios.NOMBRE_USUARIO,
                                         listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
                                         {
                                             CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
                                             CONDICION = h.CONDICION,
                                             NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                            NUMERO_PDT = h.NUMERO_PDT,
                                             listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
                                             {
                                                 CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
@@ -3744,12 +3750,14 @@ namespace SIA.Controllers
                                         NUMERO_AUDITORIA = d.NUMERO_AUDITORIA,
                                         NUMERO_AUDITORIA_INTEGRAL = d.NUMERO_AUDITORIA_INTEGRAL,
                                         ANIO_AI = d.ANIO_AI,
+                                        CODIGO_USUARIO_ASIGNADO = d.CODIGO_USUARIO_ASIGNADO,
                                         NOMBRE_USUARIO_ASIGNADO = d.mg_usuarios.NOMBRE_USUARIO,
                                         listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
                                         {
                                             CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
                                             CONDICION = h.CONDICION,
                                             NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                            NUMERO_PDT = h.NUMERO_PDT,
                                             listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
                                             {
                                                 CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
@@ -3815,12 +3823,14 @@ namespace SIA.Controllers
                                         NUMERO_AUDITORIA = d.NUMERO_AUDITORIA,
                                         NUMERO_AUDITORIA_INTEGRAL = d.NUMERO_AUDITORIA_INTEGRAL,
                                         ANIO_AI = d.ANIO_AI,
+                                        CODIGO_USUARIO_ASIGNADO = d.CODIGO_USUARIO_ASIGNADO,
                                         NOMBRE_USUARIO_ASIGNADO = d.mg_usuarios.NOMBRE_USUARIO,
                                         listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
                                         {
                                             CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
                                             CONDICION = h.CONDICION,
                                             NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                            NUMERO_PDT = h.NUMERO_PDT,
                                             listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
                                             {
                                                 CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
@@ -3880,12 +3890,14 @@ namespace SIA.Controllers
                                          NUMERO_AUDITORIA = d.NUMERO_AUDITORIA,
                                          NUMERO_AUDITORIA_INTEGRAL = d.NUMERO_AUDITORIA_INTEGRAL,
                                          ANIO_AI = d.ANIO_AI,
+                                         CODIGO_USUARIO_ASIGNADO = d.CODIGO_USUARIO_ASIGNADO,
                                          NOMBRE_USUARIO_ASIGNADO = d.mg_usuarios.NOMBRE_USUARIO,
                                          listado_hallazgos = d.listado_hallazgos.Select(h => new Mg_Hallazgos
                                          {
                                              CODIGO_HALLAZGO = h.CODIGO_HALLAZGO,
                                              CONDICION = h.CONDICION,
                                              NIVEL_RIESGO = h.NIVEL_RIESGO,
+                                             NUMERO_PDT = h.NUMERO_PDT,
                                              listado_detalles = h.Detalles.Select(d => new Mg_hallazgos_detalles
                                              {
                                                  CODIGO_HALLAZGO = d.CODIGO_HALLAZGO,
@@ -3937,7 +3949,12 @@ namespace SIA.Controllers
                                     RESPONSABLE = detallePlan.NOMBRE_USUARIO_ASIGNADO,
                                     EVIDENCIA = "Falta..",
                                     UNIDAD_APOYO = "Falta..",
-                                    ESTATUS = "Falta.."
+                                    ESTATUS = "Falta..",
+                                    CODIGO_ACTIVIDAD = detallePlan.CODIGO_ACTIVIDAD,
+                                    CODIGO_USUARIO_ASIGNADO = detallePlan.CODIGO_USUARIO_ASIGNADO,
+                                    NUMERO_PDT = hallazgo.NUMERO_PDT,
+                                    NUMERO_AUDITORIA_INTEGRAL = AuIntegral.NUMERO_AUDITORIA_INTEGRAL,
+                                    ANIO_AI = AuIntegral.ANIO_AI
                                 });
                             }
                         }
@@ -3947,6 +3964,20 @@ namespace SIA.Controllers
 
             var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
             return Ok(jsonData);
+        }
+        
+        /// <summary>
+        /// Guardar las sesiones de la auditoria
+        /// </summary>
+        /// <param name="DataAI"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> ActualizarVariablesSession(int numero_auditoria_integral, int anio_ai)
+        {
+            HttpContext.Session.SetInt32("num_auditoria_integral", numero_auditoria_integral);
+            HttpContext.Session.SetInt32("anio_auditoria_integral", anio_ai);
+
+            return new JsonResult("Ok");
         }
     }
 }

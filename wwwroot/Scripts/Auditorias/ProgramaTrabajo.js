@@ -235,9 +235,9 @@ async function GeActividadesAsignadas() {
 
                         /*buttons += "<a style='cursor: pointer; href='#' title='Editar Actividad' onClick='EditarActividadAsignada(\"" + row.codigO_ACTIVIDAD + "\", \"" + row.numerO_PDT + "\", \"" + row.codigO_USUARIO_ASIGNADO + "\")'> <i class='fas fa-edit' style='color: black;'></i></a>";*/
 
-                        buttons += " | <a style='cursor: pointer; href='#' title='Eliminar Actividad' onClick='EliminarActividadAsignada(\"" + row.codigO_ACTIVIDAD + "\", \"" + row.numerO_PDT + "\", \"" + row.codigO_USUARIO_ASIGNADO + "\")'> <i class='fas fa-trash' style='color: black;'></i></a>";
+                        buttons += " | <a style='cursor: pointer;' href='#' title='Eliminar Actividad' onClick='EliminarActividadAsignada(\"" + row.codigO_ACTIVIDAD + "\", \"" + row.numerO_PDT + "\", \"" + row.codigO_USUARIO_ASIGNADO + "\")'> <i class='fas fa-trash' style='color: black;'></i></a>";
 
-                        buttons += " | <a style='cursor: pointer; href='#' title='Ir Actividad' onClick='IrActividadAsignada(\"" + row.codigO_ACTIVIDAD + "\", \"" + row.numerO_PDT + "\", \"" + row.codigO_USUARIO_ASIGNADO + "\")'> <i class='fas fa-share' style='color: black;'></i></a>";
+                        buttons += " | <a style='cursor: pointer;' href='#' title='Ir Actividad' onClick='IrActividadAsignada(\"" + row.codigO_ACTIVIDAD + "\", \"" + row.numerO_PDT + "\", \"" + row.codigO_USUARIO_ASIGNADO + "\")'> <i class='fas fa-share' style='color: black;'></i></a>";
 
                         buttons += "</div>";
 
