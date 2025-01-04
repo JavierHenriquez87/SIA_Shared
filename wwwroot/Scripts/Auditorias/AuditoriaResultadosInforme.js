@@ -1,4 +1,11 @@
-﻿function ModificarTexto(id, tipo) {
+﻿
+let formularioData = {};
+
+document.addEventListener("DOMContentLoaded", function () {
+    formularioData = {};
+});
+
+function ModificarTexto(id, tipo) {
 
     Swal.fire({
         title: "Modificar el texto",
@@ -207,6 +214,48 @@ function ModificarTextoRI(titulo, texto) {
     }
 }
 
+let archivosSeleccionados = [];
+
+// Agregar archivos sin eliminar los existentes
+function agregarArchivos(input) {
+    const nuevosArchivos = Array.from(input.files);
+
+    nuevosArchivos.forEach((file) => {
+        // Verifica que no se agregue un archivo repetido
+        const existe = archivosSeleccionados.some(f => f.name === file.name);
+        if (!existe) {
+            archivosSeleccionados.push(file);
+        }
+    });
+
+    mostrarArchivos();
+    input.value = '';  // Limpia el input para permitir subir el mismo archivo de nuevo
+}
+
+// Mostrar archivos en la lista
+function mostrarArchivos() {
+    const lista = document.getElementById('lista-archivos');
+    lista.innerHTML = '';
+
+    archivosSeleccionados.forEach((file, index) => {
+        const item = document.createElement('div');
+        item.innerHTML = `
+                <p>
+                    ${index + 1}. ${file.name} 
+                    (${(file.size / 1024 / 1024).toFixed(2)} MB)
+                    <button onclick="eliminarArchivo(${index})" style="margin-left: 10px;">Eliminar</button>
+                </p>
+            `;
+        lista.appendChild(item);
+    });
+}
+
+// Eliminar archivo individualmente
+function eliminarArchivo(index) {
+    archivosSeleccionados.splice(index, 1);
+    mostrarArchivos();
+}
+
 function EliminarSeccion(codigoSecInf) {
     Swal.fire({
         title: '¿Estás seguro?',
@@ -238,6 +287,223 @@ function EliminarSeccion(codigoSecInf) {
                     Swal.fire('Error', 'Ocurrió un error al eliminar la sección: ' + err.statusText, 'error');
                 }
             });
+        }
+    });
+}
+
+
+// Extensiones de archivos permitidos
+const tiposPermitidos = [
+    'application/pdf',  // PDF
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // Word (DOCX)
+    'application/msword', // Word (DOC)
+    'application/vnd.ms-excel', // Excel (XLS)
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Excel (XLSX)
+    'image/jpeg', // Imagen JPEG
+    'image/png', // Imagen PNG
+    'image/gif'  // Imagen GIF
+];
+
+document.querySelectorAll('.upload-area').forEach(function (area) {
+    area.addEventListener('click', function () {
+        var idUnico = this.querySelector('input[type="file"]').id;
+        document.getElementById(idUnico).click();
+    });
+});
+
+function agregarArchivo(id) {
+    var input = document.getElementById(id);
+    var archivo = input.files[0];
+    var codigoHallazgo = id.split('_')[1];  // Extraer el ID del hallazgo
+
+    if (archivo) {
+        // Crear una lista para cada hallazgo si no existe
+        if (!formularioData[codigoHallazgo]) {
+            formularioData[codigoHallazgo] = {
+                adjuntos: []
+            };
+        }
+
+        formularioData[codigoHallazgo].adjuntos.push({
+            nombre: archivo.name,
+            tipo: archivo.type,
+            tamaño: archivo.size,
+            archivo: archivo
+        });
+
+        actualizarListaDeArchivos(codigoHallazgo);  // Pasar solo el sufijo del ID
+        input.value = "";
+    }
+}
+
+function actualizarListaDeArchivos(codigoHallazgo) {
+    var lista = document.getElementById(`archivosAgregados_${codigoHallazgo}`);
+    lista.innerHTML = "";  // Limpiar lista antes de actualizar
+
+    var archivos = formularioData[codigoHallazgo]?.adjuntos || [];
+
+    archivos.forEach((archivo, index) => {
+        var li = document.createElement('li');
+        var icono = obtenerIcono(archivo.tipo);  // Obtener ícono según el tipo de archivo
+
+        li.innerHTML = `
+                ${icono} ${archivo.nombre} 
+                <i style="color:red; cursor: pointer;" title="Eliminar archivo" class="fa fa-trash" onclick="eliminarArchivo(${index}, '${codigoHallazgo}')"></i>
+            `;
+        lista.appendChild(li);
+    });
+}
+
+// Arrastrar y soltar múltiples archivos
+function dropHandler(event) {
+    event.preventDefault();
+    var archivos = Array.from(event.dataTransfer.files);  // Obtener todos los archivos arrastrados
+
+    archivos.forEach(archivo => {
+        if (tiposPermitidos.includes(archivo.type)) {
+            const existe = formularioData.adjuntos.some(f => f.nombre === archivo.name);
+            if (!existe) {
+                formularioData.adjuntos.push({
+                    nombre: archivo.name,
+                    tipo: archivo.type,
+                    tamaño: archivo.size,
+                    archivo: archivo
+                });
+            }
+        }
+    });
+
+    actualizarListaDeArchivos();
+}
+
+//// Actualizar visualmente la lista de archivos
+//function actualizarListaDeArchivos() {
+//    var lista = document.getElementById('archivosAgregados');
+//    lista.innerHTML = "";  // Limpiar lista antes de actualizar
+
+//    formularioData.adjuntos.forEach((archivo, index) => {
+//        var li = document.createElement('li');
+//        var icono = obtenerIcono(archivo.tipo);  // Obtener ícono según el tipo de archivo
+
+//        li.innerHTML = `
+//                ${icono} ${archivo.nombre} 
+//                <i style="color:red; cursor: pointer;" title="Eliminar archivo" class="fa fa-trash" onclick="eliminarArchivo(${index})"></i>
+//            `;
+//        lista.appendChild(li);
+//    });
+//}
+
+// Eliminar archivo de la lista
+function eliminarArchivo(index) {
+    formularioData.adjuntos.splice(index, 1);
+    actualizarListaDeArchivos();
+}
+
+// Función para determinar el ícono basado en el tipo de archivo
+function obtenerIcono(tipo) {
+    if (tipo.includes('image')) {
+        return '🖼️'; // Ícono para imágenes
+    } else if (tipo.includes('pdf')) {
+        return '📄'; // Ícono para PDF
+    } else if (tipo.includes('word') || tipo.includes('wordprocessingml.document')) {
+        return '📝'; // Ícono para documentos de Word
+    } else if (tipo.includes('excel') || tipo.includes('spreadsheet')) {
+        return '📊'; // Ícono para Excel
+    } else {
+        return '📁'; // Ícono genérico
+    }
+}
+
+function EliminarDocumento(codigoHallazgoDocumento) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminarlo!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/Auditorias/EliminarDocumentoInforme',
+                type: 'POST',
+                data: {
+                    codigo: codigoHallazgoDocumento
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Mostrar el mensaje de éxito
+                        Swal.fire(
+                            '¡Eliminado!',
+                            'Documento eliminado con éxito.',
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+
+                        $('#documento-' + codigoHallazgoDocumento).hide(); // Ocultar el documento
+                    } else {
+                        // Mostrar un mensaje de error
+                        Swal.fire(
+                            'Error',
+                            'Error al eliminar el documento: ' + response.message,
+                            'error'
+                        );
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire(
+                        'Error',
+                        'Error en la solicitud: ' + error,
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+}
+
+
+function AgregarComentarios(codigo) {
+    var comentario = document.getElementById(`comentarioAUI_${codigo}`).value;
+    var formData = new FormData();
+
+    // Verificar si hay archivos para el hallazgo específico
+    if (formularioData[codigo]?.adjuntos) {
+        formularioData[codigo].adjuntos.forEach(function (archivo) {
+            formData.append("archivos", archivo.archivo);  // "archivos" es el nombre esperado por el backend
+        });
+    }
+
+    // Agregar el comentario y código del hallazgo
+    formData.append("comentario", comentario);
+    formData.append("codigo", codigo);
+
+    // Enviar los datos con AJAX
+    $.ajax({
+        method: 'POST',
+        url: '/Auditorias/GuardarComentario',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (respuesta) {
+            if (respuesta.success) {
+                Swal.fire('Éxito', respuesta.message, 'success').then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+                
+            } else {
+                Swal.fire('Error', respuesta.message, 'error');
+            }
+        },
+        error: function () {
+            Swal.fire('Error', 'Hubo un problema al guardar los datos', 'error');
         }
     });
 }

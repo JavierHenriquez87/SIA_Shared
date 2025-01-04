@@ -425,20 +425,60 @@
 
                             <span style="font-weight: bold;">Acciones Requeridas</span>
                             • It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
-                            <div @*style="display:none"*@>
-                                <span style="font-weight: bold;">Contestación</span>
-                                <textarea class="text-area" placeholder="Escribir..."> </textarea>
-
-                                <span style="font-weight: bold;">Documentos</span>
-                                <div class="upload-area">
-                                    <i class='bx bx-info-circle font-size-24 upload-warning'></i>
-                                    <p><span style="color: #186040;">Click para subir documento</span> o arrastre y suelte el archivo aquí</p><p><small>PDF (máx. 4MB)</small></p>
-                                </div>
-                                <button type="button" onclick="AgregarComentarios()" class="btn btn-secondary btn-purple">Agregar Comentarios</button>
-                            </div>
-                            <span style="font-weight: bold;">Comentarios del Auditado</span>
-                            It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
                         </div>
+
+                        @if (HALLAZGO.comentarioAuditado == null)
+                        {
+                            var idUnico = "documentos_" + @HALLAZGO.CODIGO_HALLAZGO;
+                            <div style="margin: 25px">
+                                <span style="font-weight: bold;">Comentario</span>
+                                <textarea class="text-area" id="comentarioAUI_@HALLAZGO.CODIGO_HALLAZGO" placeholder="Escribir..."></textarea>
+                                <label for="@idUnico">Documentos</label>
+                                <div class="upload-area" id="uploadArea_@HALLAZGO.CODIGO_HALLAZGO"
+                                     ondrop="dropHandler(event, '@idUnico');"
+                                     ondragover="dragOverHandler(event);" style="padding: 10px !important;">
+                                    <input type="file" accept=".pdf" multiple id="@idUnico" style="display:none;" onchange="agregarArchivo('@idUnico')">
+                                    <i class='bx bx-info-circle font-size-24' style="color: #186040; border: 2px solid #ddd; padding: 5px; border-radius: 20%; margin-bottom: 10px"></i>
+                                    <p>
+                                        <span style="color: #186040;">Click para subir documentos</span>
+                                        o arrastre y suelte los archivos aquí
+                                    </p>
+                                </div>
+
+                                <div id="listaArchivos_@HALLAZGO.CODIGO_HALLAZGO" style="margin-top: 15px;">
+                                    <h5>Archivos agregados:</h5>
+                                    <ul id="archivosAgregados_@HALLAZGO.CODIGO_HALLAZGO" class="file-list"></ul>
+                                </div>
+
+                                <button type="button" onclick="AgregarComentarios(@HALLAZGO.CODIGO_HALLAZGO)" class="btn btn-secondary btn-purple">Agregar Comentario</button>
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div style="margin:0 24px; width:95%; white-space: pre-line;">
+                                <span style="font-weight: bold;">Comentarios del Auditado</span>
+                                @HALLAZGO.comentarioAuditado.COMENTARIO
+                            </div>
+
+                            @foreach (var documento in @HALLAZGO.comentarioAuditado.Mg_docs_auditado)
+                            {
+                                var extensionDocumento = System.IO.Path.GetExtension(documento.NOMBRE_DOCUMENTO);
+                                var ico = extensionDocumento?.ToLower() == ".pdf" ? "pdf-ico.png" : (extensionDocumento?.ToLower() == ".jpeg" || extensionDocumento?.ToLower() == ".jpg" || extensionDocumento?.ToLower() == ".png") ? "pic-ico.png" : (extensionDocumento?.ToLower() == ".doc" || extensionDocumento?.ToLower() == ".docx") ? "doc-ico.png" : "excel-ico.png";
+                                <div class="pdf-item" style="margin:0 24px; width:95%; id="documento-@documento.CODIGO_DOC_AUDITADO">
+                                    <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank"><img src="/assets/images/@ico" alt="@documento.NOMBRE_DOCUMENTO"></a>
+                                    <div style="width: 80%;">
+                                        <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank">@documento.NOMBRE_DOCUMENTO</a>
+                                        <p style="margin: 5px 0;">Creado Por: @documento.CREADO_POR</p>
+                                        <p style="margin: 5px 0;">Tamaño del PDF: @documento.PESO</p>
+                                    </div>
+                                    <button onclick="EliminarDocumento('@documento.CODIGO_DOC_AUDITADO')" class="btn btn-danger" style="margin-left: 10px;">
+                                        <i class="bi bi-trash"></i> X
+                                    </button>
+                                </div>
+                            }
+                        }
+                    
                         <br>
                         <br>
                         <hr>

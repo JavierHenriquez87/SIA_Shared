@@ -30,6 +30,7 @@ namespace SIA.Context
             modelBuilder.Entity<Mg_roles>().HasKey(e => new { e.CODIGO_APLICACION, e.CODIGO_ROL });
             modelBuilder.Entity<Mg_hallazgos_detalles>().HasKey(e => new { e.CODIGO_HALLAZGO, e.TIPO });
             modelBuilder.Entity<Mg_cuestionario_secciones>().HasKey(e => new { e.CODIGO_CUESTIONARIO, e.CODIGO_SECCION });
+            modelBuilder.Entity<Mg_coment_auditado>().HasKey(e => new { e.CODIGO_COMENT_AUDITADO });
 
             modelBuilder.Entity<Au_auditorias>()
             .HasOne(h => h.AuditoriaIntegral)
@@ -90,6 +91,17 @@ namespace SIA.Context
             .HasOne(m => m.Menu)
             .WithMany()
             .HasForeignKey(m => new { m.CODIGO_APLICACION, m.CODIGO_MENU });
+
+            modelBuilder.Entity<Mg_coment_auditado>()
+            .HasMany(m => m.Mg_docs_auditado)
+            .WithOne()
+            .HasForeignKey(o => new { o.CODIGO_COMENT_AUDITADO });
+
+            modelBuilder.Entity<Mg_Hallazgos>()
+            .HasOne(h => h.comentarioAuditado)
+            .WithMany()
+            .HasForeignKey(h => new { h.CODIGO_HALLAZGO })
+            .HasPrincipalKey(d => new { d.CODIGO_HALLAZGO });
         }
 
         public virtual DbSet<Mg_usuarios_segun_app> MG_USUARIOS_SEGUN_APP { get; set; }
@@ -132,5 +144,7 @@ namespace SIA.Context
         public virtual DbSet<Au_txt_infor_prelim> AU_TXT_INFOR_PRELIM { get; set; }
         public virtual DbSet<Mg_secc_inf_preli> MG_SECC_INF_PRELI { get; set; }
         public virtual DbSet<Porcentaje_SubSecciones> Porcentaje_SubSecciones { get; set; }
+        public virtual DbSet<Mg_docs_auditado> MG_DOCS_AUDITADO { get; set; }
+        public virtual DbSet<Mg_coment_auditado> MG_COMENT_AUDITADO { get; set; }
     }
 }

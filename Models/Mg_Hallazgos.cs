@@ -34,6 +34,7 @@ namespace SIA.Models
         public ICollection<Mg_orientacion_calificacion> OrientacionCalificacion { get; set; }
 
         public Au_detalle_plan_de_trabajo detalle_plan_trabajo { get; set; }
+        public Mg_coment_auditado comentarioAuditado { get; set; }
 
         [NotMapped]
         public ICollection<Mg_hallazgos_detalles> listado_detalles { get; set; }

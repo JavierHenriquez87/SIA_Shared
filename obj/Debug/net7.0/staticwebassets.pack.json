@@ -1,6 +1,14 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU1_Condiciones_Especiales_(7).pdf",
+      "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU1_Condiciones_Especiales_(7).pdf"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU2_Condiciones_Especiales_(7).pdf",
+      "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU2_Condiciones_Especiales_(7).pdf"
+    },
+    {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\Auditorias\\Documentos\\10276_98719_Estadisticas de Usuarios - PanelHDHMovilCEL (1) (1).xlsx",
       "PackagePath": "staticwebassets\\Archivos\\Auditorias\\Documentos\\10276_98719_Estadisticas de Usuarios - PanelHDHMovilCEL (1) (1).xlsx"
     },
@@ -19,6 +27,10 @@
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\Auditorias\\Documentos\\21583_Logo HDH.docx",
       "PackagePath": "staticwebassets\\Archivos\\Auditorias\\Documentos\\21583_Logo HDH.docx"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\Auditorias\\Documentos\\24731_Condiciones_Especiales.pdf",
+      "PackagePath": "staticwebassets\\Archivos\\Auditorias\\Documentos\\24731_Condiciones_Especiales.pdf"
     },
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\Auditorias\\Documentos\\30472_Usuarios.png",
@@ -65,12 +77,20 @@
       "PackagePath": "staticwebassets\\Archivos\\Auditorias\\Documentos\\90754_CORRECCIONES A FORMULARIOS.docx"
     },
     {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\Auditorias\\Documentos\\91650_Estadisticas de Usuarios - PanelHDHMovilCEL.pdf",
+      "PackagePath": "staticwebassets\\Archivos\\Auditorias\\Documentos\\91650_Estadisticas de Usuarios - PanelHDHMovilCEL.pdf"
+    },
+    {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\Auditorias\\Documentos\\92687_4447248.png",
       "PackagePath": "staticwebassets\\Archivos\\Auditorias\\Documentos\\92687_4447248.png"
     },
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\Auditorias\\Documentos\\92730_Estadisticas de Usuarios - PanelHDHMovilCEL.pdf",
       "PackagePath": "staticwebassets\\Archivos\\Auditorias\\Documentos\\92730_Estadisticas de Usuarios - PanelHDHMovilCEL.pdf"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\Auditorias\\Documentos\\98105_Condiciones_Especiales (6).pdf",
+      "PackagePath": "staticwebassets\\Archivos\\Auditorias\\Documentos\\98105_Condiciones_Especiales (6).pdf"
     },
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\Auditorias\\Documentos\\98719_Estadisticas de Usuarios - PanelHDHMovilCEL (1).xlsx",

@@ -2985,6 +2985,8 @@ namespace SIA.Controllers
             var hallazgosAnteriores = await _context.MG_HALLAZGOS
                 .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
                 .Where(d => d.ANIO_AI == anio)
+                .Include(h => h.comentarioAuditado)
+                .ThenInclude(ca => ca.Mg_docs_auditado)
                 .ToListAsync();
 
             var hallazgosAllData = await _context.MG_HALLAZGOS
@@ -3312,8 +3314,151 @@ namespace SIA.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GuardarComentario(List<IFormFile> archivos, string comentario, int codigo)
+        {
+            // Verificar si no se han enviado archivos o si no se ha agregado comentario
+            if (archivos == null || archivos.Count == 0)
+            {
+                return Json(new { success = false, message = "No se han agregado documentos." });
+            }
+            else if (comentario == null || comentario == "")
+            {
+                return Json(new { success = false, message = "No se ha agregado comentario." });
+            }
 
+            try
+            {
+                int maxNumeroRegistro = await _context.MG_COMENT_AUDITADO
+                .MaxAsync(a => (int?)a.CODIGO_COMENT_AUDITADO) ?? 0;
 
+                string estado = "";
+
+                var comentarioAuditado = await _context.MG_COMENT_AUDITADO
+                .Where(u => u.CODIGO_HALLAZGO == codigo)
+                .FirstOrDefaultAsync();
+                 
+                if (comentarioAuditado == null)
+                {
+                    var nuevoRegistro = new Mg_coment_auditado
+                    {
+                        CODIGO_COMENT_AUDITADO = maxNumeroRegistro + 1,
+                        CODIGO_HALLAZGO = codigo,
+                        COMENTARIO = comentario,
+                        FECHA_CREACION = DateTime.Now,
+                        CREADO_POR = HttpContext.Session.GetString("user")
+                    };
+
+                    _context.MG_COMENT_AUDITADO.Add(nuevoRegistro);
+                    estado = "Comentario y archivos guardados correctamente";
+                }
+                else
+                {
+                    comentarioAuditado.COMENTARIO = comentario;
+                    comentarioAuditado.FECHA_MODIFICACION = DateTime.Now;
+                    comentarioAuditado.MODIFICADO_POR = HttpContext.Session.GetString("user");
+                    estado = "Comentario y archivos editados correctamente";
+                }
+                // Guardar los cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                var directorio = Path.Combine("wwwroot", "Archivos", "AuditoriasInforme", "Documentos");
+
+                // Verificar si el directorio existe, si no, crearlo
+                if (!Directory.Exists(directorio))
+                {
+                    Directory.CreateDirectory(directorio);
+                }
+
+                // Procesar cada archivo recibido
+                foreach (var archivo in archivos)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        int maxNumeroDocumentos = (await _context.MG_DOCS_AUDITADO
+                        .MaxAsync(a => (int?)a.CODIGO_DOC_AUDITADO) ?? 0) + 1;
+                        
+                        string peso = "";
+                        //Nombre del archivo que con el que se guarda
+                        var FileName = "AU" + maxNumeroDocumentos + "_" + archivo.FileName.Replace(" ", "_");
+
+                        var filePath = Path.Combine(directorio, FileName);
+
+                        if (archivo.Length >= 1024 * 1024)
+                        {
+                            peso = Math.Round((double)archivo.Length / (1024 * 1024), 2) + "MB";
+    }
+                        else
+                        {
+                            peso = Math.Round((double)archivo.Length / 1024, 2) + "KB";
+                        }
+
+                        var nuevoRegistro = new Mg_docs_auditado
+                        {
+                            CODIGO_DOC_AUDITADO = maxNumeroDocumentos,
+                            CODIGO_COMENT_AUDITADO = maxNumeroRegistro + 1,
+                            NOMBRE_DOCUMENTO = FileName,
+                            PESO = peso,
+                            FECHA_CREACION = DateTime.Now,
+                            CREADO_POR = HttpContext.Session.GetString("user")
+                        };
+
+                        _context.MG_DOCS_AUDITADO.Add(nuevoRegistro);
+
+                        // Guardar los cambios en la base de datos
+                        await _context.SaveChangesAsync();
+
+                        // Guardamos el Archivo
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await archivo.CopyToAsync(stream);
+                        }
+                    }
+                }
+
+                return Json(new { success = true, message = estado });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Eliminar un documento de un Hallazgo de resultado de informe
+        /// </summary>
+        /// <param name="codigo"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<JsonResult> EliminarDocumentoInforme(int codigo)
+        {
+            try
+            {
+                // Lógica para eliminar el documento de la base de datos usando el código proporcionado
+                var documento = await _context.MG_DOCS_AUDITADO.FindAsync(codigo);
+                if (documento != null)
+                {
+                    // Obtener la ruta del archivo
+                    var directorio = Path.Combine("wwwroot", "Archivos", "AuditoriasInforme", "Documentos");
+                    var filePath = Path.Combine(directorio, documento.NOMBRE_DOCUMENTO);
+
+                    // Eliminar el archivo físico si existe
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+
+                    _context.MG_DOCS_AUDITADO.Remove(documento);
+                    await _context.SaveChangesAsync();
+                    return Json(new { success = true });
+                }
+                return Json(new { success = false, message = "Documento no encontrado." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
 
 
         //********************************************************************************
