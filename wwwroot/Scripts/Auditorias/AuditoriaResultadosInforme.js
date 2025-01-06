@@ -355,15 +355,22 @@ function actualizarListaDeArchivos(codigoHallazgo) {
 }
 
 // Arrastrar y soltar múltiples archivos
-function dropHandler(event) {
+function dropHandler(event, codigoHallazgo) {
     event.preventDefault();
     var archivos = Array.from(event.dataTransfer.files);  // Obtener todos los archivos arrastrados
 
+    // Crear una lista para el hallazgo si no existe
+    if (!formularioData[codigoHallazgo]) {
+        formularioData[codigoHallazgo] = {
+            adjuntos: []
+        };
+    }
+
     archivos.forEach(archivo => {
         if (tiposPermitidos.includes(archivo.type)) {
-            const existe = formularioData.adjuntos.some(f => f.nombre === archivo.name);
+            const existe = formularioData[codigoHallazgo].adjuntos.some(f => f.nombre === archivo.name);
             if (!existe) {
-                formularioData.adjuntos.push({
+                formularioData[codigoHallazgo].adjuntos.push({
                     nombre: archivo.name,
                     tipo: archivo.type,
                     tamaño: archivo.size,
@@ -373,7 +380,7 @@ function dropHandler(event) {
         }
     });
 
-    actualizarListaDeArchivos();
+    actualizarListaDeArchivos(codigoHallazgo);  // Actualizar lista específica
 }
 
 //// Actualizar visualmente la lista de archivos

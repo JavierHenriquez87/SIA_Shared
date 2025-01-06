@@ -435,8 +435,8 @@
                                 <textarea class="text-area" id="comentarioAUI_@HALLAZGO.CODIGO_HALLAZGO" placeholder="Escribir..."></textarea>
                                 <label for="@idUnico">Documentos</label>
                                 <div class="upload-area" id="uploadArea_@HALLAZGO.CODIGO_HALLAZGO"
-                                     ondrop="dropHandler(event, '@idUnico');"
-                                     ondragover="dragOverHandler(event);" style="padding: 10px !important;">
+                                     ondrop="dropHandler(event, @HALLAZGO.CODIGO_HALLAZGO);"
+                                     ondragover="event.preventDefault();" style="padding: 10px !important;">
                                     <input type="file" accept=".pdf" multiple id="@idUnico" style="display:none;" onchange="agregarArchivo('@idUnico')">
                                     <i class='bx bx-info-circle font-size-24' style="color: #186040; border: 2px solid #ddd; padding: 5px; border-radius: 20%; margin-bottom: 10px"></i>
                                     <p>

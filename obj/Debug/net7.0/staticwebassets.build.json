@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "LBbhWzkF700Y0L2APfn0qTcZQStRPaRrjBUJYqqcoDA=",
+  "Hash": "BY8iK2zIUCimVBPrNUJOIPgk5JhLmb1nZQi106l+860=",
   "Source": "SIA",
   "BasePath": "_content/SIA",
   "Mode": "Default",
@@ -454,12 +454,12 @@
       "OriginalItemSpec": "wwwroot\\Archivos\\Auditorias\\Documentos\\99314_20230807_123500.jpg"
     },
     {
-      "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU1_Condiciones_Especiales_(7).pdf",
+      "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU2_Expediente-302940_(2).pdf",
       "SourceId": "SIA",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\",
       "BasePath": "_content/SIA",
-      "RelativePath": "Archivos/AuditoriasInforme/Documentos/AU1_Condiciones_Especiales_(7).pdf",
+      "RelativePath": "Archivos/AuditoriasInforme/Documentos/AU2_Expediente-302940_(2).pdf",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -470,15 +470,15 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU1_Condiciones_Especiales_(7).pdf"
+      "OriginalItemSpec": "wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU2_Expediente-302940_(2).pdf"
     },
     {
-      "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU2_Condiciones_Especiales_(7).pdf",
+      "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU3_Estadisticas_de_Usuarios_-_PanelHDHMovilCEL.pdf",
       "SourceId": "SIA",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\",
       "BasePath": "_content/SIA",
-      "RelativePath": "Archivos/AuditoriasInforme/Documentos/AU2_Condiciones_Especiales_(7).pdf",
+      "RelativePath": "Archivos/AuditoriasInforme/Documentos/AU3_Estadisticas_de_Usuarios_-_PanelHDHMovilCEL.pdf",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -489,7 +489,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU2_Condiciones_Especiales_(7).pdf"
+      "OriginalItemSpec": "wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU3_Estadisticas_de_Usuarios_-_PanelHDHMovilCEL.pdf"
     },
     {
       "Identity": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\wwwroot\\Archivos\\Usuarios\\Firmas_Usuarios\\firmaSergio.png",
