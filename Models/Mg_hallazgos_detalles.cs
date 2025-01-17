@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Web;
 
 namespace SIA.Models
@@ -13,6 +14,7 @@ namespace SIA.Models
         public string? DESCRIPCION { get; set; }
         public string? TIPO { get; set; }
 
-        public Mg_Hallazgos Hallazgo { get; set; }
+        [JsonIgnore]
+        public Mg_Hallazgos? Hallazgo { get; set; }
     }
 }

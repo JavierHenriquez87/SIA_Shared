@@ -1,5 +1,51 @@
 ﻿
 let formularioData = {};
+MostrarEdicionComentario();
+
+function MostrarEdicionComentario() {
+    let hallazgos = window.hallazgosData;
+    hallazgos.forEach(hallazgo => {
+        var divIdAgregar = "agregar_documentos_" + hallazgo.codigO_HALLAZGO;
+        var divIdEditar = "editar_documentos_" + hallazgo.codigO_HALLAZGO;
+        var btnIdEditar = "btnEditarCom_documentos_" + hallazgo.codigO_HALLAZGO;
+        // Buscar el div en el DOM y ocultarlo
+        var divElementAgregar = document.getElementById(divIdAgregar);
+        var divElementEditar = document.getElementById(divIdEditar);
+        var btnElementEditar = document.getElementById(btnIdEditar);
+
+        
+        if (divElementAgregar && divElementEditar && btnElementEditar) {
+            // Mostrar si comentarioAuditado no es null
+            if (hallazgo.comentarioAuditado == null) {
+                divElementAgregar.style.display = 'block'; // Mostrar el div
+                divElementEditar.style.display = 'none'; // Ocultar el div
+                btnElementEditar.style.display = 'none'; // Ocultar el div
+            } else {
+                divElementAgregar.style.display = 'none'; // Ocultar el div
+                divElementEditar.style.display = 'block'; // Mostrar el div
+                btnElementEditar.style.display = 'block'; // Ocultar el div
+                var txtComentario = "comentarioAUI_" + hallazgo.codigO_HALLAZGO;
+                var txtElementComentario = document.getElementById(txtComentario);
+                txtElementComentario.textContent = hallazgo.comentarioAuditado.comentario
+
+            }
+        }
+    });
+}
+
+function ModificarComentarioRI(codigo) {
+    var divIdAgregar = 'agregar_' + codigo;
+    var btnAgregarCom = 'btnAgregarCom_' + codigo;
+    var btnEditarCom = 'btnEditarCom_' + codigo;
+    var divElementAgregar = document.getElementById(divIdAgregar);
+    var btnElementAgregar = document.getElementById(btnAgregarCom);
+    var btnElementEditar = document.getElementById(btnEditarCom);
+    if (divElementAgregar && btnElementAgregar && btnElementEditar) {
+        divElementAgregar.style.display = 'block';
+        btnElementAgregar.style.display = 'none';
+        btnElementEditar.style.display = 'block'; 
+    }
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     formularioData = {};
@@ -243,7 +289,7 @@ function mostrarArchivos() {
                 <p>
                     ${index + 1}. ${file.name} 
                     (${(file.size / 1024 / 1024).toFixed(2)} MB)
-                    <button onclick="eliminarArchivo(${index})" style="margin-left: 10px;">Eliminar</button>
+                    <button onclick="eliminarArchivoInd(${index})" style="margin-left: 10px;">Eliminar</button>
                 </p>
             `;
         lista.appendChild(item);
@@ -251,7 +297,7 @@ function mostrarArchivos() {
 }
 
 // Eliminar archivo individualmente
-function eliminarArchivo(index) {
+function eliminarArchivoInd(index, codigo) {
     archivosSeleccionados.splice(index, 1);
     mostrarArchivos();
 }
@@ -313,10 +359,9 @@ document.querySelectorAll('.upload-area').forEach(function (area) {
 
 function agregarArchivo(id) {
     var input = document.getElementById(id);
-    var archivo = input.files[0];
+    var archivos = input.files;
     var codigoHallazgo = id.split('_')[1];  // Extraer el ID del hallazgo
 
-    if (archivo) {
         // Crear una lista para cada hallazgo si no existe
         if (!formularioData[codigoHallazgo]) {
             formularioData[codigoHallazgo] = {
@@ -324,16 +369,22 @@ function agregarArchivo(id) {
             };
         }
 
-        formularioData[codigoHallazgo].adjuntos.push({
-            nombre: archivo.name,
-            tipo: archivo.type,
-            tamaño: archivo.size,
-            archivo: archivo
+        Array.from(archivos).forEach(archivo => {
+            if (tiposPermitidos.includes(archivo.type)) {
+                const existe = formularioData[codigoHallazgo].adjuntos.some(f => f.nombre === archivo.name);
+                if (!existe) {
+                    formularioData[codigoHallazgo].adjuntos.push({
+                        nombre: archivo.name,
+                        tipo: archivo.type,
+                        tamaño: archivo.size,
+                        archivo: archivo
+                    });
+                }
+            }
         });
 
         actualizarListaDeArchivos(codigoHallazgo);  // Pasar solo el sufijo del ID
         input.value = "";
-    }
 }
 
 function actualizarListaDeArchivos(codigoHallazgo) {
@@ -401,9 +452,15 @@ function dropHandler(event, codigoHallazgo) {
 //}
 
 // Eliminar archivo de la lista
-function eliminarArchivo(index) {
-    formularioData.adjuntos.splice(index, 1);
-    actualizarListaDeArchivos();
+function eliminarArchivo(index, codigoHallazgo) {
+    // Verificar si el código de hallazgo existe en formularioData
+    if (formularioData[codigoHallazgo] && formularioData[codigoHallazgo].adjuntos) {
+        // Eliminar el archivo del array de adjuntos
+        formularioData[codigoHallazgo].adjuntos.splice(index, 1);
+
+        // Actualizar la lista de archivos en el DOM
+        actualizarListaDeArchivos(codigoHallazgo);
+    }
 }
 
 // Función para determinar el ícono basado en el tipo de archivo
@@ -474,7 +531,6 @@ function EliminarDocumento(codigoHallazgoDocumento) {
     });
 }
 
-
 function AgregarComentarios(codigo) {
     var comentario = document.getElementById(`comentarioAUI_${codigo}`).value;
     var formData = new FormData();
@@ -505,6 +561,47 @@ function AgregarComentarios(codigo) {
                     }
                 });
                 
+            } else {
+                Swal.fire('Error', respuesta.message, 'error');
+            }
+        },
+        error: function () {
+            Swal.fire('Error', 'Hubo un problema al guardar los datos', 'error');
+        }
+    });
+}
+
+
+function EditarComentario(codigo) {
+    var comentario = document.getElementById(`comentarioAUI_${codigo}`).value;
+    var formData = new FormData();
+
+    // Verificar si hay archivos para el hallazgo específico
+    if (formularioData[codigo]?.adjuntos) {
+        formularioData[codigo].adjuntos.forEach(function (archivo) {
+            formData.append("archivos", archivo.archivo);  // "archivos" es el nombre esperado por el backend
+        });
+    }
+
+    // Agregar el comentario y código del hallazgo
+    formData.append("comentario", comentario);
+    formData.append("codigo", codigo);
+
+    // Enviar los datos con AJAX
+    $.ajax({
+        method: 'POST',
+        url: '/Auditorias/EditarComentario',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (respuesta) {
+            if (respuesta.success) {
+                Swal.fire('Éxito', respuesta.message, 'success').then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+
             } else {
                 Swal.fire('Error', respuesta.message, 'error');
             }

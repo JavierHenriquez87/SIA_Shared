@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Web;
 
 namespace SIA.Models
@@ -15,6 +16,7 @@ namespace SIA.Models
         public int NIVEL_RIESGO { get; set; }
         public string ESTADO { get; set; }
 
-        public Mg_Hallazgos Hallazgo { get; set; }
+        [JsonIgnore]
+        public Mg_Hallazgos? Hallazgo { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿@{
+﻿@using System.Linq
+
+@{
     ViewBag.Title = "Resultados en Programa de Trabajo";
     ViewBag.pTitle = "RESULTADOS EN PROGRAMA DE TRABAJO";
     ViewBag.pageTitle = "Auditorías";
@@ -344,6 +346,7 @@
                 {
                     foreach (var HALLAZGO in ViewBag.HALLAZGOS)
                     {
+                        var idUnico = "documentos_" + HALLAZGO.CODIGO_HALLAZGO;
                         var calif = "";
                         var colorcalif = "";
 
@@ -427,62 +430,83 @@
                             • It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has.
                         </div>
 
-                        @if (HALLAZGO.comentarioAuditado == null)
-                        {
-                            var idUnico = "documentos_" + @HALLAZGO.CODIGO_HALLAZGO;
-                            <div style="margin: 25px">
-                                <span style="font-weight: bold;">Comentario</span>
-                                <textarea class="text-area" id="comentarioAUI_@HALLAZGO.CODIGO_HALLAZGO" placeholder="Escribir..."></textarea>
-                                <label for="@idUnico">Documentos</label>
-                                <div class="upload-area" id="uploadArea_@HALLAZGO.CODIGO_HALLAZGO"
-                                     ondrop="dropHandler(event, @HALLAZGO.CODIGO_HALLAZGO);"
-                                     ondragover="event.preventDefault();" style="padding: 10px !important;">
-                                    <input type="file" accept=".pdf" multiple id="@idUnico" style="display:none;" onchange="agregarArchivo('@idUnico')">
-                                    <i class='bx bx-info-circle font-size-24' style="color: #186040; border: 2px solid #ddd; padding: 5px; border-radius: 20%; margin-bottom: 10px"></i>
-                                    <p>
-                                        <span style="color: #186040;">Click para subir documentos</span>
-                                        o arrastre y suelte los archivos aquí
-                                    </p>
-                                </div>
-
-                                <div id="listaArchivos_@HALLAZGO.CODIGO_HALLAZGO" style="margin-top: 15px;">
-                                    <h5>Archivos agregados:</h5>
-                                    <ul id="archivosAgregados_@HALLAZGO.CODIGO_HALLAZGO" class="file-list"></ul>
-                                </div>
-
-                                <button type="button" onclick="AgregarComentarios(@HALLAZGO.CODIGO_HALLAZGO)" class="btn btn-secondary btn-purple">Agregar Comentario</button>
+                        // SECCIÓN DE COMENTARIOS
+                        <div style="margin: 25px" id="agregar_@idUnico">
+                            <span style="font-weight: bold;">Comentario</span>
+                            <textarea class="text-area" id="comentarioAUI_@HALLAZGO.CODIGO_HALLAZGO" placeholder="Escribir..."></textarea>
+                            <label for="@idUnico">Documentos</label>
+                            <div class="upload-area" id="uploadArea_@HALLAZGO.CODIGO_HALLAZGO"
+                                 ondrop="dropHandler(event, @HALLAZGO.CODIGO_HALLAZGO);"
+                                 ondragover="event.preventDefault();" style="padding: 10px !important;">
+                                <input type="file" accept=".pdf" multiple id="@idUnico" style="display:none;" onchange="agregarArchivo('@idUnico')">
+                                <i class='bx bx-info-circle font-size-24' style="color: #186040; border: 2px solid #ddd; padding: 5px; border-radius: 20%; margin-bottom: 10px"></i>
+                                <p>
+                                    <span style="color: #186040;">Click para subir documentos</span>
+                                    o arrastre y suelte los archivos aquí
+                                </p>
                             </div>
 
-                        }
-                        else
-                        {
-                            <div style="margin:0 24px; width:95%; white-space: pre-line;">
-                                <span style="font-weight: bold;">Comentarios del Auditado</span>
-                                @HALLAZGO.comentarioAuditado.COMENTARIO
+                            <div id="listaArchivos_@HALLAZGO.CODIGO_HALLAZGO" style="margin-top: 15px;">
+                                <h5>Archivos agregados:</h5>
+                                <ul id="archivosAgregados_@HALLAZGO.CODIGO_HALLAZGO" class="file-list"></ul>
                             </div>
 
-                            @foreach (var documento in @HALLAZGO.comentarioAuditado.Mg_docs_auditado)
+                            <button type="button" id="btnAgregarCom_@idUnico" onclick="AgregarComentarios(@HALLAZGO.CODIGO_HALLAZGO)" class="btn btn-secondary btn-purple">Agregar Comentario</button>
+                            <button type="button" id="btnEditarCom_@idUnico" onclick="AgregarComentarios(@HALLAZGO.CODIGO_HALLAZGO)" class="btn btn-secondary btn-purple" style="display: none">Editar Comentario</button>
+                        </div>
+
+
+                        <div id="editar_@idUnico">
+                            <div class="button-container" style="margin-bottom: 10px">
+                                <div style="margin: 0 24px; width: 60%; white-space: pre-line;">
+                                    <span style="font-weight: bold;">Comentarios del Auditado</span>
+                                    @if (!string.IsNullOrEmpty(HALLAZGO.comentarioAuditado?.COMENTARIO))
+                                    {
+                                        <p>@HALLAZGO.comentarioAuditado.COMENTARIO</p>
+                                    }
+                                    else
+                                    {
+                                        <p>No hay comentarios disponibles.</p>
+                                    }
+                                </div>
+                                <button type="button" onclick="ModificarComentarioRI('@idUnico')" class="btn btn-primary">Modificar Comentario</button>
+                            </div>
+
+                            @if (HALLAZGO.comentarioAuditado?.Mg_docs_auditado != null && HALLAZGO.comentarioAuditado?.Mg_docs_auditado?.Count > 0)
                             {
-                                var extensionDocumento = System.IO.Path.GetExtension(documento.NOMBRE_DOCUMENTO);
-                                var ico = extensionDocumento?.ToLower() == ".pdf" ? "pdf-ico.png" : (extensionDocumento?.ToLower() == ".jpeg" || extensionDocumento?.ToLower() == ".jpg" || extensionDocumento?.ToLower() == ".png") ? "pic-ico.png" : (extensionDocumento?.ToLower() == ".doc" || extensionDocumento?.ToLower() == ".docx") ? "doc-ico.png" : "excel-ico.png";
-                                <div class="pdf-item" style="margin:0 24px; width:95%; id="documento-@documento.CODIGO_DOC_AUDITADO">
-                                    <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank"><img src="/assets/images/@ico" alt="@documento.NOMBRE_DOCUMENTO"></a>
-                                    <div style="width: 80%;">
-                                        <a href="/Archivos/Auditorias/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank">@documento.NOMBRE_DOCUMENTO</a>
-                                        <p style="margin: 5px 0;">Creado Por: @documento.CREADO_POR</p>
-                                        <p style="margin: 5px 0;">Tamaño del PDF: @documento.PESO</p>
+                                @foreach (var documento in HALLAZGO.comentarioAuditado.Mg_docs_auditado)
+                                {
+                                    var extensionDocumento = System.IO.Path.GetExtension(documento.NOMBRE_DOCUMENTO)?.ToLower();
+                                    var ico = extensionDocumento == ".pdf" ? "pdf-ico.png" :
+                                    extensionDocumento == ".jpeg" || extensionDocumento == ".jpg" || extensionDocumento == ".png" ? "pic-ico.png" :
+                                    extensionDocumento == ".doc" || extensionDocumento == ".docx" ? "doc-ico.png" :
+                                    "excel-ico.png";
+
+                                    <div class="pdf-item" style="margin: 0 24px; width: 95%;" id="documento-@documento.CODIGO_DOC_AUDITADO">
+                                        <a href="/Archivos/AuditoriasInforme/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank">
+                                            <img src="/assets/images/@ico" alt="@documento.NOMBRE_DOCUMENTO">
+                                        </a>
+                                        <div style="width: 80%;">
+                                            <a href="/Archivos/AuditoriasInforme/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank">
+                                                @documento.NOMBRE_DOCUMENTO
+                                            </a>
+                                            <p style="margin: 5px 0;">Creado Por: @documento.CREADO_POR</p>
+                                            <p style="margin: 5px 0;">Tamaño del PDF: @documento.PESO</p>
+                                        </div>
+                                        <button onclick="EliminarDocumento('@documento.CODIGO_DOC_AUDITADO')" class="btn btn-danger" style="margin-left: 10px;">
+                                            <i class="bi bi-trash"></i> X
+                                        </button>
                                     </div>
-                                    <button onclick="EliminarDocumento('@documento.CODIGO_DOC_AUDITADO')" class="btn btn-danger" style="margin-left: 10px;">
-                                        <i class="bi bi-trash"></i> X
-                                    </button>
-                                </div>
+                                }
                             }
-                        }
-                    
-                        <br>
-                        <br>
-                        <hr>
+                        </div>
+                       
+                        
                     }
+                    
+                    <br>
+                    <br>
+                    <hr>
                 }
             }
 
@@ -574,7 +598,7 @@
                     Agregar conclusión...
                 </div>
 
-                <div class="button-container" style="margin-bottom: 10px">
+@*                 <div class="button-container" style="margin-bottom: 10px">
                     <h4 class="title-green" style="text-align: center; flex: 1;">
                         V. RECOMENDACIONES DE LA AUDITORÍA
                     </h4>
@@ -583,22 +607,22 @@
 
                 <div id="recomendacionText" style="margin:0 24px; width:95%; white-space: pre-line;">
                     Agregar Recomendación...
-                </div>
+                </div> *@
             }
 
-             <h4 class="title-green">
+             @* <h4 class="title-green">
                 VI. COMENTARIOS DEL AUDITADO
-            </h4>
-
+            </h4> *@
+@* 
             <div id="comentarioText" style="margin:0 24px; width:95%; white-space: pre-line;">
                 Agregar Comentario...
-            </div>
+            </div> *@
 
             @if (ViewBag.SECC_INF_PRELI != null && ViewBag.SECC_INF_PRELI.Count > 1)
             {
                 @foreach (var secc in ViewBag.SECC_INF_PRELI)
                 {
-                    if (secc.TITULO == "IV. CONCLUSIONES" || secc.TITULO == "V. RECOMENDACIONES DE LA AUDITORÍA")
+                    if (secc.TITULO == "IV. CONCLUSIONES" @* || secc.TITULO == "V. RECOMENDACIONES DE LA AUDITORÍA" *@)
                     {
                         continue;
                     }
@@ -630,6 +654,9 @@
 </div>
 
 @section scripts {
+    <script>
+        window.hallazgosData = @Html.Raw(Json.Serialize(ViewBag.HALLAZGOS));
+    </script>
     <script src="~/lib/summernote/summernote-lite.min.js"></script>
     <script src="~/Scripts/Helpers/Helpers.js"></script>
     <script src="~/Scripts/Auditorias/AuditoriaResultadosInforme.js"></script>

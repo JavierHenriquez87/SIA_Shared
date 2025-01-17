@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Web;
 
 namespace SIA.Models
@@ -17,6 +18,7 @@ namespace SIA.Models
         public string CREADO_POR { get; set; }
         public DateTime FECHA_CREACION { get; set; }
 
-        public Mg_Hallazgos Hallazgo { get; set; }
+        [JsonIgnore]
+        public Mg_Hallazgos? Hallazgo { get; set; }
     }
 }

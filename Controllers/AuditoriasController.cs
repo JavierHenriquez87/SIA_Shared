@@ -3359,6 +3359,7 @@ namespace SIA.Controllers
                     comentarioAuditado.MODIFICADO_POR = HttpContext.Session.GetString("user");
                     estado = "Comentario y archivos editados correctamente";
                 }
+
                 // Guardar los cambios en la base de datos
                 await _context.SaveChangesAsync();
 
@@ -3396,7 +3397,7 @@ namespace SIA.Controllers
                         var nuevoRegistro = new Mg_docs_auditado
                         {
                             CODIGO_DOC_AUDITADO = maxNumeroDocumentos,
-                            CODIGO_COMENT_AUDITADO = maxNumeroRegistro + 1,
+                            CODIGO_COMENT_AUDITADO = codigo > 0 ? codigo : maxNumeroRegistro + 1,
                             NOMBRE_DOCUMENTO = FileName,
                             PESO = peso,
                             FECHA_CREACION = DateTime.Now,
@@ -3423,6 +3424,7 @@ namespace SIA.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
 
         /// <summary>
         /// Eliminar un documento de un Hallazgo de resultado de informe
