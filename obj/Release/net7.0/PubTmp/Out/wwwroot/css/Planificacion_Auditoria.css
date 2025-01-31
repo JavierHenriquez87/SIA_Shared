@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.editable, .non-editable {
+    /*width: 100%;*/
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+}
+
+.editable {
+    border-bottom: none;
+    resize: none;
+}
+
+.non-editable {
+    background-color: #f0f0f0;
+}

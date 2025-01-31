@@ -37,6 +37,7 @@ namespace SIA.Helpers
                     HttpContext.Session.SetString("rolCode", "2");
                     HttpContext.Session.SetString("app", "SIA");
                     HttpContext.Session.SetString("hash", hash);
+                    HttpContext.Session.SetString("ID", resultApi.Id);
                 }
                 else
                 {
@@ -53,7 +54,7 @@ namespace SIA.Helpers
                 HttpClientHandler clientHandler = new HttpClientHandler();
                 clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
 
-                object login = new { hash = hash, appId = 119 };
+                object login = new { hash = hash, appId = 122 };
                 var json = JsonConvert.SerializeObject(login);
                 var data = new StringContent(json, Encoding.UTF8, "application/json");
 

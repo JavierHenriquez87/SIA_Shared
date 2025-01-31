@@ -1,0 +1,115 @@
+//
+// Form editors.scss
+//
+
+// Tinymce
+
+form {
+    .tox-tinymce {
+        border: 1px solid var(--#{$prefix}border-color) !important;
+    }
+
+    .tox-toolbar-overlord {
+        background-color: var(--#{$prefix}secondary-bg) !important;
+    }
+    .tox {
+        :not(svg):not(rect) {
+            color: $white !important;
+        }
+
+        &:not(.tox-tinymce-inline) {
+            .tox-editor-header {
+                box-shadow: var(--#{$prefix}box-shadow);
+            }
+        }
+
+        .tox-mbtn {
+            color: $body-secondary-color;
+
+            &:hover:not(:disabled):not(.tox-mbtn--active) {
+                background-color: $body-tertiary-bg;
+            }
+        }
+
+        .tox-tbtn {
+            &:hover {
+                color: $body-tertiary-color;
+                background-color: $body-tertiary-bg;
+            }
+        }
+
+        .tox-tbtn--disabled svg,
+        .tox-tbtn--disabled:hover svg,
+        .tox-tbtn:disabled svg,
+        .tox-tbtn:disabled:hover svg {
+            fill: $body-tertiary-color;
+        }
+
+        .tox-tbtn--bespoke {
+            background-color: $body-tertiary-bg;
+        }
+
+        .tox-editor-header {
+            background-color: var(--#{$prefix}secondary-bg) !important;
+        }
+
+        .tox-menubar {
+            background-color: var(--#{$prefix}secondary-bg) !important;
+
+            .tox-mbtn {
+                background-color: var(--#{$prefix}tertiary-bg) !important;
+                .tox-mbtn__select-label {
+                    color: $white !important;
+                }
+            }
+        }
+
+        .tox-toolbar__primary {
+            background-color: var(--#{$prefix}secondary-bg) !important;
+            .tox-toolbar__group {
+                .tox-tbtn {
+                    background-color: var(--#{$prefix}tertiary-bg) !important;
+                    .tox-icon {
+                        svg {
+                            fill: $white !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        .tox-edit-area {
+            background-color: var(--#{$prefix}secondary-bg) !important;
+        }
+
+        .tox-promotion {
+            background-color: var(--#{$prefix}secondary-bg) !important;
+        }
+
+        .tox-statusbar {
+            background-color: var(--#{$prefix}secondary-bg) !important;
+            color: var(--#{$prefix}body-color) !important;
+        }
+    }
+}
+.tox .tox-collection--list .tox-collection__group{
+    border-color: var(--#{$prefix}border-color) !important;
+}
+
+.tox-collection{
+    background-color: var(--#{$prefix}secondary-bg) !important;
+}
+
+.tox-collection__item-label{
+    color: $white !important;
+}
+
+.tox .tox-collection--list .tox-collection__item--enabled{
+    background-color: var(--#{$prefix}tertiary-bg) !important;
+}
+
+.tox-collection__item-icon{
+    svg{
+        fill: var(--#{$prefix}body-color) !important;
+    }
+}

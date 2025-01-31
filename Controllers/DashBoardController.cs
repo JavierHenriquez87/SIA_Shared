@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SIA.Controllers
 {
-    public class DashBoardController : LoginHelper
+    public class DashBoardController : Controller
     {
         private readonly AppDbContext _context;
         private IConfiguration _config;

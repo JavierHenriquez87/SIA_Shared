@@ -1,0 +1,22 @@
+.nav-link {
+    border: 1px solid #eeeee4;
+    border-radius: 1px;
+}
+
+    .nav-link.active {
+        border-color: #007bff;
+    }
+
+.th-titulo-verde {
+   /* background: #094809 !important;
+    color: white !important;*/
+    align-content: center !important;
+    text-align: center !important;
+}
+
+.th-titulo-cafe {
+    background: #964b12 !important;
+    color: white !important;
+    align-content: center !important;
+    text-align: center !important;
+}

@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using SIA.Helpers;
+using SIA.Services;
 
 namespace SIA.Controllers
 {
@@ -16,12 +17,26 @@ namespace SIA.Controllers
         private readonly AppDbContext _context;
         private IConfiguration _config;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly RabbitMQService _rabbitService;
 
         public AccesoController(AppDbContext context, IConfiguration config, IHttpContextAccessor HttpContextAccessor)
         {
             _context = context;
             _config = config;
             _contextAccessor = HttpContextAccessor;
+
+            // Inicializar RabbitMQService con los datos de configuración
+            _rabbitService = new RabbitMQService(
+                hostname: _config["RabbitMQ:HostName"],
+                username: _config["RabbitMQ:UserName"],
+                password: _config["RabbitMQ:Password"]
+            );
+
+            // Iniciar la escucha al crear el controlador
+            AddUpdateUserRabbit();
+            DisableUserRabbit();
+            UpdateNameUserRabbit();
+            UnlinkedUserRabbit();
         }
 
         /// <summary>
@@ -30,7 +45,8 @@ namespace SIA.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Login(string? hash)
         {
-            var hashSession = HttpContext.Session.GetString("hash");//"sDLmbXylurwuZDeIGpRqUXaKFexSeBrUVxAqKSOzpKdsovEcLT";  // 
+            var hashSession = HttpContext.Session.GetString("hash");
+
             if ((hash == "" || hash == null) && hashSession == null)
             {
                 return Redirect(Url.Action("Logout", "Acceso"));
@@ -43,11 +59,12 @@ namespace SIA.Controllers
             string user = HttpContext.Session.GetString("user");
             string userName = HttpContext.Session.GetString("userName");
 
+
             try
             {
                 //Validamos si existe un usuario con las credenciales enviadas
                 Mg_usuarios_segun_app userRolApp = await _context.MG_USUARIOS_SEGUN_APP
-                                    .Where(u => u.CODIGO_USUARIO == user && u.CODIGO_APLICACION == "SIA" && u.CODIGO_ESTADO == 1).FirstOrDefaultAsync();
+                                    .Where(u => u.CODIGO_USUARIO == user && u.CODIGO_APLICACION == "SIA").FirstOrDefaultAsync();
 
                 int? codigoRol = 2;
 
@@ -186,6 +203,194 @@ namespace SIA.Controllers
         {
             HttpContext.Session.Clear();//Limpiar la sesión
             return Redirect(_config.GetSection("ApiURLs")["LoginURL"]);
+        }
+
+        public IActionResult AddUpdateUserRabbit()
+        {
+            string queueName = "hdh.sso.users.access.added." + _config["AppsNumber:AppNumberDev"];
+
+            // Consumir mensajes y procesarlos
+            _rabbitService.ConsumeMessages(queueName, (message) =>
+            {
+                try
+                {
+                    // Deserializar el mensaje en un objeto dinámico
+                    using var jsonDoc = JsonDocument.Parse(message);
+                    var root = jsonDoc.RootElement;
+
+                    // Acceder a las propiedades del JSON
+                    string userCode = root.GetProperty("userCode").GetString();
+                    string name = root.GetProperty("name").GetString();
+                    string agencyName = root.GetProperty("agency").GetProperty("name").GetString();
+                    int agencyId = root.GetProperty("agency").GetProperty("id").GetInt32();
+                    string id = root.GetProperty("id").GetString();
+
+                    // Verificar si el usuario ya existe en la base de datos
+                    var existingUser = _context.MG_USUARIOS_SEGUN_APP
+                        .FirstOrDefault(u => u.CODIGO_APLICACION == "SIA" && u.ID == id);
+
+                    if (existingUser != null)
+                    {
+                        // Si el usuario ya existe, actualizar el estado
+                        existingUser.NOMBRE = name;
+                        existingUser.CODIGO_ESTADO = 1;
+                    }
+                    else
+                    {
+                        // Si el usuario no existe, crear un nuevo registro
+                        var newUser = new Mg_usuarios_segun_app
+                        {
+                            CODIGO_APLICACION = "SIA",
+                            CODIGO_USUARIO = userCode,
+                            NOMBRE = name,
+                            CODIGO_ROL = 2,
+                            CODIGO_ESTADO = 1,
+                            FECHA_CREACION = DateTime.Now,
+                            CREADO_POR = "System"
+                        };
+
+                        // Agregar el nuevo registro al contexto
+                        _context.MG_USUARIOS_SEGUN_APP.Add(newUser);
+                    }
+
+                    // Guardar los cambios en la base de datos
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error procesando el mensaje: {ex.Message}");
+                }
+            });
+
+            return Content("Escuchando mensajes en la cola RabbitMQ...");
+        }
+
+        public IActionResult DisableUserRabbit()
+        {
+            string queueName = "hdh.sso.users.access.removed." + _config["AppsNumber:AppNumberDev"];
+
+            // Consumir mensajes y procesarlos
+            _rabbitService.ConsumeMessages(queueName, (message) =>
+            {
+                try
+                {
+                    // Deserializar el mensaje en un objeto dinámico
+                    using var jsonDoc = JsonDocument.Parse(message);
+                    var root = jsonDoc.RootElement;
+
+                    // Acceder a las propiedades del JSON
+                    string name = root.GetProperty("name").GetString();
+                    string id = root.GetProperty("id").GetString();
+
+                    // Verificar si el usuario ya existe en la base de datos
+                    var existingUser = _context.MG_USUARIOS_SEGUN_APP
+                        .FirstOrDefault(u => u.CODIGO_APLICACION == "SIA" && u.ID == id);
+
+                    if (existingUser != null)
+                    {
+                        // Si el usuario ya existe, actualizar el estado
+                        existingUser.NOMBRE = name;
+                        existingUser.CODIGO_ESTADO = 0;
+                    }
+
+                    // Guardar los cambios en la base de datos
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error procesando el mensaje: {ex.Message}");
+                }
+            });
+
+            return Content("Escuchando mensajes en la cola RabbitMQ...");
+        }
+
+        public IActionResult UpdateNameUserRabbit()
+        {
+            string queueName = "hdh.sso.users.access.updated." + _config["AppsNumber:AppNumberDev"];
+
+            // Consumir mensajes y procesarlos
+            _rabbitService.ConsumeMessages(queueName, (message) =>
+            {
+                try
+                {
+                    // Deserializar el mensaje en un objeto dinámico
+                    using var jsonDoc = JsonDocument.Parse(message);
+                    var root = jsonDoc.RootElement;
+
+                    // Acceder a las propiedades del JSON
+                    string name = root.GetProperty("name").GetString();
+                    string id = root.GetProperty("id").GetString();
+
+                    // Verificar si el usuario ya existe en la base de datos
+                    var existingUser = _context.MG_USUARIOS_SEGUN_APP
+                        .FirstOrDefault(u => u.CODIGO_APLICACION == "SIA" && u.ID == id);
+
+                    if (existingUser != null)
+                    {
+                        // Si el usuario ya existe, actualizar el estado
+                        existingUser.NOMBRE = name;
+                    }
+
+                    // Guardar los cambios en la base de datos
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error procesando el mensaje: {ex.Message}");
+                }
+            });
+
+            return Content("Escuchando mensajes en la cola RabbitMQ...");
+        }
+
+
+        public IActionResult UnlinkedUserRabbit()
+        {
+            string queueName = "hdh.sso.users.access.unlinked." + _config["AppsNumber:AppNumberDev"];
+
+            // Consumir mensajes y procesarlos
+            _rabbitService.ConsumeMessages(queueName, (message) =>
+            {
+                try
+                {
+                    // Deserializar el mensaje en un objeto dinámico
+                    using var jsonDoc = JsonDocument.Parse(message);
+                    var root = jsonDoc.RootElement;
+
+                    // Acceder a las propiedades del JSON
+                    string id = root.GetProperty("id").GetString();
+
+                    // Verificar si el usuario ya existe en la base de datos
+                    var existingUser = _context.MG_USUARIOS_SEGUN_APP
+                        .FirstOrDefault(u => u.CODIGO_APLICACION == "SIA" && u.ID == id);
+
+                    if (existingUser != null)
+                    {
+                        // Si el usuario ya existe, actualizar el estado
+                        existingUser.CODIGO_ESTADO = 0;
+                    }
+
+                    // Guardar los cambios en la base de datos
+                    _context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error procesando el mensaje: {ex.Message}");
+                }
+            });
+
+            return Content("Escuchando mensajes en la cola RabbitMQ...");
+        }
+
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _rabbitService.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }
