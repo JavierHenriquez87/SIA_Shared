@@ -2,10 +2,6 @@
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using SIA.Context;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using System.Threading.Tasks;
-using iText.Kernel.Colors;
 
 namespace SIA.Print
 {
@@ -16,6 +12,7 @@ namespace SIA.Print
         private string _user;
         //private readonly HelpersPDF _helpersPDF;
         private readonly HeaderEventHandlerQuest _headerEventHandler;
+        private readonly FooterEventHandlerQuest _footerEventHandler;
 
         public ErrorPDF(AppDbContext context, IConfiguration config, IHttpContextAccessor HttpContextAccessor)
         {
@@ -24,6 +21,7 @@ namespace SIA.Print
             _user = HttpContextAccessor.HttpContext.Session.GetString("user");
             //_helpersPDF = new HelpersPDF(context, config, HttpContextAccessor);
             _headerEventHandler = new HeaderEventHandlerQuest();
+            _footerEventHandler = new FooterEventHandlerQuest();
         }
 
         public async Task<byte[]> CreateErrorPDF()
@@ -33,10 +31,10 @@ namespace SIA.Print
                 container.Page(page =>
                 {
                     page.Size(PageSizes.Letter);
-                    page.MarginTop(80);    // Margen superior
-                    page.MarginRight(40);  // Margen derecho
-                    page.MarginBottom(80); // Margen inferior
-                    page.MarginLeft(40);   // Margen izquierdo
+                    //page.MarginTop(100);    // Margen superior
+                    //page.MarginRight(40);  // Margen derecho
+                    //page.MarginBottom(80); // Margen inferior
+                    //page.MarginLeft(40);   // Margen izquierdo
 
                     // Agregar el header
                     page.Header().Element(_headerEventHandler.ComposeHeader);
@@ -45,7 +43,7 @@ namespace SIA.Print
                     page.Content().Element(ComposeContent);
 
                     // Agregar el footer
-                    //page.Footer().Element(ComposeFooter);
+                    page.Footer().Element(_footerEventHandler.ComposeFooter);
                 });
             });
 
@@ -56,7 +54,7 @@ namespace SIA.Print
 
         private void ComposeContent(IContainer container)
         {
-            container.Column(column =>
+            container.Padding(20).Column(column =>
             {
                 column.Spacing(4);
 

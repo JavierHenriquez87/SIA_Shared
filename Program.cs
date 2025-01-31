@@ -1,8 +1,11 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Infrastructure;
 using SIA.Context;
 
 var builder = WebApplication.CreateBuilder(args);
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
