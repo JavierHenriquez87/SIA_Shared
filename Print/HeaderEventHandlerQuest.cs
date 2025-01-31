@@ -43,7 +43,7 @@ public class HeaderEventHandlerQuest
             // Agregar el texto superpuesto
             stack.Item().PaddingRight(40).Text(text =>
             {
-                text.Span("515615156")
+                text.Span(_id)
                     .FontColor("#80BD9F") // Color del texto (código hexadecimal)
                     .FontSize(11) // Tamaño de la fuente
                     .FontFamily("Arial") // Fuente

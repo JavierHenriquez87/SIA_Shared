@@ -2826,8 +2826,8 @@ namespace SIA.Controllers
             byte[] pdfGenerateMemoryStream;
             ErrorPDF errorPDF = new ErrorPDF(_context, _config, _contextAccessor);
 
-            CartaDeIngreso cartaDeIngreso = new CartaDeIngreso(_context, _config, _contextAccessor);
-            pdfGenerateMemoryStream = await cartaDeIngreso.CreateCartaDeIngreso(id);
+            CartaIngreso cartaDeIngreso = new CartaIngreso(_context, _config, _contextAccessor);
+            pdfGenerateMemoryStream = await cartaDeIngreso.CreateCartaIngresoPDF(id);
 
             if (pdfGenerateMemoryStream.Length == 0)
             {

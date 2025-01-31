@@ -28,6 +28,16 @@ namespace SIA.Print
             _user = httpContextAccessor.HttpContext.Session.GetString("user");
         }
 
+        public string ColorCafeHtml()
+        {
+            return "#8B4513";
+        }
+
+        public string ColorGrisHtml()
+        {
+            return "#494F57";
+        }
+
         public Color ColorAnaranjado()
         {
             Color color = new DeviceRgb(239, 140, 74);
