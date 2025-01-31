@@ -45,14 +45,14 @@ namespace SIA.Controllers
 
                 default:
                     errorPDF = new ErrorPDF(_context, _config, _contextAccessor);
-                    pdfGenerateMemoryStream = await errorPDF.createErrorPDF();
+                    pdfGenerateMemoryStream = await errorPDF.CreateErrorPDF();
                     break;
             }
 
             if (pdfGenerateMemoryStream.Length == 0)
             {
                 errorPDF = new ErrorPDF(_context, _config, _contextAccessor);
-                pdfGenerateMemoryStream = await errorPDF.createErrorPDF();
+                pdfGenerateMemoryStream = await errorPDF.CreateErrorPDF();
             }
 
             var documentoBase64 = Convert.ToBase64String(pdfGenerateMemoryStream);

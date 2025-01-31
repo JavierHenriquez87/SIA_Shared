@@ -2832,7 +2832,7 @@ namespace SIA.Controllers
             if (pdfGenerateMemoryStream.Length == 0)
             {
                 errorPDF = new ErrorPDF(_context, _config, _contextAccessor);
-                pdfGenerateMemoryStream = await errorPDF.createErrorPDF();
+                pdfGenerateMemoryStream = await errorPDF.CreateErrorPDF();
             }
 
             var documentoBase64 = Convert.ToBase64String(pdfGenerateMemoryStream);
@@ -2949,7 +2949,7 @@ namespace SIA.Controllers
             if (pdfGenerateMemoryStream.Length == 0)
             {
                 errorPDF = new ErrorPDF(_context, _config, _contextAccessor);
-                pdfGenerateMemoryStream = await errorPDF.createErrorPDF();
+                pdfGenerateMemoryStream = await errorPDF.CreateErrorPDF();
             }
 
             var documentoBase64 = Convert.ToBase64String(pdfGenerateMemoryStream);

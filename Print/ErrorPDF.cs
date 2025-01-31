@@ -1,19 +1,11 @@
-﻿using iText.Layout;
-using iText.Layout.Element;
-using iText.Kernel.Pdf;
-using iText.Kernel.Events;
-using iText.Kernel.Pdf.Canvas;
-using iText.Layout.Properties;
-using iText.Layout.Borders;
-using iText.IO.Font.Constants;
-using iText.IO.Font;
-using iText.Kernel.Font;
-using iText.Kernel.Colors;
-using iText.IO.Image;
-using iText.Kernel.Geom;
+﻿using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 using SIA.Context;
-using SIA.Print;
 using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Threading.Tasks;
+using iText.Kernel.Colors;
 
 namespace SIA.Print
 {
@@ -22,68 +14,65 @@ namespace SIA.Print
         private readonly AppDbContext _context;
         private IConfiguration _config;
         private string _user;
-        private readonly HelpersPDF _helpersPDF;
+        //private readonly HelpersPDF _helpersPDF;
+        private readonly HeaderEventHandlerQuest _headerEventHandler;
 
         public ErrorPDF(AppDbContext context, IConfiguration config, IHttpContextAccessor HttpContextAccessor)
         {
             _context = context;
             _config = config;
             _user = HttpContextAccessor.HttpContext.Session.GetString("user");
-            _helpersPDF = new HelpersPDF(context, config, HttpContextAccessor);
+            //_helpersPDF = new HelpersPDF(context, config, HttpContextAccessor);
+            _headerEventHandler = new HeaderEventHandlerQuest();
         }
 
-        public async Task<byte[]> createErrorPDF()
+        public async Task<byte[]> CreateErrorPDF()
         {
-            MemoryStream workStream = new MemoryStream();
-
-            using (var pdfWriter = new PdfWriter(workStream))
+            var document = Document.Create(container =>
             {
-                pdfWriter.SetCloseStream(false);
-                using (PdfDocument pdfDoc = new PdfDocument(pdfWriter))
-                using (Document document = new Document(pdfDoc, PageSize.LETTER))
+                container.Page(page =>
                 {
-                    document.SetMargins(105, 40, 80, 40);
+                    page.Size(PageSizes.Letter);
+                    page.MarginTop(80);    // Margen superior
+                    page.MarginRight(40);  // Margen derecho
+                    page.MarginBottom(80); // Margen inferior
+                    page.MarginLeft(40);   // Margen izquierdo
 
-                    PdfFont bfArial = PdfFontFactory.CreateFont("c:/windows/fonts/Arial.ttf", PdfEncodings.IDENTITY_H);
-                    PdfFont bfArialBd = PdfFontFactory.CreateFont("c:/windows/fonts/arialbd.ttf", PdfEncodings.IDENTITY_H);
+                    // Agregar el header
+                    page.Header().Element(_headerEventHandler.ComposeHeader);
 
-                    //CELDAS PARA UTILIZAR EN LAS TABLAS
-                    Cell cell = new Cell();
+                    // Agregar el contenido
+                    page.Content().Element(ComposeContent);
 
-                    string id = "";
+                    // Agregar el footer
+                    //page.Footer().Element(ComposeFooter);
+                });
+            });
 
-                    pdfDoc.AddEventHandler(PdfDocumentEvent.START_PAGE, new HeaderEventHandler(document, id));
-
-                    //AGREGAMOS EL FOOTER DE LAS PAGINAS
-                    pdfDoc.AddEventHandler(PdfDocumentEvent.START_PAGE, new TextFooterEventHandler(document));
-
-                    //GENERAMOS UN ESPACIO PARA SER UTILIZADO DONDE SEA NECESARIO
-                    Paragraph sectionSpacing = new Paragraph(" ").SetFontSize(4);
-
-                    document.Add(sectionSpacing);
-
-                    var sectionI_1 = new Table(UnitValue.CreatePercentArray(new float[] { 100 })).SetWidth(UnitValue.CreatePercentValue(100));
-                    cell = _helpersPDF.CreateTableCellNoBorder();
-
-                    sectionI_1.AddCell(
-                        cell.Add(
-                            new Paragraph(
-                                _helpersPDF.CreateTextFormat("NO HEMOS ENCONTRADO LA INFORMACION SOLICITADA, POR FAVOR HACER LA BUSQUEDA EN LA BASE DE DATOS O SOLICITAR INFORMACION A UN SUPERIOR.", bfArial, 12)
-                                .SetFontColor(_helpersPDF.ColorCafe())
-                                )
-                            )
-                        );
-
-                    document.Add(sectionI_1);
-
-                    document.Close();
-
-                    byte[] byteInfo = workStream.ToArray();
-                    return byteInfo;
-                }
-            }
+            var stream = new MemoryStream();
+            document.GeneratePdf(stream);
+            return stream.ToArray();
         }
-        
-    }
 
+        private void ComposeContent(IContainer container)
+        {
+            container.Column(column =>
+            {
+                column.Spacing(4);
+
+                column.Item().Text(text =>
+                {
+                    text.Span("NO HEMOS ENCONTRADO LA INFORMACION SOLICITADA, POR FAVOR HACER LA BUSQUEDA EN LA BASE DE DATOS O SOLICITAR INFORMACION A UN SUPERIOR.")
+                         .FontColor(ColorCafe())
+                         .FontSize(12)
+                         .FontFamily("Arial");
+                });
+            });
+        }
+
+        public string ColorCafe()
+        {
+            return "#8B4513";
+        }
+    }
 }

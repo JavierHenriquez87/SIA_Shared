@@ -28,7 +28,7 @@
           }
         }
       },
-      "itext/9.0.0": {
+      "itext/8.0.4": {
         "type": "package",
         "dependencies": {
           "Microsoft.DotNet.PlatformAbstractions": "1.1.0",
@@ -45,7 +45,7 @@
           "System.Threading.Thread": "4.3.0",
           "System.Threading.ThreadPool": "4.3.0",
           "System.Xml.XmlDocument": "4.3.0",
-          "itext.commons": "9.0.0"
+          "itext.commons": "8.0.4"
         },
         "compile": {
           "lib/netstandard2.0/itext.barcodes.dll": {
@@ -118,11 +118,11 @@
           }
         }
       },
-      "itext.bouncy-castle-adapter/9.0.0": {
+      "itext.bouncy-castle-adapter/8.0.4": {
         "type": "package",
         "dependencies": {
-          "BouncyCastle.Cryptography": "2.4.0",
-          "itext.commons": "9.0.0"
+          "BouncyCastle.Cryptography": "2.2.1",
+          "itext.commons": "8.0.4"
         },
         "compile": {
           "lib/netstandard2.0/itext.bouncy-castle-adapter.dll": {
@@ -135,7 +135,7 @@
           }
         }
       },
-      "itext.commons/9.0.0": {
+      "itext.commons/8.0.4": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Logging": "5.0.0",
@@ -152,10 +152,10 @@
           }
         }
       },
-      "itext.pdfhtml/6.0.0": {
+      "itext.pdfhtml/5.0.1": {
         "type": "package",
         "dependencies": {
-          "itext": "9.0.0"
+          "itext": "8.0.1"
         },
         "compile": {
           "lib/netstandard2.0/itext.html2pdf.dll": {
@@ -168,22 +168,22 @@
           }
         }
       },
-      "itext7/9.0.0": {
+      "itext7/8.0.4": {
         "type": "package",
         "dependencies": {
-          "itext": "9.0.0"
+          "itext": "8.0.4"
         }
       },
-      "itext7.bouncy-castle-adapter/9.0.0": {
+      "itext7.bouncy-castle-adapter/8.0.4": {
         "type": "package",
         "dependencies": {
-          "itext.bouncy-castle-adapter": "9.0.0"
+          "itext.bouncy-castle-adapter": "8.0.4"
         }
       },
-      "itext7.pdfhtml/6.0.0": {
+      "itext7.pdfhtml/5.0.1": {
         "type": "package",
         "dependencies": {
-          "itext.pdfhtml": "6.0.0"
+          "itext.pdfhtml": "5.0.1"
         }
       },
       "iTextSharp/5.5.13.4": {
@@ -2017,17 +2017,17 @@
         "logo.png"
       ]
     },
-    "itext/9.0.0": {
-      "sha512": "Y2nDUrXDO7eZ+dI2NZ10apW818OcgGklMWpLrVZ/P16rwSxpVyzjWZQjCgZVj8liSVhVDHy6eVJOrZah5KNhhQ==",
+    "itext/8.0.4": {
+      "sha512": "k2dSmNbDAUmlXseGDjYL0d4h8gn5uAeFIVoEyS2zP3YT2t+AjZMtKb1rY4DgSS7lGn0TuAn9dez0fSemdlnsXQ==",
       "type": "package",
-      "path": "itext/9.0.0",
+      "path": "itext/8.0.4",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "ITSC-avatar.png",
         "LICENSE.md",
         "gnu-agpl-v3.0.md",
-        "itext.9.0.0.nupkg.sha512",
+        "itext.8.0.4.nupkg.sha512",
         "itext.nuspec",
         "lib/net461/itext.barcodes.dll",
         "lib/net461/itext.barcodes.xml",
@@ -2075,15 +2075,15 @@
         "lib/netstandard2.0/itext.svg.xml"
       ]
     },
-    "itext.bouncy-castle-adapter/9.0.0": {
-      "sha512": "2IcE6/X6YMBr9dgxsSK+934zXqi7UcdsYHapaa+aD7LLHgcbEABzyVNzsTrVEcNO4XJAMLVtqk4MP8dcVNiyQw==",
+    "itext.bouncy-castle-adapter/8.0.4": {
+      "sha512": "uNc3tEfF/4+gNfNBlIuy4zTsrtAy/un+DZzXJeDODM4o9kNTawBQ7AeChfjMKg9C9aNMa3kky8LeTkbXo0LOFQ==",
       "type": "package",
-      "path": "itext.bouncy-castle-adapter/9.0.0",
+      "path": "itext.bouncy-castle-adapter/8.0.4",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "ITSC-avatar.png",
-        "itext.bouncy-castle-adapter.9.0.0.nupkg.sha512",
+        "itext.bouncy-castle-adapter.8.0.4.nupkg.sha512",
         "itext.bouncy-castle-adapter.nuspec",
         "lib/net461/itext.bouncy-castle-adapter.dll",
         "lib/net461/itext.bouncy-castle-adapter.xml",
@@ -2091,15 +2091,15 @@
         "lib/netstandard2.0/itext.bouncy-castle-adapter.xml"
       ]
     },
-    "itext.commons/9.0.0": {
-      "sha512": "mfQuZz4beW2GOHMrtGay5iowg6WINBkHMm7hj38el3eDvWY3yLVZGrVxdWVRhEXJIdsXsBa3lPywxspsqi3rxg==",
+    "itext.commons/8.0.4": {
+      "sha512": "+76EQpGCj1gw17/zD6DaFumWXj9S+ko40wxNny+/3nW7PmrMZd6R8NJHvE1HVHo0xr2Ibx1JL71REYjIYTKFCQ==",
       "type": "package",
-      "path": "itext.commons/9.0.0",
+      "path": "itext.commons/8.0.4",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "ITSC-avatar.png",
-        "itext.commons.9.0.0.nupkg.sha512",
+        "itext.commons.8.0.4.nupkg.sha512",
         "itext.commons.nuspec",
         "lib/net461/itext.commons.dll",
         "lib/net461/itext.commons.xml",
@@ -2107,10 +2107,10 @@
         "lib/netstandard2.0/itext.commons.xml"
       ]
     },
-    "itext.pdfhtml/6.0.0": {
-      "sha512": "NcmUDoSsus9u4x91nL9OBAGpwqJOFM9xk4SX82pNrl3jS0kpi+UnH9WgAB79E/gZujCEtBxmLPY0Hl8jhhE1fw==",
+    "itext.pdfhtml/5.0.1": {
+      "sha512": "vyDtl35h4OFnWFLAal0qtCdbGUCv4DcjnLT32icodgmUpEKLCytgWVRF+XFjyHWidtqVdGErbouQ2mNa32AKDA==",
       "type": "package",
-      "path": "itext.pdfhtml/6.0.0",
+      "path": "itext.pdfhtml/5.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2118,7 +2118,7 @@
         "LICENSE.md",
         "NOTICE.txt",
         "gnu-agpl-v3.0.md",
-        "itext.pdfhtml.6.0.0.nupkg.sha512",
+        "itext.pdfhtml.5.0.1.nupkg.sha512",
         "itext.pdfhtml.nuspec",
         "lib/net461/itext.html2pdf.dll",
         "lib/net461/itext.html2pdf.xml",
@@ -2126,38 +2126,38 @@
         "lib/netstandard2.0/itext.html2pdf.xml"
       ]
     },
-    "itext7/9.0.0": {
-      "sha512": "WcRaL2xYhRWJrNXHlfWi9Cr/YApvFtDSEMvJlnbbSEUyYzYcwk52QJL/IAiP4T/O5U+rkzn6dIIwbeITUzsBLA==",
+    "itext7/8.0.4": {
+      "sha512": "J+eaLBqCSXbk4DPGuuKZPcs02cH7De6xGZ312o87d21MNgSmAQQikDVw5OpcdMiA0GW/YT/VXRjU5cLPa6sh9A==",
       "type": "package",
-      "path": "itext7/9.0.0",
+      "path": "itext7/8.0.4",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "ITSC-avatar.png",
         "LICENSE.md",
         "gnu-agpl-v3.0.md",
-        "itext7.9.0.0.nupkg.sha512",
+        "itext7.8.0.4.nupkg.sha512",
         "itext7.nuspec"
       ]
     },
-    "itext7.bouncy-castle-adapter/9.0.0": {
-      "sha512": "JJccn14lsKhhyevA1rXwahZVtFjkmrB0JybNgxeAenRxkv8fxGX2ToC1BD5Il4vCIU5m2QN/n1LGJ7dehWqc1A==",
+    "itext7.bouncy-castle-adapter/8.0.4": {
+      "sha512": "i+VSf2O2sCRW/SQv4KrOK6X7asfPLzxCMBPCsiDA6xHkOYYnoRYReCVcOmNflZiKT9X/KU8TqdmSc2wEcMSyOg==",
       "type": "package",
-      "path": "itext7.bouncy-castle-adapter/9.0.0",
+      "path": "itext7.bouncy-castle-adapter/8.0.4",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "ITSC-avatar.png",
         "LICENSE.md",
         "gnu-agpl-v3.0.md",
-        "itext7.bouncy-castle-adapter.9.0.0.nupkg.sha512",
+        "itext7.bouncy-castle-adapter.8.0.4.nupkg.sha512",
         "itext7.bouncy-castle-adapter.nuspec"
       ]
     },
-    "itext7.pdfhtml/6.0.0": {
-      "sha512": "9X2DM9l2Ao9BaYbyXaIq1hRDiH494qU+kYBjkiulv0bQmOumxVj5LQrUcmbfB3tUv1kuGmGnTXb6HRMplWi2rw==",
+    "itext7.pdfhtml/5.0.1": {
+      "sha512": "ww1GLBG5bqQQ6KJKBJbVPjIHdNFJsLawQ6C22K5vlYg6eeMFmkCa/jBHgdK8yIobBQgMXxhD9t2RlKDOOO4P+Q==",
       "type": "package",
-      "path": "itext7.pdfhtml/6.0.0",
+      "path": "itext7.pdfhtml/5.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2165,7 +2165,7 @@
         "LICENSE.md",
         "NOTICE.txt",
         "gnu-agpl-v3.0.md",
-        "itext7.pdfhtml.6.0.0.nupkg.sha512",
+        "itext7.pdfhtml.5.0.1.nupkg.sha512",
         "itext7.pdfhtml.nuspec"
       ]
     },
@@ -5940,27 +5940,35 @@
       "Oracle.ManagedDataAccess.Core >= 3.21.90",
       "QuestPDF >= 2024.12.3",
       "RabbitMQ.Client >= 5.2.0",
-      "itext7 >= 9.0.0",
-      "itext7.bouncy-castle-adapter >= 9.0.0",
-      "itext7.pdfhtml >= 6.0.0",
+      "itext7 >= 8.0.4",
+      "itext7.bouncy-castle-adapter >= 8.0.4",
+      "itext7.pdfhtml >= 5.0.1",
       "itextsharp.xmlworker >= 5.5.13.4"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Lenovo\\.nuget\\packages\\": {}
+    "C:\\Users\\Lenovo\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Expresate\\SIA_Shared\\SIA.csproj",
+      "projectUniqueName": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\SIA.csproj",
       "projectName": "SIA",
-      "projectPath": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Expresate\\SIA_Shared\\SIA.csproj",
+      "projectPath": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\SIA.csproj",
       "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Expresate\\SIA_Shared\\obj\\",
+      "outputPath": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
         "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -6029,15 +6037,15 @@
           },
           "itext7": {
             "target": "Package",
-            "version": "[9.0.0, )"
+            "version": "[8.0.4, )"
           },
           "itext7.bouncy-castle-adapter": {
             "target": "Package",
-            "version": "[9.0.0, )"
+            "version": "[8.0.4, )"
           },
           "itext7.pdfhtml": {
             "target": "Package",
-            "version": "[6.0.0, )"
+            "version": "[5.0.1, )"
           },
           "itextsharp.xmlworker": {
             "target": "Package",
@@ -6063,7 +6071,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403\\RuntimeIdentifierGraph.json"
       }
     }
   },
