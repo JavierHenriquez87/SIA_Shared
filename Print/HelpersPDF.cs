@@ -13,6 +13,7 @@ using iText.IO.Image;
 using iText.Kernel.Geom;
 using SIA.Context;
 
+
 namespace SIA.Print
 {
     public class HelpersPDF
@@ -26,16 +27,6 @@ namespace SIA.Print
             _context = context;
             _config = config;
             _user = httpContextAccessor.HttpContext.Session.GetString("user");
-        }
-
-        public string ColorCafeHtml()
-        {
-            return "#8B4513";
-        }
-
-        public string ColorGrisHtml()
-        {
-            return "#494F57";
         }
 
         public Color ColorAnaranjado()
@@ -292,4 +283,5 @@ namespace SIA.Print
             new Canvas(canvas, rect).Add(tableHeader).Close();
         }
     }
+
 }

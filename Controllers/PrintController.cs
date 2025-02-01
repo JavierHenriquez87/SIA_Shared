@@ -14,7 +14,7 @@ namespace SIA.Controllers
         private IConfiguration _config;
         private readonly IHttpContextAccessor _contextAccessor;
         private ErrorPDF errorPDF;
-        private MemorandumPlanificacion memorandumPlanificacion;
+        private Memorandum memorandumPlanificacion;
         private ResultadoInforme resultadoInforme;
 
         public PrintController(AppDbContext context, IConfiguration config, IHttpContextAccessor HttpContextAccessor)
@@ -34,8 +34,8 @@ namespace SIA.Controllers
             switch (doc)
             {
                 case "memorandumPlanificacion":
-                    memorandumPlanificacion = new MemorandumPlanificacion(_context, _config, _contextAccessor);
-                    pdfGenerateMemoryStream = await memorandumPlanificacion.CreateMemorandumPlanificacion(id);
+                    memorandumPlanificacion = new Memorandum(_context, _config, _contextAccessor);
+                    pdfGenerateMemoryStream = await memorandumPlanificacion.CreateMemorandumPDF(id);
                     break;
 
                 case "resultadoInforme":

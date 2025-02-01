@@ -2943,8 +2943,8 @@ namespace SIA.Controllers
             byte[] pdfGenerateMemoryStream;
             ErrorPDF errorPDF = new ErrorPDF(_context, _config, _contextAccessor);
 
-            CartaDeSalida cartaDeSalida = new CartaDeSalida(_context, _config, _contextAccessor);
-            pdfGenerateMemoryStream = await cartaDeSalida.CreateCartaDeSalida(id);
+            CartaSalida cartaDeSalida = new CartaSalida(_context, _config, _contextAccessor);
+            pdfGenerateMemoryStream = await cartaDeSalida.CreateCartaSalidaPDF(id);
 
             if (pdfGenerateMemoryStream.Length == 0)
             {

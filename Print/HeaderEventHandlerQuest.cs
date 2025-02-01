@@ -22,7 +22,8 @@ public class HeaderEventHandlerQuest
         {
             table.ColumnsDefinition(columns =>
             {
-                columns.RelativeColumn(100); // 100% del ancho
+                columns.RelativeColumn(30); 
+                columns.RelativeColumn(0); // 100% del ancho
             });
 
             // Agregar el logo del banco y el texto superpuesto
@@ -32,13 +33,11 @@ public class HeaderEventHandlerQuest
 
     private void ComposeLogoAndText(IContainer container)
     {
-        var pageWidth = PageSizes.Letter.Width; // Ancho total de la página
-        var availableWidth = pageWidth - 40 - 40;
         // Usar un Stack para superponer la imagen y el texto
         container.Stack(stack =>
         {
             // Agregar la imagen
-            stack.Item().Width(612).Image("wwwroot/assets/images/pdf-headers.png", ImageScaling.FitArea);
+            stack.Item().Image("wwwroot/assets/images/pdf-headers.png", ImageScaling.FitArea);
 
             // Agregar el texto superpuesto
             stack.Item().PaddingRight(40).Text(text =>

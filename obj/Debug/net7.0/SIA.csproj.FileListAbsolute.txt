@@ -345,3 +345,4 @@ C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\refint
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\SIA.pdb
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\SIA.genruntimeconfig.cache
 C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\obj\Debug\net7.0\ref\SIA.dll
+C:\Users\Lenovo\Documents\Proyectos\Hermandad\SIA_Shared\bin\Debug\net7.0\HtmlAgilityPack.dll

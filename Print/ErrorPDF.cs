@@ -10,7 +10,7 @@ namespace SIA.Print
         private readonly AppDbContext _context;
         private IConfiguration _config;
         private string _user;
-        private readonly HelpersPDF _helpersPDF;
+        private readonly HelpersQuestPDF _helpersQuestPDF;
         private readonly HeaderEventHandlerQuest _headerEventHandler;
         private readonly FooterEventHandlerQuest _footerEventHandler;
 
@@ -19,7 +19,7 @@ namespace SIA.Print
             _context = context;
             _config = config;
             _user = HttpContextAccessor.HttpContext.Session.GetString("user");
-            _helpersPDF = new HelpersPDF(context, config, HttpContextAccessor);
+            _helpersQuestPDF = new HelpersQuestPDF(context, config, HttpContextAccessor);
             _headerEventHandler = new HeaderEventHandlerQuest();
             _footerEventHandler = new FooterEventHandlerQuest();
         }
@@ -61,7 +61,7 @@ namespace SIA.Print
                 column.Item().Text(text =>
                 {
                     text.Span("NO HEMOS ENCONTRADO LA INFORMACION SOLICITADA, POR FAVOR HACER LA BUSQUEDA EN LA BASE DE DATOS O SOLICITAR INFORMACION A UN SUPERIOR.")
-                         .FontColor(_helpersPDF.ColorCafeHtml())
+                         .FontColor(_helpersQuestPDF.ColorCafeHtml())
                          .FontSize(12)
                          .FontFamily("Arial");
                 });

@@ -14,8 +14,8 @@ public class FooterEventHandlerQuest
         {
             table.ColumnsDefinition(columns =>
             {
-                columns.RelativeColumn(180); // 80% del ancho
-                columns.RelativeColumn(20); // 20% del ancho
+                columns.RelativeColumn(30); // 80% del ancho
+                columns.RelativeColumn(0); // 20% del ancho
             });
 
             // Agregar el logo del banco

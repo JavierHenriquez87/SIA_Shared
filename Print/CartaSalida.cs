@@ -8,7 +8,7 @@ using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace SIA.Print
 {
-    public class CartaIngreso
+    public class CartaSalida
     {
         private readonly AppDbContext _context;
         private IConfiguration _config;
@@ -16,7 +16,7 @@ namespace SIA.Print
         private readonly HelpersQuestPDF _helpersQuestPDF;
         private readonly FooterEventHandlerQuest _footerEventHandler;
 
-        public CartaIngreso(AppDbContext context, IConfiguration config, IHttpContextAccessor HttpContextAccessor)
+        public CartaSalida(AppDbContext context, IConfiguration config, IHttpContextAccessor HttpContextAccessor)
         {
             _context = context;
             _config = config;
@@ -25,7 +25,7 @@ namespace SIA.Print
             _footerEventHandler = new FooterEventHandlerQuest();
         }
 
-        public async Task<byte[]> CreateCartaIngresoPDF(string id)
+        public async Task<byte[]> CreateCartaSalidaPDF(string id)
         {
            
             var document = Document.Create(container =>
@@ -53,7 +53,6 @@ namespace SIA.Print
             return stream.ToArray();
         }
 
-
         private async void ComposeContent(IContainer container, string id)
         {
             //Obtenemos informacion de la planificacion de la auditoria
@@ -61,13 +60,10 @@ namespace SIA.Print
                                 .FirstOrDefaultAsync(u => u.CODIGO_AUDITORIA == id);
 
             var carta = await _context.MG_CARTAS
-                                .FirstOrDefaultAsync(u => u.TIPO_CARTA == 1 && u.NUMERO_AUDITORIA_INTEGRAL == dataAI.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == dataAI.ANIO_AI);
+                                .FirstOrDefaultAsync(u => u.TIPO_CARTA == 2 && u.NUMERO_AUDITORIA_INTEGRAL == dataAI.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == dataAI.ANIO_AI);
 
             string fechaInicioVisita = dataAI.FECHA_INICIO_VISITA?.ToString("dd MMMM yyyy");
             string fechaFinVisita = dataAI.FECHA_FIN_VISITA?.ToString("dd MMMM 'del año' yyyy");
-
-            string fechaInicioRevision = dataAI.PERIODO_INICIO_REVISION?.ToString("dd MMMM yyyy");
-            string fechaFinRevision = dataAI.PERIODO_FIN_REVISION?.ToString("dd MMMM 'del año' yyyy");
 
             container.PaddingLeft(40).PaddingRight(40).PaddingTop(20).Column(column =>
             {
@@ -79,19 +75,10 @@ namespace SIA.Print
                         .FontFamily("Arial");
                 });
 
-                // Saludo inicial
+                // Nombre 
                 column.Item().PaddingTop(20).Text(text =>
                 {
-                    text.Span("Señor:")
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                        .FontFamily("Arial");
-                });
-
-                // Nombre del jefe de agencia
-                column.Item().Text(text =>
-                {
-                    text.Span("JERSON ELY VELASQUEZ PEREZ")
+                    text.Span("AUDITORÍA INTERNA")
                         .FontSize(13)
                         .FontColor(_helpersQuestPDF.ColorGrisHtml())
                         .FontFamily("Arial")
@@ -101,7 +88,7 @@ namespace SIA.Print
                 // Cargo del jefe de agencia
                 column.Item().Text(text =>
                 {
-                    text.Span("Jefe de Agencia")
+                    text.Span("Fundación Microfinanciera Hermandad de Honduras, OPDF")
                         .FontSize(13)
                         .FontColor(_helpersQuestPDF.ColorGrisHtml())
                         .FontFamily("Arial");
@@ -110,25 +97,16 @@ namespace SIA.Print
                 // Nombre de la fundación
                 column.Item().Text(text =>
                 {
-                    text.Span("Fundación Microfinanciera Hermandad de Honduras, OPDF")
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                        .FontFamily("Arial");
-                });
-
-                // Saludo formal
-                column.Item().PaddingTop(20).Text(text =>
-                {
-                    text.Span("Estimado Jefe de Agencia")
+                    text.Span("San Marcos, Ocotepeque")
                         .FontSize(13)
                         .FontColor(_helpersQuestPDF.ColorGrisHtml())
                         .FontFamily("Arial");
                 });
 
                 // Primer párrafo
-                column.Item().PaddingTop(14).Text(text =>
+                column.Item().PaddingTop(20).PaddingBottom(14).Text(text =>
                 {
-                    text.Span("Hemos sido asignados a la revisión periódica de todas sus transacciones realizadas en su Agencia, en el periodo comprendido de ")
+                    text.Span("Esta carta de manifestaciones se proporciona en relación con su auditoría interna detodas las transacciones de cartera de préstamos, cartera de ahorros, movimientosdiarios de caja de ventanilla, caja de reserva, activos fijos, y libros de su Agencia,correspondientes al periodo comprendido de ")
                         .FontSize(13)
                         .FontColor(_helpersQuestPDF.ColorGrisHtml())
                         .FontFamily("Arial");
@@ -146,66 +124,26 @@ namespace SIA.Print
                         .FontFamily("Arial");
                 });
 
-                // Segundo párrafo
-                column.Item().PaddingTop(14).PaddingBottom(14).Text(text =>
-                {
-                    text.Span("Con mandato de la Junta de Vigilancia nos solicitan que auditemos todas las transacciones que comprenden la cartera de préstamos, cartera de ahorros, movimientos diarios de caja de ventanilla, caja de reserva, inventario de activos fijos y libros de su Agencia correspondientes al periodo comprendido de ")
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                        .FontFamily("Arial");
-
-                    text.Span(fechaInicioRevision + " a " + fechaFinRevision)
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                        .FontFamily("Arial")
-                        .Bold();
-
-                    text.Span(".")
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                        .FontFamily("Arial");
-                });
-
                 // AGREGAMOS EL TEXTO QUE ES HTML AL PDF
                 var converter = new HtmlToPdfConverter();
                 converter.AddHtmlContent(column, carta.TEXTO_CARTA ?? "", _helpersQuestPDF);
 
-                column.Item().Row(row =>
+                column.Item().PaddingTop(20).Row(row =>
                 {
-                    // Primera firma
-                    row.RelativeItem().AlignCenter().Column(col =>
-                    {
-                        col.Item().Width(100).AlignCenter().PaddingLeft(30).Image("wwwroot/Archivos/Usuarios/Firmas_Usuarios/firmaSergio.png", ImageScaling.FitWidth);
-
-                        col.Item().Text("Lic. Sergio Antonio Melgar")
-                            .FontSize(13)
-                            .FontFamily("Arial")
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                            .AlignCenter();
-
-                        col.Item().Text("Auditor Interno")
-                            .FontSize(13)
-                            .FontFamily("Arial Bold")
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                            .AlignCenter();
-                    });
-
                     // Segunda firma
-                    row.RelativeItem().AlignCenter().Column(col =>
+                    row.RelativeItem().Column(col =>
                     {
                         col.Item().Width(100).AlignCenter().PaddingLeft(30).Image("wwwroot/Archivos/Usuarios/Firmas_Usuarios/firmaSergio.png", ImageScaling.FitWidth);
 
                         col.Item().Text("Jerson Ely Velasquez Perez")
                             .FontSize(13)
                             .FontFamily("Arial")
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                            .AlignCenter();
+                            .FontColor(_helpersQuestPDF.ColorGrisHtml());
 
                         col.Item().Text("Jefe de Agencia")
                             .FontSize(13)
                             .FontFamily("Arial Bold")
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                            .AlignCenter();
+                            .FontColor(_helpersQuestPDF.ColorGrisHtml());
                     });
                 });
             });
