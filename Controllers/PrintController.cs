@@ -15,7 +15,7 @@ namespace SIA.Controllers
         private readonly IHttpContextAccessor _contextAccessor;
         private ErrorPDF errorPDF;
         private Memorandum memorandumPlanificacion;
-        private ResultadoInforme resultadoInforme;
+        private ResultadoDelInforme resultadoInforme;
 
         public PrintController(AppDbContext context, IConfiguration config, IHttpContextAccessor HttpContextAccessor)
         {
@@ -39,8 +39,8 @@ namespace SIA.Controllers
                     break;
 
                 case "resultadoInforme":
-                    resultadoInforme = new ResultadoInforme(_context, _config, _contextAccessor);
-                    pdfGenerateMemoryStream = await resultadoInforme.CreateResultadoInforme();
+                    resultadoInforme = new ResultadoDelInforme(_context, _config, _contextAccessor);
+                    pdfGenerateMemoryStream = await resultadoInforme.CreateResultadoDelInformePDF();
                     break;
 
                 default:

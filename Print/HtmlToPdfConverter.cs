@@ -8,7 +8,7 @@ namespace SIA.Print
 {
     public class HtmlToPdfConverter
     {
-        public void AddHtmlContent(ColumnDescriptor column, string htmlContent, HelpersQuestPDF _helpersQuestPDF)
+        public void AddHtmlContent(ColumnDescriptor column, string htmlContent, HelpersQuestPDF _helpersQuestPDF, int fontSize = 13)
         {
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(htmlContent);
@@ -28,7 +28,7 @@ namespace SIA.Print
                                     {
                                         // Si es texto plano
                                         text.Span(childNode.InnerText)
-                                            .FontSize(13)
+                                            .FontSize(fontSize)
                                             .FontColor(_helpersQuestPDF.ColorGrisHtml())
                                             .FontFamily("Arial");
                                     }
@@ -36,7 +36,7 @@ namespace SIA.Print
                                     {
                                         // Si es un elemento <b> o <strong>
                                         text.Span(childNode.InnerText)
-                                            .FontSize(13)
+                                            .FontSize(fontSize)
                                             .FontColor(_helpersQuestPDF.ColorGrisHtml())
                                             .FontFamily("Arial")
                                             .Bold();
@@ -55,7 +55,7 @@ namespace SIA.Print
                                     .Text(text =>
                                     {
                                         text.Span("• " + li.InnerText)
-                                            .FontSize(13)
+                                            .FontSize(fontSize)
                                             .FontColor(_helpersQuestPDF.ColorGrisHtml())
                                             .FontFamily("Arial");
                                     });
@@ -72,7 +72,7 @@ namespace SIA.Print
                                     .Text(text =>
                                     {
                                         text.Span($"{counter}. {li.InnerText}") // Usa números para listas ordenadas
-                                            .FontSize(13)
+                                            .FontSize(fontSize)
                                             .FontColor(_helpersQuestPDF.ColorGrisHtml())
                                             .FontFamily("Arial");
                                         counter++;
@@ -85,7 +85,7 @@ namespace SIA.Print
                             column.Item().Text(text =>
                             {
                                 text.Span(node.InnerText)
-                                    .FontSize(13)
+                                    .FontSize(fontSize)
                                     .FontColor(_helpersQuestPDF.ColorGrisHtml())
                                     .FontFamily("Arial")
                                     .Bold();
@@ -97,7 +97,7 @@ namespace SIA.Print
                             column.Item().Text(text =>
                             {
                                 text.Span(node.InnerText)
-                                    .FontSize(13)
+                                    .FontSize(fontSize)
                                     .FontColor(_helpersQuestPDF.ColorGrisHtml())
                                     .FontFamily("Arial");
                             });

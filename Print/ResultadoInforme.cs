@@ -600,7 +600,7 @@ namespace SIA.Print
                     }
                     else
                     {
-                        procedimientoAuditoria = "<div>Los procedimientos y técnicas utilizadas para la realización de este trabajo,</div><div>fueron los siguientes:</div>";
+                        procedimientoAuditoria = "<div><p>Los procedimientos y técnicas utilizadas para la realización de este trabajo,</p></div><div><p>fueron los siguientes:</p></div>";
                     }
 
                     elements = HtmlConverter.ConvertToElements(procedimientoAuditoria);
