@@ -73,6 +73,8 @@ namespace SIA.Print
             var hallazgosAnteriores = await _context.MG_HALLAZGOS
                 .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
                 .Where(d => d.ANIO_AI == anio)
+                .Include(h => h.comentarioAuditado)
+                .ThenInclude(ca => ca.Mg_docs_auditado)
                 .ToListAsync();
 
             var hallazgosAllData = await _context.MG_HALLAZGOS
