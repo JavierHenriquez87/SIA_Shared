@@ -4,6 +4,64 @@ CargarAuditoresEncargados();
 CargarTiposAuditorias();
 CargarAuditoresAsignados();
 
+async function SolicitarAprobacionMDP() {
+    var CODIGO_MEMORANDUM = $('#codigoMemorandum').val();
+
+    Swal.fire({
+        title: 'Solicitud de Aprobación de Memorándum',
+        text: "¿Desea enviar a aprobación este memorándum de planificación?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#34c38f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aprobar',
+        cancelButtonText: `Cancelar`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.showLoading();
+
+            $.ajax({
+                method: 'POST',
+                url: '../SolicitarAprobacionMDP',
+                data: {
+                    codigo_memorandum: CODIGO_MEMORANDUM
+                },
+                dataType: 'json',
+                success: function (respuesta) {
+                    if (respuesta == "error") {
+                        Swal.fire({
+                            title: 'Error',
+                            text: "Ocurrió un error al intentar aprobar el memorandum de planificacion",
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#2A3042',
+                            confirmButtonText: 'Ok'
+                        })
+                    } else {
+                        Swal.fire({
+                            title: 'Guardado!',
+                            text: 'Se envió con exitó el memorándum de planificación!',
+                            icon: 'success',
+                            didClose: () => {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
+                    Swal.fire(
+                        'Error!',
+                        'Hubo un problema al procesar su solicitud.',
+                        'error'
+                    );
+                }
+            });
+        }
+    })
+}
+
+
 async function AgregarComentario() {
     // Objeto que contiene los datos a enviar
     var DataAI = {
@@ -136,7 +194,7 @@ async function RegresarMDP() {
         text: "¿Desea regresar al auditor el memorándum de planificación para que realice cambios? \n\n\n Asegurese de haber agregado comentarios en la parte inferior de esta ventana, para que los auditores conozcan los cambios que solicita.",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#f1b44c',
+        confirmButtonColor: '#2A3042',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Aceptar',
         cancelButtonText: `Cancelar`,
@@ -224,8 +282,8 @@ async function closeSidebarBtnSave() {
         }
     }
 
-        document.getElementById("SidebarEditMDP").style.width = "0";
-        document.getElementById("overlay").style.display = "none";
+    document.getElementById("SidebarEditMDP").style.width = "0";
+    document.getElementById("overlay").style.display = "none";
     setTimeout(() => {
         window.location.reload();
     }, 800);
@@ -572,7 +630,7 @@ function CargarAuditoresAsignados() {
                     // Marcar la opción como seleccionada si debe estarlo
                     if (tipo.selected) {  // Verifica que el objeto devuelto incluya esta propiedad
                         opcion.selected = true;
-                    }   
+                    }
                     SelectAuditores.appendChild(opcion);
                 });
             }
@@ -585,4 +643,64 @@ function CargarAuditoresAsignados() {
             )
         }
     });
+}
+
+
+async function aprobarDevolver() {
+    var NUMERO_AUDITORIA_INTEGRAL = $('#codAI_DA').val();
+    var anio_auditoria_integral = $('#anioAI_DA').val();
+
+    Swal.fire({
+        title: 'Anular',
+        text: "¿Desea anular la auditoría? \n\n Tome en cuenta que la anulación no se podra revertir.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#f1b44c',
+        cancelButtonColor: '#d33',
+        cancelButtonText: `Cancelar`,
+        confirmButtonText: 'Anular',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.showLoading();
+
+            $.ajax({
+                method: 'POST',
+                url: '/Auditorias/AnularAuditoria',
+                data: {
+                    num_audit_integral: NUMERO_AUDITORIA_INTEGRAL,
+                    anio_audit_integral: anio_auditoria_integral
+                },
+                dataType: 'json',
+                success: function (respuesta) {
+                    if (respuesta == "error") {
+                        Swal.fire({
+                            title: 'Error',
+                            text: "Ocurrió un error al intentar anular la auditoría.",
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#2A3042',
+                            confirmButtonText: 'Ok'
+                        })
+                    } else {
+                        Swal.fire({
+                            title: 'Guardado!',
+                            text: 'Se anuló la auditoría con éxito!',
+                            icon: 'success',
+                            didClose: () => {
+                                window.location.href = '/Auditorias';
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
+                    Swal.fire(
+                        'Error!',
+                        'Hubo un problema al procesar su solicitud.',
+                        'error'
+                    );
+                }
+            });
+        }
+    })
 }

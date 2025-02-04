@@ -1145,6 +1145,52 @@ namespace SIA.Controllers
 
 
         /// <summary>
+        /// Solicitar aprobacion de memorandum de planificacion
+        /// </summary>
+        /// <param name="DataAI"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> SolicitarAprobacionMDP(string codigo_memorandum)
+        {
+            try
+            {
+                //Obtenemos data del memorandum de planificacion
+                var datamemorandum = await _context.AU_PLANIFICACION_DE_AUDITORIA
+                                    .Where(u => u.CODIGO_MEMORANDUM == codigo_memorandum)
+                                    .FirstOrDefaultAsync();
+
+                datamemorandum!.CODIGO_ESTADO = 2;
+                datamemorandum.FECHA_SOLICITUD_APROBACION = DateTime.Now;
+                datamemorandum.SOLICITADO_POR = HttpContext.Session.GetString("user");
+
+                // Guarda los cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                /*******/
+                //Obtenemos data de la auditoria integral
+                var dataAudInt = await _context.AU_AUDITORIAS_INTEGRALES
+                                    .Where(u => u.NUMERO_AUDITORIA_INTEGRAL == (int)HttpContext.Session.GetInt32("num_auditoria_integral"))
+                                    .Where(u => u.ANIO_AI == (int)HttpContext.Session.GetInt32("anio_auditoria_integral"))
+                                    .FirstOrDefaultAsync();
+
+                dataAudInt!.CODIGO_ESTADO = 3;
+                dataAudInt.FECHA_MODIFICACION = DateTime.Now;
+                dataAudInt.MODIFICADO_POR = HttpContext.Session.GetString("user");
+
+                // Guarda los cambios en la base de datos
+                await _context.SaveChangesAsync();
+                /********/
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("success");
+        }
+
+        /// <summary>
         /// Dar por aprobada un memorandum de planificacion
         /// </summary>
         /// <param name="DataAI"></param>

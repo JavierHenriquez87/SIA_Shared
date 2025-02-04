@@ -4,6 +4,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using SIA.Context;
+using SIA.Models;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace SIA.Print
@@ -27,7 +28,7 @@ namespace SIA.Print
 
         public async Task<byte[]> CreateCartaSalidaPDF(string id)
         {
-           
+
             var document = Document.Create(container =>
             {
                 container.Page(page =>
@@ -61,6 +62,31 @@ namespace SIA.Print
 
             var carta = await _context.MG_CARTAS
                                 .FirstOrDefaultAsync(u => u.TIPO_CARTA == 2 && u.NUMERO_AUDITORIA_INTEGRAL == dataAI.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == dataAI.ANIO_AI);
+
+            if (carta == null)
+            {
+
+                int maxNumeroRegistro = await _context.MG_CARTAS
+                    .MaxAsync(a => (int?)a.CODIGO_CARTA) ?? 0;
+
+                Mg_cartas nuevaCarta = new();
+                nuevaCarta.CODIGO_CARTA = maxNumeroRegistro + 1;
+                nuevaCarta.TEXTO_CARTA = "<p data-pm-slice=\"0 0 []\">Para efectos de expresar una conformidad sobre el cumplimiento de controles, internos, Resoluciones, Procesos, reglamentos internos y manuales operativos.</p>\r\n<p>Confirmo que he cumplido con mi responsabilidad, tal como se establecen en el memorándum de solicitud y en la carta de entrada, con respecto a la presentación de toda la información misma que es transparente, confiable, oportuna, libre de errores de incorrección material y fraudes.</p>\r\n<p><strong>Les hemos proporcionado</strong></p>\r\n<ol>\r\n<li>Acceso a toda la información que tengo conocimiento que sea relevante en la preparación del informe, tal como registros, documentación y otro material;</li>\r\n<li>Información adicional que solicitaron para los fines de la auditoría; y</li>\r\n<li>Acceso ilimitado al personal de la Unidad de Auditoría Interna en la realización de su trabajo, a manera de obtener las evidencias sobre las inconsistencias encontradas.</li>\r\n<li>Les manifiesto que la información proporcionada para la realización de su trabajo, está libre de incorrecciones materiales debida a fraudes de la que tenemos conocimiento y que afecta a la Agencia e implica a los empleados que desempeñan funciones significativas en el control interno.</li>\r\n<li>Le he revelado toda la información relativa a denuncias de fraude o a indicios defraude que afectan a los estados financieros de la Institución, comunicada por empleados, antiguos empleados y clientes.</li>\r\n<li>Le he revelado todos los casos conocidos de incumplimiento o sospecha de incumplimiento de las disposiciones legales y reglamentarias cuyos efectos deberían considerarse para preparar los estados financieros.</li>\r\n</ol>\r\n<p>Le he revelado la identidad de las partes vinculadas con los Empleados y todas las relaciones y transacciones con partes vinculadas de las que tengo conocimiento.</p>";
+                nuevaCarta.FECHA_CREACION = DateTime.Now;
+                nuevaCarta.CREADO_POR = "PROVISIONAL";
+                nuevaCarta.NUMERO_AUDITORIA_INTEGRAL = dataAI.NUMERO_AUDITORIA_INTEGRAL;
+                nuevaCarta.ANIO_AI = dataAI.ANIO_AI;
+                nuevaCarta.TIPO_CARTA = 2;
+
+
+                _context.Add(nuevaCarta);
+
+                //Guardamos el rol editado
+                await _context.SaveChangesAsync();
+
+                carta = await _context.MG_CARTAS
+                                .FirstOrDefaultAsync(u => u.TIPO_CARTA == 2 && u.NUMERO_AUDITORIA_INTEGRAL == dataAI.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == dataAI.ANIO_AI);
+            }
 
             string fechaInicioVisita = dataAI.FECHA_INICIO_VISITA?.ToString("dd MMMM yyyy");
             string fechaFinVisita = dataAI.FECHA_FIN_VISITA?.ToString("dd MMMM 'del año' yyyy");

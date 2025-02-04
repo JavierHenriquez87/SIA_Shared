@@ -28,16 +28,29 @@
 
                 <div class="row">
                     <h5 style="width: 70%">@ViewBag.TITULO_AUDITORIA</h5>
-                    <div class="form-group" style="padding-top: 10px" id="divButtons">
-                        <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
-                        <div class="status @ViewBag.STATUS" id="divStatus" style="width: 20%; height: 20px;">@ViewBag.ESTADO</div>
+                    <div class="form-group" style="padding-top: 10px; display: flex; justify-content: space-between; align-items: center;" id="divButtons">
+                        <!-- Contenedor para los botones de la izquierda -->
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
+                            @* @if (estado == "Pendiente Aprobación")
+                            {
+                            <button type="button" onclick="AprobarMDP()" class="btn btn-primary">Aprobar</button>
+                            <button type="button" onclick="RegresarMDP()" class="btn btn-warning">Devolver</button>
+                            } *@
+                        </div>
+
+                        <!-- Contenedor para los elementos de la derecha -->
+                        <div style="display: flex; align-items: center;">
+                            <div class="status @ViewBag.STATUS" id="divStatus" style="width: 20%; height: 20px;">@ViewBag.ESTADO</div>
+
+                            @if (estado == "Aprobado")
+                            {
+                                <a href="~/print/Index?doc=memorandumPlanificacion&id=@ViewBag.CODIGO_MEMORANDUM_PLANIFICACION" target="_blank" style="width: 10%; font-size:18px; cursor:pointer; text-align:right">
+                                    <i class="fas fa-print"></i>
+                                </a>
+                            }
+                        </div>
                     </div>
-                    @if (estado == "Aprobado")
-                    {
-                        <a href="~/print/Index?doc=memorandumPlanificacion&id=@ViewBag.CODIGO_MEMORANDUM_PLANIFICACION" target="_blank" style="width: 10%; font-size:18px; cursor:pointer;">
-                            <i class="fas fa-print"></i>
-                        </a>
-                    }
                 </div>
 
                 <div class="row" style="margin-bottom: 20px">
@@ -108,13 +121,20 @@
                     <input id="tiempoAuditoria" type="text" name="tiempoAuditoria" class="form-control" value="@ViewBag.TEXTO_TIEMPO_AUDITORIA @ViewBag.TIEMPO_AUDITORIA_INICIO al @ViewBag.TIEMPO_AUDITORIA_FIN" disabled>
                 </div>
 
+                @if (estado == "Creado" || estado == "Con Observaciones")
+                {
+                    <div class="form-group" style="padding-top: 10px" id="divButtons">
+                        <button type="button" onclick="SolicitarAprobacionMDP()" class="btn btn-success">Solicitar Aprobación</button>
+                    </div>
+                }
+
                 @* Verificamos si el memorandum de planificacion esta aprobado *@
                 @if (estado == "Pendiente Aprobación")
                 {
                     @if (estadoAI != 14)
                     {
                         @* Verificamos si el rol del usuario logueado es Auditor Interno*@
-                        @if (rolcode == "AI")
+                        @if (rolcode == "1")
                         {
                             <div class="form-group" style="padding-top: 10px" id="divButtons">
                                 <button type="button" onclick="RegresarMDP()" class="btn btn-warning">Regresar</button>

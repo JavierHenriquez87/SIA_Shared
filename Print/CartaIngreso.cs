@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using iTextSharp.tool.xml.html.head;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using SIA.Context;
+using SIA.Models;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace SIA.Print
@@ -27,7 +30,7 @@ namespace SIA.Print
 
         public async Task<byte[]> CreateCartaIngresoPDF(string id)
         {
-           
+
             var document = Document.Create(container =>
             {
                 container.Page(page =>
@@ -62,6 +65,31 @@ namespace SIA.Print
 
             var carta = await _context.MG_CARTAS
                                 .FirstOrDefaultAsync(u => u.TIPO_CARTA == 1 && u.NUMERO_AUDITORIA_INTEGRAL == dataAI.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == dataAI.ANIO_AI);
+
+            if (carta == null)
+            {
+
+                int maxNumeroRegistro = await _context.MG_CARTAS
+                    .MaxAsync(a => (int?)a.CODIGO_CARTA) ?? 0;
+
+                Mg_cartas nuevaCarta = new();
+                nuevaCarta.CODIGO_CARTA = maxNumeroRegistro + 1;
+                nuevaCarta.TEXTO_CARTA = "<p style=\"font-size: 16px\" data-pm-slice=\"1 3 []\">Realizaremos nuestra auditoría con el objetivo de expresar nuestros comentarios, observaciones y recomendaciones sobre las inconsistencias encontradas en dicha revisión.</p><p style=\"font-size: 16px\">Una auditoría conlleva la aplicación de procedimientos para obtener evidencia de auditoría sobre los importes y la información revelada en los estados financieros, comprobando el cumplimiento de los procesos, manuales, reglamentos, normativas y las circulares emitidas por la Administración y/o CNBS.</p><p style=\"font-size: 16px\">Los procedimientos seleccionados dependen del juicio del auditor, incluida la valoración de los riesgos de incorrección material en los estados financieros, debida a fraude o error.</p><p style=\"font-size: 16px\">La Unidad de Auditoría Interna realiza revisiones de forma continua desde la Oficina Principal a través del Sistema Integral de Auditoria y solicitando información a las Agencias vía electrónica, identificado inconsistencias que serán consideradas al momento de emitir el informe de la auditoría realizada a su Agencia.</p><p style=\"font-size: 16px\"></p><p style=\"font-size: 16px\">Debido a las limitaciones inherentes a la auditoría, junto con las limitaciones inherentes al control interno, existe un riesgo inevitable de que puedan no detectarse algunas incorrecciones materiales, aun cuando la auditoría se planifique y ejecute adecuadamente.</p><p style=\"font-size: 16px\"></p><p style=\"font-size: 16px\">Al efectuar nuestras valoraciones del riesgo verificaremos el cumplimiento del control interno implementado por la Administración, identificando algunos riesgos y controles que no se han tomado en cuenta por la Administración, comunicándoles por escrito cualquier inconsistencia significativa en el control interno, relevante para la auditoría que identifiquemos durante la realización de la misma.</p><p style=\"font-size: 16px\"></p><p style=\"font-size: 16px\">Realizaremos la auditoría considerando que la estructura organizativa de la Institución, reconocen y comprenden que el Jefe de Agencia es el responsable de:</p><ol><li style=\"font-size: 16px;\">La preparación, presentación y resguardo de la información de todas las transacciones realizadas en su Agencia</li><li style=\"font-size: 16px;\">Fiel en el cumplimiento de todos los manuales, reglamentos, normativas y circulares emitidas por la Administración.</li><li style=\"font-size: 16px;\">El control interno que la Agencia considere necesario para permitir la preparación de toda la información, misma que debe ser transparente, confiable, oportuna, libre de errores e incorrección material y fraudes.</li></ol><p style=\"font-size: 16px\"><br></p><p style=\"font-size: 16px\" data-pm-slice=\"1 1 []\"><b>Jefe de Agencia debe proporcionarnos</b></p><ol><li style=\"font-size: 16px;\">Acceso a toda la información que tenga conocimiento que sea relevante en la preparación de nuestro informe, tal como registros, documentación y otros datos.</li><li style=\"font-size: 16px;\">Información adicional que podamos solicitar para los fines de la auditoría;</li><li style=\"font-size: 16px;\">Acceso ilimitado al personal de la Unidad de Auditoría Interna en la realización de nuestro trabajo a manera de obtener evidencia de las inconsistencias encontradas.</li></ol><p style=\"font-size: 16px\">Como parte de nuestro proceso de auditoría, solicitaremos por escrito al Jefe de Agencia que la información suministrada sea verdadera y que pueda ser verificada cuando se estime conveniente.</p><p style=\"font-size: 16px\">Esperamos contar con la plena colaboración de sus empleados durante nuestra auditoría, es posible que la estructura y el contenido de nuestro informe tengan que ser modificados en función de las inconsistencias identificadas en nuestra auditoría.</p><p style=\"font-size: 16px\">Le rogamos que firme y devuelva la copia adjunta de esta carta para indicar que conoce y acepta los acuerdos relativos a nuestra auditoría, de todas las transacciones que comprenden cartera de préstamos, cartera de ahorros, movimientos diarios de caja de ventanilla, caja de reserva y libros.</p>";
+                nuevaCarta.FECHA_CREACION = DateTime.Now;
+                nuevaCarta.CREADO_POR = "PROVISIONAL";
+                nuevaCarta.NUMERO_AUDITORIA_INTEGRAL = dataAI.NUMERO_AUDITORIA_INTEGRAL;
+                nuevaCarta.ANIO_AI = dataAI.ANIO_AI;
+                nuevaCarta.TIPO_CARTA = 1;
+
+
+                _context.Add(nuevaCarta);
+
+                //Guardamos el rol editado
+                await _context.SaveChangesAsync();
+
+                carta = await _context.MG_CARTAS
+                                    .FirstOrDefaultAsync(u => u.TIPO_CARTA == 1 && u.NUMERO_AUDITORIA_INTEGRAL == dataAI.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == dataAI.ANIO_AI);
+            }
 
             string fechaInicioVisita = dataAI.FECHA_INICIO_VISITA?.ToString("dd MMMM yyyy");
             string fechaFinVisita = dataAI.FECHA_FIN_VISITA?.ToString("dd MMMM 'del año' yyyy");
