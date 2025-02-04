@@ -53,8 +53,9 @@ namespace SIA.Helpers
             {
                 HttpClientHandler clientHandler = new HttpClientHandler();
                 clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+                int appId = int.Parse(_config.GetSection("AppsNumber")["AppNumber"]);
 
-                object login = new { hash = hash, appId = 122 };
+                object login = new { hash, appId };
                 var json = JsonConvert.SerializeObject(login);
                 var data = new StringContent(json, Encoding.UTF8, "application/json");
 
