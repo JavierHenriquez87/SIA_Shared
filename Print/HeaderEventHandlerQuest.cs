@@ -33,23 +33,26 @@ public class HeaderEventHandlerQuest
 
     private void ComposeLogoAndText(IContainer container)
     {
-        // Usar un Stack para superponer la imagen y el texto
         container.Stack(stack =>
         {
-            // Agregar la imagen
-            stack.Item().Image("wwwroot/assets/images/pdf-headers.png", ImageScaling.FitArea);
+            // Agregar la imagen centrada con un ancho de 4.26 cm
+            stack.Item().AlignCenter().Width(4.26f * 28.35f).Image("wwwroot/assets/images/logoNew.png", ImageScaling.FitWidth);
 
-            // Agregar el texto superpuesto
+            // Agregar el texto alineado a la derecha
             stack.Item().PaddingRight(40).Text(text =>
             {
                 text.Span(_id)
-                    .FontColor("#80BD9F") // Color del texto (código hexadecimal)
-                    .FontSize(11) // Tamaño de la fuente
-                    .FontFamily("Arial") // Fuente
+                    .FontColor("#80BD9F")
+                    .FontSize(11)
+                    .FontFamily("Arial")
                     .Bold();
                 text.AlignRight();
-
             });
         });
     }
+
+
+
+
+
 }

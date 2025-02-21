@@ -46,6 +46,15 @@ async function GuardarAuditoriaIntegral() {
             confirmButtonColor: '#2A3042',
             confirmButtonText: 'Ok'
         })
+    } else if (val == "errorF3") {
+        Swal.fire({
+            title: 'Error',
+            text: "La fecha de Inicio del periodo no puede ser menor al dia actual",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#2A3042',
+            confirmButtonText: 'Ok'
+        })
     } else {
         Swal.showLoading();
 
@@ -126,6 +135,11 @@ function ValidacionGuardarAudInteg() {
     }
 
     if (errorValidacion == false) {
+        // Validar que la fecha de fin no sea menor que la de inicio
+        if (new Date(fechaFinVisita) < new Date()) {
+            return "errorF3";
+        }
+
         // Validar que la fecha de fin no sea menor que la de inicio
         if (new Date(fechaFinVisita) < new Date(fechaInicioVisita)) {
             return "errorF1";

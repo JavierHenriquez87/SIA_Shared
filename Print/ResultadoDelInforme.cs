@@ -173,7 +173,7 @@ namespace SIA.Print
 
             container.PaddingLeft(40).PaddingRight(40).PaddingTop(20).Column(column =>
             {
-                column.Item().AlignCenter().PaddingBottom(20).Text(text =>
+                column.Item().AlignCenter().PaddingBottom(5).Text(text =>
                 {
                     text.Span("INFORME PRELIMINAR AUDITORÍA INTEGRAL AGENCIA SAN MARCOS")
                         .FontSize(13)
@@ -182,7 +182,15 @@ namespace SIA.Print
                         .Bold();
                 });
 
-                column.Item().Text("ELVIN NOEL ORELLANA")
+                // Agregar una línea verde en la parte inferior
+                column.Item().Height(1).Background("#007A3D"); // Puedes ajustar el alto para hacerlo más grueso si es necesario
+
+                column.Item().PaddingTop(20).Text("Señores(as)")
+                    .FontSize(11)
+                    .FontFamily("Arial")
+                    .FontColor(_helpersQuestPDF.ColorGrisHtml());
+
+                column.Item().PaddingTop(5).Text("ELVIN NOEL ORELLANA")
                     .FontFamily("Arial")
                     .FontSize(12)
                     .Bold()
@@ -536,7 +544,8 @@ namespace SIA.Print
                                             .FontSize(10)
                                             .Bold();
                                     }
-                                    else {
+                                    else
+                                    {
                                         // Título de nueva sección
                                         table.Cell().Background(_helpersQuestPDF.ColorSubTituloFondoTablaHtml()).BorderTop(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).Padding(5).AlignCenter().Text(seccion)
                                             .FontColor(_helpersQuestPDF.ColorGrisHtml())
@@ -833,7 +842,7 @@ namespace SIA.Print
                         .FontFamily("Arial");
                 }
 
-                
+
                 if (seccInformesPreli != null && seccInformesPreli.Count > 1)
                 {
                     foreach (var secc in seccInformesPreli)
