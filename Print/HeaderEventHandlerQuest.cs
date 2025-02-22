@@ -36,7 +36,7 @@ public class HeaderEventHandlerQuest
         container.Stack(stack =>
         {
             // Agregar la imagen centrada con un ancho de 4.26 cm
-            stack.Item().AlignCenter().Width(4.26f * 28.35f).Image("wwwroot/assets/images/logoNew.png", ImageScaling.FitWidth);
+            stack.Item().PaddingLeft(30).Width(4.26f * 28.35f).Image("wwwroot/assets/images/pdfNew-headers.png", ImageScaling.FitWidth);
 
             // Agregar el texto alineado a la derecha
             stack.Item().PaddingRight(40).Text(text =>

@@ -43,7 +43,7 @@ namespace SIA.Print
                     page.Content().Element(ComposeContent);
 
                     // Agregar el footer
-                    page.Footer().Element(_footerEventHandler.ComposeFooter);
+                    page.Footer().Element(container => _footerEventHandler.ComposeFooter(container, false));
                 });
             });
 

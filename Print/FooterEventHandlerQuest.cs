@@ -4,7 +4,7 @@ using QuestPDF.Infrastructure;
 
 public class FooterEventHandlerQuest
 {
-    public void ComposeFooter(IContainer container)
+    public void ComposeFooter(IContainer container, bool validate = false)
     {
         // Definir el ancho de la página
         var pageWidth = PageSizes.Letter.Width;
@@ -19,8 +19,14 @@ public class FooterEventHandlerQuest
             });
 
             // Agregar el logo del banco
-            table.Cell().Element(ComposeLogo);
-
+            if(!validate)
+            {
+                table.Cell().Element(ComposeLogo);
+            }
+            else // Agregar solo espacio
+            {
+                table.Cell().Height(60);
+            }
             // Espacio vacío para la segunda columna (opcional)
             table.Cell().Element(ComposeEmptySpace);
         });

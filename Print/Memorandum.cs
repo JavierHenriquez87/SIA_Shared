@@ -37,13 +37,13 @@ namespace SIA.Print
                     var headerEventHandler = new HeaderEventHandlerQuest(id);
 
                     // Agregar el header
-                    page.Header().Element(headerEventHandler.ComposeHeader);
+                    page.Header().ShowIf(context => context.PageNumber > 1).Element(headerEventHandler.ComposeHeader);
 
                     // Agregar el contenido
                     page.Content().Element(container => ComposeContent(container, id));
 
                     // Agregar el footer
-                    page.Footer().Element(_footerEventHandler.ComposeFooter);
+                    page.Footer().Element(container => _footerEventHandler.ComposeFooter(container, false));
                 });
             });
 
@@ -80,6 +80,9 @@ namespace SIA.Print
 
             container.PaddingLeft(40).PaddingRight(40).PaddingTop(20).Column(column =>
             {
+                // Agregar la imagen centrada con un ancho de 4.26 cm
+                column.Item().AlignCenter().Width(4.26f * 28.35f).Image("wwwroot/assets/images/logoNew.png", ImageScaling.FitWidth);
+
                 column.Item().AlignCenter().PaddingBottom(20).Text(text =>
                 {
                     text.Span("MEMORÁNDUM DE PLANIFICACIÓN")
