@@ -3127,14 +3127,32 @@ namespace SIA.Controllers
                 });
             }
 
+            //obtenemos el numero de auditorias especificas de la integral
+            var AuditoriaI = await _context.AU_AUDITORIAS_INTEGRALES
+                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == cod)
+                    .Where(e => e.ANIO_AI == anio)
+                    .FirstOrDefaultAsync();
+            //Obtenemos informacion complementaria del universo auditable
+            var universos = await _context.MG_UNIVERSO_AUDITABLE
+                                .Where(u => u.CODIGO_UNIVERSO_AUDITABLE == AuditoriaI.CODIGO_UNIVERSO_AUDITABLE)
+                                .FirstOrDefaultAsync();
+
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
             ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
+            ViewBag.CODIGO_AUDITORIA = AuditoriaI.CODIGO_AUDITORIA;
+            ViewBag.IP_FECHA_ENVIADO = AuditoriaI.IP_FECHA_ENVIADO;
+            ViewBag.IP_FECHA_RECIBIDO = AuditoriaI.IP_FECHA_RECIBIDO;
+            ViewBag.UNIVERSO_AUDITABLE = universos.NOMBRE.ToUpper();
             ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
             ViewBag.AU_TXT_INFOR_PRELIM = Infor;
             ViewBag.HALLAZGOS = hallazgosAllData;
             ViewBag.HALLAZGOS_ANTERIORES = hallazgosAnteriores;
             ViewBag.SECC_INF_PRELI = seccInformesPreli;
             ViewBag.RESULTADOS_AUDITORIAS = resultadosAuditorias;
+            ViewBag.FECHA_INFORME = AuditoriaI.IP_FECHA_ENVIADO.HasValue
+                                    ? AuditoriaI.IP_FECHA_ENVIADO.Value.ToString("dd 'de' MMMM 'del' yyyy")
+                                    : DateTime.Now.ToString("dd 'de' MMMM 'del' yyyy");
+
 
             return View();
         }

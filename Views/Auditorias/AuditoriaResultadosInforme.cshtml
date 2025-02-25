@@ -17,7 +17,7 @@
 <div class="container">
     <div class="form-container">
         <h3>
-            INFORME PRELIMINAR AGE101-1-2024 AUDITORÍA INTEGRAL AGENCIA SAN MARCOS
+            INFORME PRELIMINAR @ViewBag.TITULO_AUDITORIA
         </h3>
 
         <div class="row">
@@ -29,15 +29,15 @@
             </div>
 
             <h5>
-                IP-AGE101-1-2024
+                IP-@ViewBag.CODIGO_AUDITORIA
             </h5>
 
             <h5>
-                Fecha de emisión: 25/05/2024
+                Fecha de emisión: @ViewBag.IP_FECHA_ENVIADO
             </h5>
 
             <h5>
-                Fecha de recibido: 25/05/2024
+                Fecha de recibido: @ViewBag.IP_FECHA_RECIBIDO
             </h5>
         </div>
 
@@ -57,12 +57,12 @@
         <div class="image-container" style="text-align: center;">
             <img src="~/assets/images/logoNew.png" alt="Logo" style="width: 4.26cm;">
             <div class="text-overlay">
-                AGE101-1-2024
+                @ViewBag.CODIGO_AUDITORIA
             </div>
         </div>
 
         <h4 style="text-align: center; margin-top: 40px; border-bottom: 2px solid #007A3D; padding-bottom: 10px;">
-            INFORME PRELIMINAR AUDITORÍA INTEGRAL AGENCIA SAN MARCOS
+            INFORME PRELIMINAR DE AUDITORÍA INTEGRAL @ViewBag.UNIVERSO_AUDITABLE
         </h4>
 
         <div style="font-size: 14px; margin-top: 30px" class="row">
@@ -78,7 +78,7 @@
                 CC.<br />
                 Coordinador de Zona I<br /><br />
                 Fundación Microfinanciera Hermandad de Honduras, OPDF<br />
-                San Marcos, Ocotepeque, 30 de junio 2024<br /><br />
+                San Marcos, Ocotepeque, @ViewBag.FECHA_INFORME<br /><br />
             </a>
 
             <div class="button-container" style="margin-bottom: 10px">
@@ -96,7 +96,7 @@
                 }
                 else
                 {
-                    motivo = "<p>Como Auditores Internos de la Fundación Microfinanciera Hermandad de Honduras y dando cumplimiento al Plan Anual de Trabajo de Auditoría Interna para el año 2024, nos permitimos presentar el informe correspondiente a la Auditoría Agencia Santa Barbara.</p>";
+                    motivo = $"<p>Como Auditores Internos de la Fundación Microfinanciera Hermandad de Honduras y dando cumplimiento al Plan Anual de Trabajo de Auditoría Interna para el año 2024, nos permitimos presentar el informe correspondiente a la Auditoría {ViewBag.UNIVERSO_AUDITABLE}</p>";
                 }
 
                 <div id="motivoContent" style="white-space: pre-line;">@Html.Raw(motivo)</div>
@@ -108,7 +108,7 @@
 
             <div class="button-container" style="margin-bottom: 10px">
                 <a style="font-weight: bold;">
-                    1. Objetivo
+                    1. Objetivo del informe
                 </a>
                 <button type="button" onclick="ModificarTexto(@id, 'objetivoContent')" class="btn btn-primary">Modificar Objetivo</button>
             </div>
@@ -129,7 +129,7 @@
 
             <div class="button-container" style="margin-bottom: 10px">
                 <a style="font-weight: bold;">
-                    2. Alcance
+                    2. Alcance de la auditoría
                 </a>
                 <button type="button" onclick="ModificarTexto(@id, 'alcanceContent')" class="btn btn-primary">Modificar Alcance</button>
             </div>
@@ -207,7 +207,7 @@
                         if (ViewBag.HALLAZGOS_ANTERIORES == null || ViewBag.HALLAZGOS_ANTERIORES.Count == 0)
                         {
                             <tr>
-                                <td colspan="3">Sin hallazgos encontrados</td>
+                                <td colspan="3">A la fecha de nuestra revisión, no se tienen hallazgos pendientes de subsanar correspondientes a los informes anteriores emitidos.</td>
                             </tr>
                         }
                         else
@@ -269,7 +269,7 @@
                 }
                 else
                 {
-                    procedimientoAuditoria = "<div>Los procedimientos y técnicas utilizadas para la realización de este trabajo,</div><div>fueron los siguientes:</div>";
+                    procedimientoAuditoria = "<div>Los procedimientos y técnicas utilizadas para la realización de este trabajo, fueron los siguientes:</div>";
                 }
 
                 <div id="procedimientoAuditoriaContent" style="white-space: pre-line;">@Html.Raw(procedimientoAuditoria)</div>
@@ -289,7 +289,7 @@
 
                     <table class="tabla-resumen">
                         <tr>
-                            <th colspan="2" class="titulo">RESUMEN DE CONTROL - AGENCIA</th>
+                            <th colspan="2" class="titulo">RESUMEN DE CONTROL - @ViewBag.UNIVERSO_AUDITABLE</th>
                         </tr>
                         <tr>
                             <th colspan="2" class="titulo">@resultadoAuditoria.DESCRIPCION.ToUpper()</th>

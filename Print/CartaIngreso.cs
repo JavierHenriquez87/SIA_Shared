@@ -105,12 +105,12 @@ namespace SIA.Print
                 // Agregar el texto alineado a la derecha
                 column.Item().PaddingRight(40).Text(text =>
                 {
-                    text.Span(_id)
-                        .FontColor("#80BD9F")
-                        .FontSize(11)
-                        .FontFamily("Arial")
-                        .Bold();
-                    text.AlignRight();
+                    //text.Span(_id)
+                    //    .FontColor("#80BD9F")
+                    //    .FontSize(11)
+                    //    .FontFamily("Arial")
+                    //    .Bold();
+                    //text.AlignRight();
                 });
 
                 column.Item().Text(text =>
