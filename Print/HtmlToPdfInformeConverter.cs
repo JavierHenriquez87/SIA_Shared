@@ -6,9 +6,9 @@ using QuestPDF.Infrastructure;
 
 namespace SIA.Print
 {
-    public class HtmlToPdfConverter
+    public class HtmlToPdfInformeConverter
     {
-        public void AddHtmlContent(ColumnDescriptor column, string htmlContent, HelpersQuestPDF _helpersQuestPDF, int fontSize = 13)
+        public void AddHtmlContent(ColumnDescriptor column, string htmlContent, HelpersQuestPDF _helpersQuestPDF, int fontSize = 13, float sangria = 0)
         {
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(htmlContent);
@@ -20,7 +20,7 @@ namespace SIA.Print
                     switch (node.Name.ToLower())
                     {
                         case "p":
-                            column.Item().Text(text =>
+                            column.Item().AlignLeft().PaddingLeft(sangria).Text(text =>
                             {
                                 foreach (var childNode in node.ChildNodes)
                                 {
@@ -43,14 +43,14 @@ namespace SIA.Print
                                     }
                                 }
                             });
-                            column.Item().PaddingBottom(10);
+                            column.Item().AlignLeft().PaddingLeft(sangria).PaddingBottom(10);
                             break;
 
                         case "ul": // Lista no ordenada (viñetas)
                             foreach (var li in node.SelectNodes("li"))
                             {
                                 column.Item()
-                                    .PaddingLeft(10)
+                                    .PaddingLeft(sangria)
                                     .PaddingBottom(10)
                                     .Text(text =>
                                     {
@@ -67,7 +67,8 @@ namespace SIA.Print
                             foreach (var li in node.SelectNodes("li"))
                             {
                                 column.Item()
-                                    .PaddingLeft(10)
+                                    .AlignLeft()
+                                    .PaddingLeft(sangria)
                                     .PaddingBottom(10)
                                     .Text(text =>
                                     {
@@ -82,7 +83,7 @@ namespace SIA.Print
 
                         case "b":
                         case "strong":
-                            column.Item().Text(text =>
+                            column.Item().AlignLeft().PaddingLeft(sangria).Text(text =>
                             {
                                 text.Span(node.InnerText)
                                     .FontSize(fontSize)
@@ -94,7 +95,7 @@ namespace SIA.Print
 
                         default:
                             // Si no es un elemento reconocido, simplemente lo agregamos como texto
-                            column.Item().Text(text =>
+                            column.Item().AlignLeft().PaddingLeft(sangria).Text(text =>
                             {
                                 text.Span(node.InnerText)
                                     .FontSize(fontSize)

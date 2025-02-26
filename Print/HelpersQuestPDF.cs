@@ -36,6 +36,18 @@ namespace SIA.Print
         public string ColorAltoTablaHtml() => "#F04438"; // RGB(240, 68, 56)
         public string ColorBlancoHtml() => "#FFFFFF"; // RGB(255, 255, 255)
 
+        //COLORES DEL DOCUMENTO
+        public string ColorSeccionesPrincipales() => "#007A3D"; // Verde
+        public string ColorPrioridadAlto() => "#FF0000"; // Rojo
+        public string ColorPrioridadMedio() => "#FC9804"; // Naranja
+        public string ColorCriterioEfectoCausa() => "#2F5496"; // Azul
+        public string ColorComentarioAuditadoTitulo() => "#007A3D"; // Verde
+        public string ColorComentarioAuditadoContenido() => "#0070C0"; // Azul
+        public string ColorNegroPrincipal() => "#000000"; // Negro
+        public string ColorPrioridadBajo() => "#00B050"; // Verde
+        public string ColorCafeTabla() => "#7A5100"; // Café
+        public string ColorGrisTabla() => "#F2F2F2"; // Gris
+        public string ColorAmarilloTabla() => "#FFFF00"; // Amarillo
     }
 
 }

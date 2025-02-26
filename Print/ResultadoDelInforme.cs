@@ -61,7 +61,7 @@ namespace SIA.Print
 
         private async void ComposeContent(IContainer container)
         {
-            var converter = new HtmlToPdfConverter();
+            var converter = new HtmlToPdfInformeConverter();
 
             //obtenemos el numero de auditorias informe
             var Infor = await _context.AU_TXT_INFOR_PRELIM
@@ -171,7 +171,7 @@ namespace SIA.Print
                 });
             }
 
-            container.PaddingLeft(40).PaddingRight(40).PaddingTop(20).Column(column =>
+            container.PaddingLeft(60).PaddingRight(60).PaddingTop(10).Column(column =>
             {
                 // Agregar la imagen centrada con un ancho de 4.26 cm
                 column.Item().AlignCenter().PaddingBottom(5).Width(4.26f * 28.35f).Image("wwwroot/assets/images/logoNew.png", ImageScaling.FitWidth);
@@ -180,8 +180,8 @@ namespace SIA.Print
                 column.Item().AlignCenter().PaddingBottom(5).Text(text =>
                 {
                     text.Span("INFORME PRELIMINAR AUDITORÍA INTEGRAL AGENCIA SAN MARCOS")
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontSize(12)
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial")
                         .Bold();
                 });
@@ -190,46 +190,46 @@ namespace SIA.Print
                 column.Item().Height(1).Background("#007A3D"); // Puedes ajustar el alto para hacerlo más grueso si es necesario
 
                 column.Item().PaddingTop(20).Text("Señores(as)")
-                    .FontSize(11)
+                    .FontSize(12)
                     .FontFamily("Arial")
-                    .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
                 column.Item().PaddingTop(5).Text("ELVIN NOEL ORELLANA")
                     .FontFamily("Arial")
                     .FontSize(12)
                     .Bold()
-                    .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
                 column.Item().PaddingTop(5).Text("Jefe de Agencia")
-                    .FontSize(11)
+                    .FontSize(12)
                     .FontFamily("Arial")
-                    .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
                 column.Item().PaddingTop(18).Text("CC.")
-                    .FontSize(11)
+                    .FontSize(12)
                     .FontFamily("Arial")
-                    .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
                 column.Item().PaddingTop(5).Text("Coordinador de Zona I")
-                    .FontSize(11)
+                    .FontSize(12)
                     .FontFamily("Arial")
-                    .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
                 column.Item().PaddingTop(18).Text("Fundación Microfinanciera Hermandad de Honduras, OPDF")
-                    .FontSize(11)
+                    .FontSize(12)
                     .FontFamily("Arial")
-                    .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
                 column.Item().PaddingTop(5).Text("San Marcos, " + DateTime.Now.ToString("dd 'de' MMMM 'del' yyyy"))
-                    .FontSize(11)
+                    .FontSize(12)
                     .FontFamily("Arial")
-                    .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
-                column.Item().PaddingTop(20).PaddingBottom(5).Text("MOTIVO DEL INFORME")
+                column.Item().PaddingTop(14).PaddingBottom(5).Text("MOTIVO DEL INFORME")
                     .FontFamily("Arial")
                     .FontSize(12)
                     .Bold()
-                    .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
                 var motivo = "";
                 if (Infor != null && Infor.MOTIVO_INFORME != null)
@@ -242,23 +242,22 @@ namespace SIA.Print
                 }
 
                 // AGREGAMOS EL TEXTO QUE ES HTML AL PDF
-                var converter = new HtmlToPdfConverter();
-                converter.AddHtmlContent(column, motivo, _helpersQuestPDF, 11);
+                converter.AddHtmlContent(column, motivo, _helpersQuestPDF, 12, 0);
 
-                column.Item().AlignCenter().PaddingBottom(12).Text(text =>
+                column.Item().PaddingLeft(14.2f).PaddingBottom(12).PaddingTop(14).Text(text =>
                 {
-                    text.Span("I. INTRODUCCIÓN")
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                    text.Span("I.   INTRODUCCIÓN")
+                        .FontSize(12)
+                        .FontColor(_helpersQuestPDF.ColorSeccionesPrincipales())
                         .FontFamily("Arial")
                         .Bold();
                 });
 
-                column.Item().PaddingBottom(5).Text("1. Objetivo")
+                column.Item().PaddingLeft(18.1f).PaddingBottom(5).PaddingTop(14).Text("1.  Objetivo")
                    .FontFamily("Arial")
                    .FontSize(12)
                    .Bold()
-                   .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                   .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
                 var objetivo = "";
                 if (Infor != null && Infor.OBJETIVO != null)
@@ -271,13 +270,13 @@ namespace SIA.Print
                 }
 
                 // AGREGAMOS EL TEXTO QUE ES HTML AL PDF
-                converter.AddHtmlContent(column, objetivo, _helpersQuestPDF, 11);
+                converter.AddHtmlContent(column, objetivo, _helpersQuestPDF, 12, 35.4f);
 
-                column.Item().PaddingBottom(5).Text("2. Alcance")
+                column.Item().PaddingLeft(18.1f).PaddingBottom(5).PaddingTop(14).Text("2.  Alcance")
                    .FontFamily("Arial")
                    .FontSize(12)
                    .Bold()
-                   .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                   .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
                 var alcance = "";
                 if (Infor != null && Infor.ALCANCE != null)
@@ -290,41 +289,46 @@ namespace SIA.Print
                 }
 
                 // AGREGAMOS EL TEXTO QUE ES HTML AL PDF
-                converter.AddHtmlContent(column, alcance, _helpersQuestPDF, 11);
+                converter.AddHtmlContent(column, alcance, _helpersQuestPDF, 12, 35.4f);
 
-                column.Item().PaddingBottom(5).Text("3. Resultados Generales")
+                column.Item().PaddingLeft(18.1f).PaddingBottom(5).PaddingTop(14).Text("3.  Resultados Generales")
                    .FontFamily("Arial")
                    .FontSize(12)
                    .Bold()
-                   .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                   .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
-                column.Item().PaddingTop(10).PaddingBottom(12).Table(table =>
+                column.Item().PaddingLeft(35.4f).PaddingBottom(5).Text("Como resultado de nuestra Auditoría a continuación el resumen de los hallazgos identificados:")
+                   .FontFamily("Arial")
+                   .FontSize(12)
+                   .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
+
+                column.Item().PaddingLeft(35.4f).PaddingTop(10).PaddingBottom(12).Table(table =>
                 {
                     // Configuración de las columnas (20%, 50%, 30%)
                     table.ColumnsDefinition(columns =>
                     {
+                        columns.RelativeColumn(10);
+                        columns.RelativeColumn(70);
                         columns.RelativeColumn(20);
-                        columns.RelativeColumn(50);
-                        columns.RelativeColumn(30);
                     });
 
                     // Fila de encabezados
-                    table.Cell().Row(1).Column(1).Background(_helpersQuestPDF.ColorGrisClaroHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("ID")
-                        .FontSize(11)
+                    table.Cell().Row(1).Column(1).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("N°")
+                        .FontSize(12)
                         .Bold()
-                        .FontColor(_helpersQuestPDF.ColorGrisOscuroHtml())
+                        .FontColor(_helpersQuestPDF.ColorBlancoHtml())
                         .FontFamily("Arial Bold");
 
-                    table.Cell().Row(1).Column(2).Background(_helpersQuestPDF.ColorGrisClaroHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Hallazgos")
-                        .FontSize(11)
+                    table.Cell().Row(1).Column(2).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Hallazgos")
+                        .FontSize(12)
                         .Bold()
-                        .FontColor(_helpersQuestPDF.ColorGrisOscuroHtml())
+                        .FontColor(_helpersQuestPDF.ColorBlancoHtml())
                         .FontFamily("Arial Bold");
 
-                    table.Cell().Row(1).Column(3).Background(_helpersQuestPDF.ColorGrisClaroHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Prioridad")
-                        .FontSize(11)
+                    table.Cell().Row(1).Column(3).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Prioridad")
+                        .FontSize(12)
                         .Bold()
-                        .FontColor(_helpersQuestPDF.ColorGrisOscuroHtml())
+                        .FontColor(_helpersQuestPDF.ColorBlancoHtml())
                         .FontFamily("Arial Bold");
 
                     // Validación de datos
@@ -332,8 +336,8 @@ namespace SIA.Print
                     {
                         // Celda única cuando no hay datos
                         table.Cell().Row(2).ColumnSpan(3).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Sin hallazgos encontrados")
-                            .FontSize(10)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                             .FontFamily("Arial");
                     }
                     else
@@ -341,7 +345,7 @@ namespace SIA.Print
                         // Agregar datos dinámicamente
                         foreach (var HALLAZGO in hallazgosAllData)
                         {
-                            var riesgo = HALLAZGO.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO.NIVEL_RIESGO == 2 ? "MEDIO" : "ALTO";
+                            var riesgo = HALLAZGO.NIVEL_RIESGO == 1 ? "Bajo" : HALLAZGO.NIVEL_RIESGO == 2 ? "Medio" : "Alto";
                             var colorEstado = HALLAZGO.NIVEL_RIESGO == 1
                                 ? _helpersQuestPDF.ColorBajoTablaHtml()
                                 : HALLAZGO.NIVEL_RIESGO == 2
@@ -350,19 +354,19 @@ namespace SIA.Print
 
                             // Columna 1: ID
                             table.Cell().Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).AlignCenter().Padding(4).AlignMiddle().Text(HALLAZGO.CODIGO_HALLAZGO.ToString())
-                                .FontSize(11)
-                                .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                                .FontSize(12)
+                                .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                                 .FontFamily("Arial");
 
                             // Columna 2: Hallazgos
                             table.Cell().Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).PaddingLeft(6).AlignMiddle().Text(HALLAZGO.HALLAZGO)
-                                .FontSize(11)
-                                .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                                .FontSize(12)
+                                .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                                 .FontFamily("Arial");
 
                             // Columna 3: Prioridad
                             table.Cell().Background(colorEstado).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text(riesgo)
-                                .FontSize(9)
+                                .FontSize(12)
                                 .Bold()
                                 .FontColor(_helpersQuestPDF.ColorBlancoHtml())
                                 .FontFamily("Arial Bold");
@@ -370,108 +374,109 @@ namespace SIA.Print
                     }
                 });
 
-                column.Item().PaddingBottom(5).Text("4. Seguimientos a Informes Anteriores")
+                column.Item().PaddingLeft(18.1f).PaddingBottom(5).PaddingTop(14).Text("4.  Seguimientos a Informes Anteriores")
                    .FontFamily("Arial")
                    .FontSize(12)
                    .Bold()
-                   .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                   .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
 
-                column.Item().PaddingTop(10).PaddingBottom(12).Table(table =>
+                if (hallazgosAnteriores == null || hallazgosAnteriores.Count == 0)
                 {
-                    // Configuración de las columnas (20%, 50%, 30%)
-                    table.ColumnsDefinition(columns =>
-                    {
-                        columns.RelativeColumn(20);
-                        columns.RelativeColumn(50);
-                        columns.RelativeColumn(30);
-                    });
-
-                    // Fila de encabezados
-                    table.Cell().Row(1).Column(1).Background(_helpersQuestPDF.ColorGrisClaroHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("ID")
-                        .FontSize(11)
-                        .Bold()
-                        .FontColor(_helpersQuestPDF.ColorGrisOscuroHtml())
-                        .FontFamily("Arial Bold");
-
-                    table.Cell().Row(1).Column(2).Background(_helpersQuestPDF.ColorGrisClaroHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Hallazgos")
-                        .FontSize(11)
-                        .Bold()
-                        .FontColor(_helpersQuestPDF.ColorGrisOscuroHtml())
-                        .FontFamily("Arial Bold");
-
-                    table.Cell().Row(1).Column(3).Background(_helpersQuestPDF.ColorGrisClaroHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Prioridad")
-                        .FontSize(11)
-                        .Bold()
-                        .FontColor(_helpersQuestPDF.ColorGrisOscuroHtml())
-                        .FontFamily("Arial Bold");
-
-                    // Validación de datos
-                    if (hallazgosAnteriores == null || hallazgosAnteriores.Count == 0)
-                    {
-                        // Celda única cuando no hay datos
-                        table.Cell().Row(2).ColumnSpan(3).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Sin hallazgos encontrados")
-                            .FontSize(10)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                            .FontFamily("Arial");
-                    }
-                    else
-                    {
-                        // Agregar datos dinámicamente
-                        foreach (var HALLAZGO in hallazgosAnteriores)
-                        {
-                            var riesgo = HALLAZGO.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO.NIVEL_RIESGO == 2 ? "MEDIO" : "ALTO";
-                            var colorEstado = HALLAZGO.NIVEL_RIESGO == 1
-                                ? _helpersQuestPDF.ColorBajoTablaHtml()
-                                : HALLAZGO.NIVEL_RIESGO == 2
-                                    ? _helpersQuestPDF.ColorMedioTablaHtml()
-                                    : _helpersQuestPDF.ColorAltoTablaHtml();
-
-                            // Columna 1: ID
-                            table.Cell().Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).AlignCenter().Padding(4).AlignMiddle().Text(HALLAZGO.CODIGO_HALLAZGO.ToString())
-                                .FontSize(11)
-                                .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                                .FontFamily("Arial");
-
-                            // Columna 2: Hallazgos
-                            table.Cell().Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).PaddingLeft(6).AlignMiddle().Text(HALLAZGO.HALLAZGO)
-                                .FontSize(11)
-                                .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                                .FontFamily("Arial");
-
-                            // Columna 3: Prioridad
-                            table.Cell().Background(colorEstado).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text(riesgo)
-                                .FontSize(9)
-                                .Bold()
-                                .FontColor(_helpersQuestPDF.ColorBlancoHtml())
-                                .FontFamily("Arial Bold");
-                        }
-                    }
-                });
-
-                column.Item().PaddingBottom(5).Text("5. Conclusión General")
-                   .FontFamily("Arial")
-                   .FontSize(12)
-                   .Bold()
-                   .FontColor(_helpersQuestPDF.ColorGrisHtml());
-
-                var conclusion = "";
-                if (Infor != null && Infor.TEXTO_CONCLUSION_GENERAL != null)
-                {
-                    conclusion = Infor.TEXTO_CONCLUSION_GENERAL;
+                    column.Item().PaddingLeft(35.4f).PaddingBottom(5).Text("A la fecha de nuestra revisión, no se tienen hallazgos pendientes de subsanar correspondientes a los informes anteriores emitidos.")
+                       .FontFamily("Arial")
+                       .FontSize(12)
+                       .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
                 }
                 else
                 {
-                    conclusion = "<p>Sin Conclusión.</p>";
+                    column.Item().PaddingTop(10).PaddingBottom(12).Table(table =>
+                    {
+                        // Configuración de las columnas (20%, 50%, 30%)
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.RelativeColumn(10);
+                            columns.RelativeColumn(70);
+                            columns.RelativeColumn(20);
+                        });
+
+                        // Fila de encabezados
+                        table.Cell().Row(1).Column(1).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("N°")
+                            .FontSize(12)
+                            .Bold()
+                            .FontColor(_helpersQuestPDF.ColorBlancoHtml())
+                            .FontFamily("Arial Bold");
+
+                        table.Cell().Row(1).Column(2).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Hallazgos")
+                            .FontSize(12)
+                            .Bold()
+                            .FontColor(_helpersQuestPDF.ColorBlancoHtml())
+                            .FontFamily("Arial Bold");
+
+                        table.Cell().Row(1).Column(3).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Prioridad")
+                            .FontSize(12)
+                            .Bold()
+                            .FontColor(_helpersQuestPDF.ColorBlancoHtml())
+                            .FontFamily("Arial Bold");
+
+                        
+                        // Agregar datos dinámicamente
+                        foreach (var HALLAZGO in hallazgosAnteriores)
+                        {
+                            var riesgo = HALLAZGO.NIVEL_RIESGO == 1 ? "Bajo" : HALLAZGO.NIVEL_RIESGO == 2 ? "Medio" : "Alto";
+                            var colorEstado = HALLAZGO.NIVEL_RIESGO == 1
+                                ? _helpersQuestPDF.ColorPrioridadBajo()
+                                : HALLAZGO.NIVEL_RIESGO == 2
+                                    ? _helpersQuestPDF.ColorPrioridadMedio()
+                                    : _helpersQuestPDF.ColorPrioridadAlto();
+
+                            // Columna 1: ID
+                            table.Cell().Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).AlignCenter().Padding(4).AlignMiddle().Text(HALLAZGO.CODIGO_HALLAZGO.ToString())
+                                .FontSize(12)
+                                .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
+                                .FontFamily("Arial");
+
+                            // Columna 2: Hallazgos
+                            table.Cell().Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).PaddingLeft(6).AlignMiddle().Text(HALLAZGO.HALLAZGO)
+                                .FontSize(12)
+                                .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
+                                .FontFamily("Arial");
+
+                            // Columna 3: Prioridad
+                            table.Cell().Background(colorEstado).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text(riesgo)
+                                .FontSize(12)
+                                .Bold()
+                                .FontColor(_helpersQuestPDF.ColorBlancoHtml())
+                                .FontFamily("Arial Bold");
+                        }
+                        
+                    });
                 }
+                
+
+                //column.Item().PaddingLeft(18.1f).PaddingBottom(5).PaddingTop(14).Text("5.  Conclusión General")
+                //   .FontFamily("Arial")
+                //   .FontSize(12)
+                //   .Bold()
+                //   .FontColor(_helpersQuestPDF.ColorNegroPrincipal());
+
+                //var conclusion = "";
+                //if (Infor != null && Infor.TEXTO_CONCLUSION_GENERAL != null)
+                //{
+                //    conclusion = Infor.TEXTO_CONCLUSION_GENERAL;
+                //}
+                //else
+                //{
+                //    conclusion = "<p>Sin Conclusión.</p>";
+                //}
 
                 // AGREGAMOS EL TEXTO QUE ES HTML AL PDF
-                converter.AddHtmlContent(column, conclusion, _helpersQuestPDF, 11);
+                //converter.AddHtmlContent(column, conclusion, _helpersQuestPDF, 12);
 
-                column.Item().AlignCenter().PaddingBottom(12).Text(text =>
+                column.Item().PaddingLeft(14.2f).PaddingBottom(12).PaddingTop(14).Text(text =>
                 {
-                    text.Span("II. PROCEDIMIENTOS DE LA AUDITORÍA")
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                    text.Span("II.   PROCEDIMIENTOS DE LA AUDITORÍA")
+                        .FontSize(12)
+                        .FontColor(_helpersQuestPDF.ColorSeccionesPrincipales())
                         .FontFamily("Arial")
                         .Bold();
                 });
@@ -487,13 +492,13 @@ namespace SIA.Print
                 }
 
                 // AGREGAMOS EL TEXTO QUE ES HTML AL PDF
-                converter.AddHtmlContent(column, procedimientoAuditoria, _helpersQuestPDF, 11);
+                converter.AddHtmlContent(column, procedimientoAuditoria, _helpersQuestPDF, 12, 35.4f);
 
-                column.Item().AlignCenter().PaddingTop(12).Text(text =>
+                column.Item().PaddingLeft(14.2f).PaddingBottom(12).PaddingTop(14).Text(text =>
                 {
-                    text.Span("III. RESULTADOS DE LA AUDITORÍA")
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                    text.Span("III.   RESULTADOS DE LA AUDITORÍA")
+                        .FontSize(12)
+                        .FontColor(_helpersQuestPDF.ColorSeccionesPrincipales())
                         .FontFamily("Arial")
                         .Bold();
                 });
@@ -502,25 +507,25 @@ namespace SIA.Print
                 {
                     foreach (var resultadoAuditoria in resultadosAuditorias)
                     {
-                        column.Item().PaddingTop(12).PaddingBottom(12).PaddingLeft(80).PaddingRight(80).Border(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).AlignCenter().AlignMiddle().Table(table =>
+                        column.Item().PaddingTop(12).PaddingBottom(12).PaddingLeft(30).PaddingRight(30).Border(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).AlignCenter().AlignMiddle().Table(table =>
                         {
                             // Encabezado de la tabla
                             table.ColumnsDefinition(columns =>
                             {
-                                columns.ConstantColumn(150);
+                                columns.ConstantColumn(300);
                                 columns.RelativeColumn(1);
                             });
 
-                            table.Cell().ColumnSpan(2).Background(_helpersQuestPDF.ColorVerdeFondoTablaHtml()).AlignCenter().Padding(5).Text("RESUMEN DE CONTROL - AGENCIA")
+                            table.Cell().ColumnSpan(1).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).AlignCenter().Padding(5).Text("RESUMEN DE CONTROL - AGENCIA")
                                 .FontColor(Colors.White)
                                 .FontFamily("Arial")
-                                .FontSize(11)
+                                .FontSize(12)
                                 .Bold();
 
-                            table.Cell().ColumnSpan(2).Background(_helpersQuestPDF.ColorVerdeFondoTablaHtml()).AlignCenter().Padding(5).Text(resultadoAuditoria.DESCRIPCION.ToUpper())
+                            table.Cell().ColumnSpan(1).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).AlignCenter().Padding(5).Text("PUNTAJE GRADO DE CUMPLIMIENTO")
                                 .FontColor(Colors.White)
                                 .FontFamily("Arial")
-                                .FontSize(11)
+                                .FontSize(12)
                                 .Bold();
 
                             int conteo = 1;
@@ -533,55 +538,32 @@ namespace SIA.Print
                                 {
                                     seccion = porcentajeSubSeccion.Seccion;
 
-                                    if (conteo == 1)
-                                    {
-                                        // Título de nueva sección
-                                        table.Cell().Background(_helpersQuestPDF.ColorSubTituloFondoTablaHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).Padding(5).AlignCenter().Text(seccion)
-                                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                                            .FontFamily("Arial")
-                                            .FontSize(10)
-                                            .Bold();
-
-                                        table.Cell().Background(_helpersQuestPDF.ColorSubTituloFondoTablaHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).Padding(5).AlignCenter().Text("PUNTAJE GRADO DE CUMPLIMIENTO")
-                                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                                            .FontFamily("Arial")
-                                            .FontSize(10)
-                                            .Bold();
-                                    }
-                                    else
-                                    {
-                                        // Título de nueva sección
-                                        table.Cell().Background(_helpersQuestPDF.ColorSubTituloFondoTablaHtml()).BorderTop(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).Padding(5).AlignCenter().Text(seccion)
-                                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                                            .FontFamily("Arial")
-                                            .FontSize(10)
-                                            .Bold();
-
-                                        table.Cell().Background(_helpersQuestPDF.ColorSubTituloFondoTablaHtml()).BorderTop(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).Padding(5).AlignCenter().Text("")
-                                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                                            .FontFamily("Arial")
-                                            .FontSize(10)
-                                            .Bold();
-
-                                    }
+                                    // Título de nueva sección
+                                    table.Cell().ColumnSpan(2).Background(_helpersQuestPDF.ColorCafeTabla()).BorderTop(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).Padding(5).AlignCenter().Text(seccion)
+                                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
+                                        .FontFamily("Arial")
+                                        .FontColor(Colors.White)
+                                        .FontSize(12)
+                                        .Bold();
                                 }
 
 
                                 // Celda de SubSección
-                                table.Cell().Border(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).Padding(5).AlignCenter().Text($"{conteo}. {porcentajeSubSeccion.SubSeccion.ToUpper()}")
-                                    .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                                table.Cell().Border(1).Background(_helpersQuestPDF.ColorGrisTabla()).BorderColor(_helpersQuestPDF.ColorGrisTabla()).Padding(5).AlignLeft().Text($"{conteo}. {porcentajeSubSeccion.SubSeccion.ToUpper()}")
+                                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                                     .FontFamily("Arial")
-                                    .FontSize(10);
+                                    .FontSize(12)
+                                    .Bold();
 
                                 // Celda de Porcentaje
                                 table.Cell().Background(GetColorForPercentage((double)porcentajeSubSeccion.PorcentajeCumplimiento))
                                     .Border(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml())
                                     .Padding(5).AlignCenter()
                                     .Text($"{porcentajeSubSeccion.PorcentajeCumplimiento}%")
-                                    .FontColor((double)porcentajeSubSeccion.PorcentajeCumplimiento <= 50.90 ? Colors.White : _helpersQuestPDF.ColorGrisHtml())
+                                    .FontColor((double)porcentajeSubSeccion.PorcentajeCumplimiento <= 50.90 ? Colors.White : _helpersQuestPDF.ColorNegroPrincipal())
                                     .Bold()
                                     .FontFamily("Arial")
-                                    .FontSize(11);
+                                    .FontSize(12);
 
                                 conteo++;
                                 porcentaje += porcentajeSubSeccion.PorcentajeCumplimiento;
@@ -591,16 +573,17 @@ namespace SIA.Print
                             double porcentajeTotal = (porcentaje != 0 ? Math.Round((double)porcentaje / (conteo - 1), 2) : 0);
 
                             // Fila del puntaje total
-                            table.Cell().ColumnSpan(1).Background(_helpersQuestPDF.ColorVerdeLimonFondoTablaHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).Padding(5).AlignCenter().Text("Puntaje de la Agencia...")
+                            table.Cell().ColumnSpan(1).Background(_helpersQuestPDF.ColorVerdeLimonFondoTablaHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).Padding(5).AlignCenter().Text("PUNTAJE DE LA AGENCIA")
                                 .FontColor(Colors.White)
                                 .FontFamily("Arial")
-                                .FontSize(11)
+                                .FontSize(12)
                                 .Bold();
 
                             table.Cell().Background(GetColorForPercentage(porcentajeTotal)).Border(1).BorderColor(_helpersQuestPDF.ColorVerdeHtml()).Padding(5).AlignCenter().Text($"{porcentajeTotal}%")
-                                .FontColor(porcentajeTotal <= 50.90 ? Colors.White : _helpersQuestPDF.ColorGrisHtml())
+                                .FontColor(porcentajeTotal <= 50.90 ? Colors.White : _helpersQuestPDF.ColorNegroPrincipal())
                                 .FontFamily("Arial")
-                                .FontSize(11);
+                                .FontSize(12)
+                                .Bold();
                         });
                     }
                 }
@@ -609,34 +592,35 @@ namespace SIA.Print
                 if (hallazgosAllData == null || hallazgosAllData.Count == 0)
                 {
                     column.Item().PaddingTop(10).Text("Sin hallazgos encontrados")
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontSize(12)
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial")
                         .AlignCenter();
                 }
                 else
                 {
+                    int countHallazgo = 1;
                     foreach (var HALLAZGO in hallazgosAllData)
                     {
-                        var calif = HALLAZGO.NIVEL_RIESGO == 1 ? " - BAJO" : HALLAZGO.NIVEL_RIESGO == 2 ? " - MEDIO" : HALLAZGO.NIVEL_RIESGO == 3 ? " - ALTO" : "";
-                        var colorEstado = HALLAZGO.NIVEL_RIESGO == 1 ? _helpersQuestPDF.ColorBajoTablaHtml() : HALLAZGO.NIVEL_RIESGO == 2 ? _helpersQuestPDF.ColorMedioTablaHtml() : _helpersQuestPDF.ColorAltoTablaHtml();
+                        var calif = HALLAZGO.NIVEL_RIESGO == 1 ? " - Bajo" : HALLAZGO.NIVEL_RIESGO == 2 ? " - Medio" : HALLAZGO.NIVEL_RIESGO == 3 ? " - Alto" : "";
+                        var colorEstado = HALLAZGO.NIVEL_RIESGO == 1 ? _helpersQuestPDF.ColorPrioridadBajo() : HALLAZGO.NIVEL_RIESGO == 2 ? _helpersQuestPDF.ColorPrioridadMedio() : _helpersQuestPDF.ColorPrioridadAlto();
 
-                        column.Item().PaddingTop(10).Text(text =>
+                        column.Item().PaddingLeft(14.2f).PaddingTop(14).Text(text =>
                         {
-                            text.Span(HALLAZGO.HALLAZGO.ToUpper())
+                            text.Span(countHallazgo + ". " + HALLAZGO.HALLAZGO.ToUpper())
                                 .FontSize(12)
-                                .FontColor(_helpersQuestPDF.ColorGrisOscuroHtml())
+                                .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                                 .FontFamily("Arial")
                                 .Bold();
                             text.Span(calif)
                                 .FontSize(12)
-                                .FontColor(colorEstado)
-                                .Italic();
+                                .Bold()
+                                .FontColor(colorEstado);
                         });
 
                         if (HALLAZGO.CALIFICACION == 1)
                         {
-                            column.Item().PaddingTop(10).PaddingBottom(12).Table(table =>
+                            column.Item().PaddingTop(12).PaddingBottom(12).PaddingLeft(30).PaddingRight(30).Table(table =>
                             {
                                 table.ColumnsDefinition(columns =>
                                 {
@@ -647,75 +631,80 @@ namespace SIA.Print
                                 });
 
                                 // Fila de encabezados
-                                table.Cell().Row(1).Column(1).Background(_helpersQuestPDF.ColorGrisClaroHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Valor de Muestra")
-                                    .FontSize(11)
+                                table.Cell().Row(1).Column(1).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Valor de Muestra")
+                                    .FontSize(12)
                                     .Bold()
-                                    .FontColor(_helpersQuestPDF.ColorGrisOscuroHtml())
-                                    .FontFamily("Arial Bold");
+                                    .FontColor(_helpersQuestPDF.ColorBlancoHtml())
+                                    .FontFamily("Arial");
 
-                                table.Cell().Row(1).Column(2).Background(_helpersQuestPDF.ColorGrisClaroHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Muestra con Hallazgos")
-                                    .FontSize(11)
+                                table.Cell().Row(1).Column(2).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Muestra con Hallazgos")
+                                    .FontSize(12)
                                     .Bold()
-                                    .FontColor(_helpersQuestPDF.ColorGrisOscuroHtml())
-                                    .FontFamily("Arial Bold");
+                                    .FontColor(_helpersQuestPDF.ColorBlancoHtml())
+                                    .FontFamily("Arial");
 
-                                table.Cell().Row(1).Column(3).Background(_helpersQuestPDF.ColorGrisClaroHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Desviación de Muestra")
-                                    .FontSize(11)
+                                table.Cell().Row(1).Column(3).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Desviación de Muestra")
+                                    .FontSize(12)
                                     .Bold()
-                                    .FontColor(_helpersQuestPDF.ColorGrisOscuroHtml())
-                                    .FontFamily("Arial Bold");
+                                    .FontColor(_helpersQuestPDF.ColorBlancoHtml())
+                                    .FontFamily("Arial");
 
-                                table.Cell().Row(1).Column(4).Background(_helpersQuestPDF.ColorGrisClaroHtml()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Nivel de Riesgo")
-                                    .FontSize(11)
+                                table.Cell().Row(1).Column(4).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Nivel de Riesgo")
+                                    .FontSize(12)
                                     .Bold()
-                                    .FontColor(_helpersQuestPDF.ColorGrisOscuroHtml())
-                                    .FontFamily("Arial Bold");
+                                    .FontColor(_helpersQuestPDF.ColorBlancoHtml())
+                                    .FontFamily("Arial");
 
                                 table.Cell().Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).AlignCenter().Padding(4).AlignMiddle().Text(HALLAZGO.VALOR_MUESTRA.ToString())
-                                    .FontSize(11)
-                                    .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                                    .FontSize(12)
+                                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                                     .FontFamily("Arial");
 
                                 table.Cell().Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).AlignCenter().Padding(4).AlignMiddle().Text(HALLAZGO.MUESTRA_INCONSISTENTE.ToString())
-                                    .FontSize(11)
-                                    .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                                    .FontSize(12)
+                                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                                     .FontFamily("Arial");
 
                                 table.Cell().Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).AlignCenter().Padding(4).AlignMiddle().Text(HALLAZGO.DESVIACION_MUESTRA + " %")
-                                    .FontSize(11)
-                                    .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                                    .FontSize(12)
+                                    .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                                     .FontFamily("Arial");
 
-                                table.Cell().Background(colorEstado).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text(HALLAZGO.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO.NIVEL_RIESGO == 2 ? "MEDIO" : HALLAZGO.NIVEL_RIESGO == 3 ? "ALTO" : "")
-                                    .FontSize(9)
+                                table.Cell().Background(colorEstado).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text(HALLAZGO.NIVEL_RIESGO == 1 ? "Bajo" : HALLAZGO.NIVEL_RIESGO == 2 ? "Medio" : HALLAZGO.NIVEL_RIESGO == 3 ? "Alto" : "")
+                                    .FontSize(12)
                                     .Bold()
                                     .FontColor(_helpersQuestPDF.ColorBlancoHtml())
                                     .BackgroundColor(colorEstado)
-                                    .FontFamily("Arial Bold");
+                                    .FontFamily("Arial");
                             });
 
                         }
 
-                        column.Item().PaddingTop(10).Text(HALLAZGO.CONDICION)
-                            .FontSize(11)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(14).Text("Condición:")
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorPrioridadMedio())
                             .Bold()
                             .FontFamily("Arial");
 
-                        column.Item().PaddingTop(10).Text("Criterio: ")
-                            .FontSize(11)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(5).Text(HALLAZGO.CONDICION)
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
+                            .FontFamily("Arial");
+
+                        column.Item().PaddingLeft(35.4f).PaddingTop(14).Text("Criterio: ")
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorCriterioEfectoCausa())
                             .Bold()
                             .FontFamily("Arial");
 
-                        column.Item().PaddingTop(10).Text(HALLAZGO.CRITERIO)
-                            .FontSize(10)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(5).Text(HALLAZGO.CRITERIO)
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                             .FontFamily("Arial");
 
-                        column.Item().PaddingTop(10).Text("Efectos: ")
-                            .FontSize(11)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(14).Text("Efectos: ")
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorCriterioEfectoCausa())
                             .Bold()
                             .FontFamily("Arial");
 
@@ -723,85 +712,88 @@ namespace SIA.Print
                         {
                             if (CAUSAS.TIPO.Contains("efecto"))
                             {
-                                column.Item().PaddingTop(5).Text("• " + CAUSAS.DESCRIPCION)
-                                .FontSize(10)
-                                .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                                column.Item().PaddingLeft(42.5f).PaddingTop(5).Text("• " + CAUSAS.DESCRIPCION)
+                                .FontSize(12)
+                                .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                                 .FontFamily("Arial");
                             }
                         }
 
-                        column.Item().PaddingTop(10).Text("Causas: ")
-                            .FontSize(11)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(14).Text("Causas: ")
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorCriterioEfectoCausa())
                             .Bold()
                             .FontFamily("Arial");
                         foreach (var CAUSAS in HALLAZGO.Detalles)
                         {
                             if (CAUSAS.TIPO.Contains("causa"))
                             {
-                                column.Item().PaddingTop(5).Text("• " + CAUSAS.DESCRIPCION)
-                                .FontSize(10)
-                                .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                                column.Item().PaddingLeft(42.5f).PaddingTop(5).Text("• " + CAUSAS.DESCRIPCION)
+                                .FontSize(12)
+                                .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                                 .FontFamily("Arial");
                             }
                         }
 
-                        column.Item().PaddingTop(10).Text("Proceso Asociado")
-                            .FontSize(11)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(14).Text("Proceso Asociado")
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorComentarioAuditadoTitulo())
                             .Bold()
                             .FontFamily("Arial");
 
-                        column.Item().PaddingTop(10).Text("Proceso de Consulta en Central de Riesgo - FALTA")
-                            .FontSize(10)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(5).Text("Proceso de Consulta en Central de Riesgo - FALTA")
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                             .FontFamily("Arial");
 
-                        column.Item().PaddingTop(10).Text("Acciones Requeridas: ")
-                            .FontSize(11)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(14).Text("Acciones Requeridas: ")
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorComentarioAuditadoTitulo())
                             .Bold()
                             .FontFamily("Arial");
+
                         foreach (var CAUSAS in HALLAZGO.Detalles)
                         {
                             if (CAUSAS.TIPO.Contains("accion_requerida - FALTA"))
                             {
-                                column.Item().PaddingTop(5).Text("• " + CAUSAS.DESCRIPCION)
-                                .FontSize(10)
-                                .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                                column.Item().PaddingLeft(35.4f).PaddingTop(5).Text("• " + CAUSAS.DESCRIPCION)
+                                .FontSize(12)
+                                .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                                 .FontFamily("Arial");
                             }
                         }
 
-                        column.Item().PaddingTop(10).Text("Contestación")
-                            .FontSize(11)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(14).Text("Contestación")
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorComentarioAuditadoTitulo())
                             .Bold()
                             .FontFamily("Arial");
 
-                        column.Item().PaddingTop(10).Text("Contestación.......  - FALTA")
-                            .FontSize(10)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(5).Text("Contestación.......  - FALTA")
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                             .FontFamily("Arial");
 
-                        column.Item().PaddingTop(10).Text("Comentario del Auditado")
-                            .FontSize(11)
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(14).Text("Comentario del Auditado")
+                            .FontSize(12)
+                            .FontColor(_helpersQuestPDF.ColorComentarioAuditadoTitulo())
                             .Bold()
                             .FontFamily("Arial");
 
-                        column.Item().PaddingTop(10).PaddingBottom(10).Text("Comentario.......  - FALTA")
-                                .FontSize(10)
-                                .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        column.Item().PaddingLeft(35.4f).PaddingTop(5).PaddingBottom(10).Text("Comentario.......  - FALTA")
+                                .FontSize(12)
+                                .FontColor(_helpersQuestPDF.ColorComentarioAuditadoContenido())
                                 .FontFamily("Arial");
+
+                        countHallazgo++;
                     }
                 }
 
-                column.Item().AlignCenter().PaddingBottom(12).Text(text =>
+                column.Item().PaddingLeft(14.2f).PaddingBottom(12).PaddingTop(14).Text(text =>
                 {
-                    text.Span("IV. CONCLUSIONES")
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                    text.Span("IV.  CONCLUSIONES")
+                        .FontSize(12)
+                        .FontColor(_helpersQuestPDF.ColorSeccionesPrincipales())
                         .FontFamily("Arial")
                         .Bold();
                 });
@@ -811,38 +803,38 @@ namespace SIA.Print
                 if (conclusionesFinales != null)
                 {
                     // AGREGAMOS EL TEXTO QUE ES HTML AL PDF
-                    converter.AddHtmlContent(column, conclusionesFinales.TEXTO_SECCION, _helpersQuestPDF, 11);
+                    converter.AddHtmlContent(column, conclusionesFinales.TEXTO_SECCION, _helpersQuestPDF, 12);
                 }
                 else
                 {
                     // Si no hay conclusiones, mostrar mensaje de "Sin conclusiones agregadas"
-                    column.Item().PaddingTop(10).Text("Sin conclusiones agregadas.......")
-                        .FontSize(10)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                    column.Item().PaddingLeft(35.4f).PaddingTop(5).Text("Sin conclusiones agregadas.......")
+                        .FontSize(12)
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 }
 
-                column.Item().AlignCenter().PaddingBottom(12).Text(text =>
+                column.Item().PaddingLeft(14.2f).PaddingBottom(12).PaddingTop(14).Text(text =>
                 {
                     text.Span("V. RECOMENDACIONES DE LA AUDITORÍA")
-                        .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontSize(12)
+                        .FontColor(_helpersQuestPDF.ColorSeccionesPrincipales())
                         .FontFamily("Arial")
                         .Bold();
                 });
 
-                var RecomendacionesFinales = seccInformesPreli.FirstOrDefault(x => x.TITULO.Trim().Equals("V. RECOMENDACIONES DE LA AUDITORÍA", StringComparison.OrdinalIgnoreCase));
+                var RecomendacionesFinales = seccInformesPreli.FirstOrDefault(x => x.TITULO.Trim().Equals("V.   RECOMENDACIONES DE LA AUDITORÍA", StringComparison.OrdinalIgnoreCase));
                 if (RecomendacionesFinales != null)
                 {
                     // AGREGAMOS EL TEXTO QUE ES HTML AL PDF
-                    converter.AddHtmlContent(column, RecomendacionesFinales.TEXTO_SECCION, _helpersQuestPDF, 11);
+                    converter.AddHtmlContent(column, RecomendacionesFinales.TEXTO_SECCION, _helpersQuestPDF, 12);
                 }
                 else
                 {
                     // Si no hay conclusiones, mostrar mensaje de "Sin conclusiones agregadas"
-                    column.Item().PaddingTop(10).Text("Sin recomendaciones agregadas.......")
-                        .FontSize(10)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                    column.Item().PaddingLeft(35.4f).PaddingTop(5).Text("Sin recomendaciones agregadas.......")
+                        .FontSize(12)
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 }
 
@@ -856,18 +848,18 @@ namespace SIA.Print
                             continue;
                         }
 
-                        column.Item().AlignCenter().PaddingBottom(12).Text(text =>
+                        column.Item().PaddingLeft(14.2f).PaddingBottom(12).Text(text =>
                         {
-                            text.Span("VI. COMENTARIOS DEL AUDITADO")
-                                .FontSize(13)
-                                .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                            text.Span("VI.   COMENTARIOS DEL AUDITADO")
+                                .FontSize(12)
+                                .FontColor(_helpersQuestPDF.ColorSeccionesPrincipales())
                                 .FontFamily("Arial")
                                 .Bold();
                         });
 
 
                         // AGREGAMOS EL TEXTO QUE ES HTML AL PDF
-                        converter.AddHtmlContent(column, RecomendacionesFinales.TEXTO_SECCION, _helpersQuestPDF, 11);
+                        converter.AddHtmlContent(column, RecomendacionesFinales.TEXTO_SECCION, _helpersQuestPDF, 12, 35.4f);
                     }
                 }
             });
@@ -876,12 +868,12 @@ namespace SIA.Print
         private string GetColorForPercentage(double porcentaje)
         {
             if (porcentaje <= 50.90)
-                return _helpersQuestPDF.ColorRojoPorcentajeTablaHtml();
+                return _helpersQuestPDF.ColorPrioridadAlto();
             if (porcentaje <= 65.90)
-                return _helpersQuestPDF.ColorAnaranjadoPorcentajeTablaHtml();
+                return _helpersQuestPDF.ColorPrioridadMedio();
             if (porcentaje <= 85.90)
-                return _helpersQuestPDF.ColorAmarilloPorcentajeTablaHtml();
-            return _helpersQuestPDF.ColorVerdePorcentajeTablaHtml();
+                return _helpersQuestPDF.ColorAmarilloTabla();
+            return _helpersQuestPDF.ColorPrioridadBajo();
         }
     }
 }
