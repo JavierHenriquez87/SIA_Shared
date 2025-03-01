@@ -1651,6 +1651,7 @@ namespace SIA.Controllers
             ViewBag.DATA_CUESTIONARIO = secciones;
             ViewBag.CODIGO_CUEST = codigoCuest;
             ViewBag.ESTADO_CUESTIONARIO = data.CODIGO_ESTADO;
+            ViewBag.CI_APROBADA = dataAI.CI_APROBADA;
             ViewBag.AGENCIA = dataAI.NOMBRE_AUDITORIA;
             ViewBag.FECHA_CUESTIONARIO = data.FECHA_CUESTIONARIO != null ? DateTime.Parse(data.FECHA_CUESTIONARIO.ToString()).ToString("yyyy-MM-dd") : null;
             ViewBag.AUDITOR_ASIGNADO = data.AUDITOR_ASIGNADO;

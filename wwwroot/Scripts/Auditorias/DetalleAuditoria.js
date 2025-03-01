@@ -143,6 +143,9 @@ function MostrarOpcionesDA() {
     //Alterna la visibilidad de los div entre display none a block
     $('#opcion1DA').toggle();
     $('#opcion2DA').toggle();
+
+    $('#regresarBtn1').toggle();
+    $('#regresarBtn2').toggle();
 }
 
 // Función que será llamada al hacer clic en un documento

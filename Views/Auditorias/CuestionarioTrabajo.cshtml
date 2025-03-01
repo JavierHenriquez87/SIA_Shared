@@ -12,7 +12,7 @@
     var color = "white";
     var check = "";
 
-    if (ViewBag.ESTADO_CUESTIONARIO == 1 || ViewBag.ESTADO_CUESTIONARIO == 2)
+    if (ViewBag.ESTADO_CUESTIONARIO == 1 || ViewBag.ESTADO_CUESTIONARIO == 2 || ViewBag.CI_APROBADA == 0)
     {
         estado_cuestionario = "disabled";
         color = "blue";
@@ -31,7 +31,7 @@
                     <input type="hidden" value="@ViewBag.CODIGO_CUEST" id="codigo_cuest" />
                 </div>
                     <div class="form-group" id="divButtons">
-                        <label style="color: @color; text-align: right;"><i class="fa fa-info-circle"></i> No puede modificar este cuestionario, porque no ha sido autorizado.</label>
+                        <label style="color: @color; text-align: right;"><i class="fa fa-info-circle"></i> No puede modificar este cuestionario, porque no ha sido autorizado o no se ha aprobado la Carta de Ingreso.</label>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
                         <button type="button" class="btn btn-primary" onclick="saveQuestion()" @estado_cuestionario>Guardar Cuestionario</button>

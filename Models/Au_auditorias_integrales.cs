@@ -55,6 +55,7 @@ namespace SIA.Models
         public int? CODIGO_TIPO_AUDITORIA { get; set; }
         public string? SOLICITADA_POR { get; set; }
         public int ANIO_AI { get; set; }
+        public int CI_APROBADA { get; set; }
 
         [NotMapped]
         public string? NOMBRE_UNIVERSO_AUDITABLE { get; set; }

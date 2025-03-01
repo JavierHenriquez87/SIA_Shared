@@ -27,17 +27,17 @@
                 <div class="form-group" style="padding-top: 10px" id="divButtons">
                     <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
                     @* Verificamos si el rol del usuario logueado es Auditor Interno*@
-                    @* @if (rolcode == "AI")
-                    { *@
+                    @if (rolcode == "AI")
+                    {
                     <button type="button" onclick="RegresarPlanTrabajo()" class="btn btn-warning">Regresar</button>
                     <button type="button" onclick="AprobarPDT()" class="btn btn-primary">Aprobar</button>
-                    @*  }
+                     }
                     else if (rolcode == "AA")
-                    { *@
+                    {
                     @* Verificamos si el rol del usuario logueado es Asistente de Auditor*@
                     <button type="button" onclick="VerActividades()" class="btn btn-primary">Asignar Actividades</button>
                     <button type="button" onclick="SolicitarAprobacion()" class="btn btn-primary">Solicitar Aprobacion</button>
-                    @* } *@
+                    }
                 </div>
 
                 <h5 style="padding-top: 20px">Actividades Agregadas al Plan de Trabajo</h5>
