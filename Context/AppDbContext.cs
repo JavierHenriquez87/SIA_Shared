@@ -31,6 +31,7 @@ namespace SIA.Context
             modelBuilder.Entity<Mg_hallazgos_detalles>().HasKey(e => new { e.CODIGO_HALLAZGO, e.TIPO });
             modelBuilder.Entity<Mg_cuestionario_secciones>().HasKey(e => new { e.CODIGO_CUESTIONARIO, e.CODIGO_SECCION });
             modelBuilder.Entity<Mg_coment_auditado>().HasKey(e => new { e.CODIGO_COMENT_AUDITADO });
+            modelBuilder.Entity<Mg_firmas_cartas>().HasKey(e => new { e.CODIGO_FIRMA_CARTA });
 
             modelBuilder.Entity<Au_auditorias>()
             .HasOne(h => h.AuditoriaIntegral)
@@ -146,5 +147,6 @@ namespace SIA.Context
         public virtual DbSet<Porcentaje_SubSecciones> Porcentaje_SubSecciones { get; set; }
         public virtual DbSet<Mg_docs_auditado> MG_DOCS_AUDITADO { get; set; }
         public virtual DbSet<Mg_coment_auditado> MG_COMENT_AUDITADO { get; set; }
+        public virtual DbSet<Mg_firmas_cartas> MG_FIRMAS_CARTAS { get; set; }
     }
 }

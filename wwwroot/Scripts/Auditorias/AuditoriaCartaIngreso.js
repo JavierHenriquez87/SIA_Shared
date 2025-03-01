@@ -194,3 +194,73 @@ function ModificarTextoPdf(id, tipo) {
     });
 
 }
+
+//FIRMAR LA CARTA
+function AgregarFirma(id, tipo) {
+    Swal.fire({
+        title: 'Ingrese sus credenciales',
+        html: `
+           <div>
+                <label for="usuario" style="font-weight: bold;" style="width: 30%;">Usuario:</label>
+                <input type="text" id="usuario" class="swal2-input" placeholder="Ingrese su usuario" style="width: 43%;">
+
+            </div>
+           <div>
+                <label for="password" style="font-weight: bold;" style="width: 30%;">Contraseña:</label>
+                <input type="password" id="password" class="swal2-input" placeholder="Ingrese su contraseña" style="width: 40%;">
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Firmar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+            const usuario = document.getElementById('usuario').value;
+            const password = document.getElementById('password').value;
+
+            if (!usuario || !password) {
+                Swal.showValidationMessage('Por favor, ingrese usuario y contraseña');
+                return false;
+            }
+
+            return { usuario, password };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/Auditorias/EnviarFirma',
+                type: 'POST',
+                data: {
+                    id: id,
+                    usuario: result.value.usuario,
+                    password: result.value.password,
+                    tipo: tipo
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire(
+                            'Firma exitosa',
+                            'Su firma ha sido registrada correctamente.',
+                            'success'
+                        ).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire(
+                            'Error',
+                            'Ocurrió un error al realizar la firma: ' + response.message,
+                            'error'
+                        );
+                    }
+                },
+                error: function (err) {
+                    Swal.fire(
+                        'Error',
+                        'Ocurrió un error al realizar la firma: ' + err.statusText,
+                        'error'
+                    );
+                }
+            });
+            
+        }
+    });
+}

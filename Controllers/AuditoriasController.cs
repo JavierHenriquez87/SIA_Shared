@@ -11,6 +11,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 using SIA.Print;
+using System.Net.Http;
+using System.Security.Policy;
 
 namespace SIA.Controllers
 {
@@ -2885,6 +2887,9 @@ namespace SIA.Controllers
             var documentoBase64 = Convert.ToBase64String(pdfGenerateMemoryStream);
             TempData["Base64PDF"] = documentoBase64;
 
+            bool cartaFirmadaExiste = await _context.MG_FIRMAS_CARTAS.AnyAsync(u => u.CODIGO_CARTA == id && u.TIPO_CARTA == 2);
+            TempData["FirmaExiste"] = cartaFirmadaExiste;
+
             return View();
         }
 
@@ -3002,9 +3007,59 @@ namespace SIA.Controllers
             var documentoBase64 = Convert.ToBase64String(pdfGenerateMemoryStream);
             TempData["Base64PDF"] = documentoBase64;
 
+            bool cartaFirmadaExiste = await _context.MG_FIRMAS_CARTAS.AnyAsync(u => u.CODIGO_CARTA == id && u.TIPO_CARTA == 1);
+            TempData["FirmaExiste"] = cartaFirmadaExiste;
+
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EnviarFirma(string id, string usuario, string password, int tipo)
+        {
+            var apiBaseUrl = _config.GetSection("ApiURLs")["ApiURLBase"];
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            
+            try
+            {
+                clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+                // Crear el objeto con los datos a enviar
+                object data = new
+                {
+                    user = usuario,
+                    password = password
+                };
+                var json = JsonConvert.SerializeObject(data);
+                var dataEncoding = new StringContent(json, Encoding.UTF8, "application/json");
+                using var client = new HttpClient(clientHandler);
+
+                var response = await client.PostAsync(apiBaseUrl + "/users/signature", dataEncoding);
+
+                var result = await response.Content.ReadAsStringAsync();
+
+                int maxNumeroRegistro = await _context.MG_FIRMAS_CARTAS
+                .MaxAsync(a => (int?)a.CODIGO_FIRMA_CARTA) ?? 0;
+
+                Mg_firmas_cartas firmaCarta = new();
+                firmaCarta.CODIGO_FIRMA_CARTA = maxNumeroRegistro + 1;
+                firmaCarta.CODIGO_CARTA = id;
+                firmaCarta.TIPO_CARTA = tipo;
+                firmaCarta.FIRMA = result;
+                firmaCarta.FECHA_CREACION = DateTime.Now;
+                firmaCarta.CREADO_POR = HttpContext.Session.GetString("user");
+
+                _context.Add(firmaCarta);
+
+                // Guardar los cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true });
+            }
+            catch (HttpRequestException ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
 
 
         //********************************************************************************
