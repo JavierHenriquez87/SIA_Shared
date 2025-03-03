@@ -1,0 +1,97 @@
+﻿@{
+    var planesTrabajo = ViewBag.AUDITORIAS_PLANESDETRABAJO as List<SIA.Models.Au_Planes_De_Trabajo>;
+    ViewBag.Title = "Solicitud de Información";
+    ViewBag.pTitle = "SOLICITUD DE INFORMACIÓN";
+    ViewBag.pageTitle = "Auditorías";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string styleDA = "width:20%;";
+
+    var TextStatus = "";
+    var styleTextStatus = "";
+}
+
+<link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloAuditoriaResultadoInforme.css" rel="stylesheet" type="text/css" />
+<link href="~/css/estiloAuditoriaDetalle.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <h3 style="width: 77%">@ViewBag.TITULO_AUDITORIA</h3>
+                    <br />
+                    <label style="width: 77%">MEMORÁNDUM DE PLANIFICACIÓN \ SOLICITUD DE INFORMACIÓN</label>
+                    <input type="hidden" id="codAI_CU" value="@ViewBag.NUMERO_AUDITORIA_INTEGRAL" />
+                    <input type="hidden" id="anioAI_CU" value="@ViewBag.ANIO_AUDITORIA_INTEGRAL" />
+                </div>
+
+                <div class="form-group" style="padding-top: 10px" id="divButtons">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <button type="button" onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
+                    </div>
+                </div>
+
+                <div id="documents-lists">
+
+                    @if (ViewBag.HALLAZGOS != null || ViewBag.HALLAZGOS.Count != 0)
+                    {
+                        foreach (var HALLAZGO in ViewBag.HALLAZGOS)
+                        {
+                            @if (HALLAZGO.comentarioAuditado?.Mg_docs_auditado != null && HALLAZGO.comentarioAuditado?.Mg_docs_auditado?.Count > 0)
+                            {
+                                @foreach (var documento in HALLAZGO.comentarioAuditado.Mg_docs_auditado)
+                                {
+                                    var extensionDocumento = System.IO.Path.GetExtension(documento.NOMBRE_DOCUMENTO)?.ToLower();
+                                    var ico = extensionDocumento == ".pdf" ? "pdf-ico.png" :
+                                    extensionDocumento == ".jpeg" || extensionDocumento == ".jpg" || extensionDocumento == ".png" ? "pic-ico.png" :
+                                    extensionDocumento == ".doc" || extensionDocumento == ".docx" ? "doc-ico.png" :
+                                    "excel-ico.png";
+
+                                    <div class="pdf-item" style="margin: 0 24px; width: 95%;" id="documento-@documento.CODIGO_DOC_AUDITADO">
+                                        <a href="/Archivos/AuditoriasInforme/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank">
+                                            <img src="/assets/images/@ico" alt="@documento.NOMBRE_DOCUMENTO">
+                                        </a>
+                                        <div style="width: 80%;">
+                                            <a href="/Archivos/AuditoriasInforme/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank">
+                                                @documento.NOMBRE_DOCUMENTO
+                                            </a>
+                                            <p style="margin: 5px 0;">
+                                                <a href="/Archivos/AuditoriasInforme/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank" style="color: dimgrey !important;">
+                                                    Creado Por: @documento.CREADO_POR
+                                                </a>
+                                            </p>
+                                            <p style="margin: 5px 0;">
+                                                <a href="/Archivos/AuditoriasInforme/Documentos/@documento.NOMBRE_DOCUMENTO" target="_blank" style="color: dimgrey !important;">
+                                                    Tamaño del PDF: @documento.PESO
+                                                </a>
+                                            </p>
+                                        </div>
+                                        @* <button onclick="EliminarDocumento('@documento.CODIGO_DOC_AUDITADO')" class="btn btn-danger" style="margin-left: 10px;">
+                                            <i class="bi bi-trash"></i> X
+                                        </button> *@
+                                    </div>
+                                }
+
+                            }
+                            
+                        }
+                    }
+                    else
+                    {
+                        <br />
+                        <p style="text-align:center;">No hay listado de documentos cargados.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("partialView/_RegresarPlanTrabajo")
+
+@section scripts {
+    <script src="~/Scripts/Helpers/Helpers.js"></script>
+    <script src="~/Scripts/Auditorias/SolicitudInformacion.js"></script>
+}

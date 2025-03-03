@@ -7,6 +7,7 @@
     string base64PDF = TempData["Base64PDF"] as string;
     TempData.Remove("Base64PDF");
     var pdfGenerate = "data:application/pdf;base64," + base64PDF + "#navpanes=0&filename=doc.pdf";
+    bool firmaExiste = TempData["firmaExiste"] as bool? ?? false;
 }
 <style type="text/css">
     iframe {
@@ -38,7 +39,10 @@
                         <button type="button" onclick="ModificarFecha('@ViewBag.id', 'visita')" class="btn btn-primary" style="margin-right: 6px">Modificar Fecha de Periodo Inicio</button>
                         <button type="button" onclick="ModificarFecha('@ViewBag.id', 'revision')" class="btn btn-primary" style="margin-right: 6px">Modificar Fecha de Periodo Revisión</button>
                         <button type="button" onclick="ModificarTextoPdf('@ViewBag.id', '1')" class="btn btn-primary" style="margin-right: 6px">Modificar Texto</button>
-                        <button type="button" onclick="AgregarFirma('@ViewBag.id', '2')" class="btn btn-primary">Firmar Carta</button>
+                       @if (!firmaExiste)
+                        {
+                            <button type="button" onclick="AgregarFirma('@ViewBag.id', '2')" class="btn btn-primary">Firmar Carta</button>
+                        }
                     </div>
                 </div>
 

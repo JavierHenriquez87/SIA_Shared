@@ -126,6 +126,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXVkaXRvcmlhc1xQcm9ncmFtYVRyYWJham8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA_Shared/Views/Auditorias/SolicitudInformacion.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXVkaXRvcmlhc1xTb2xpY2l0dWRJbmZvcm1hY2lvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Lenovo/Documents/Proyectos/Hermandad/SIA_Shared/Views/Configuraciones/Cuestionarios.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uZmlndXJhY2lvbmVzXEN1ZXN0aW9uYXJpb3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

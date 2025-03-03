@@ -4246,5 +4246,34 @@ namespace SIA.Controllers
 
             return new JsonResult("Ok");
         }
+
+        //********************************************************************************
+        // PAGINA SOLICITUD DE INFORMACIÓN
+        //********************************************************************************
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("Auditorias/SolicitudInformacion")]
+        public async Task<IActionResult> SolicitudInformacion(string id)
+        {
+            int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
+            int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+
+            var hallazgosAnteriores = await _context.MG_HALLAZGOS
+                .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
+                .Where(d => d.ANIO_AI == anio)
+                .Include(h => h.comentarioAuditado)
+                .ThenInclude(ca => ca.Mg_docs_auditado)
+                .ToListAsync();
+
+            ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
+            ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
+            ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
+            ViewBag.HALLAZGOS = hallazgosAnteriores;
+
+            return View();
+        }
     }
 }

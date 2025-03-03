@@ -70,7 +70,7 @@
 
                 <div class="form-group" style="padding-top: 10px" id="divButtons">
                     <button type="button" id="regresarBtn1" style="display:inline-block;"  onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
-                    <button type="button" id="regresarBtn" style="display:none;" onclick="MostrarOpcionesDA()" class="btn btn-primary">Regresar2</button>
+                    <button type="button" id="regresarBtn2" style="display:none;" onclick="MostrarOpcionesDA()" class="btn btn-primary">Regresar</button>
                     <button type="button" onclick="ConfirmarAuditoria()" class="btn btn-primary" @disabledButtons>Confirmar Auditorías</button>
                     <button type="button" onclick="TrabajarAuditoria()" class="btn btn-primary" @disabledButtons>Trabajar Auditorías</button>
                     <button type="button" onclick="AnularAuditoria()" class="btn btn-danger" @disabledButtons>Anular Auditoría</button>
@@ -113,7 +113,7 @@
                             <div class="icon folder"></div>
                             <div class="title">CUESTIONARIOS DE TRABAJO</div>
                         </div>
-                        <div class="document-item @disabledOptions" style="cursor: pointer;" onclick="">
+                        <div class="document-item @disabledOptions" style="cursor: pointer;" onclick="IrSolicitudInformacion('@ViewBag.CODIGO_AUDITORIA')">
                             <div class="icon folder"></div>
                             <div class="title">SOLICITUD DE INFORMACIÓN</div>
                         </div>

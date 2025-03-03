@@ -169,3 +169,7 @@ function IrCartaIngreso(codigo_auditoria) {
 function IrInformePreliminar() {
     window.location.href = '/Auditorias/AuditoriaResultados/AuditoriaResultadosInforme'
 }
+
+function IrSolicitudInformacion(codigo_auditoria) {
+    window.location.href = '/Auditorias/SolicitudInformacion?id=' + codigo_auditoria
+}
