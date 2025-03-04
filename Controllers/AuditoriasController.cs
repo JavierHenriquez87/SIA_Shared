@@ -3085,10 +3085,18 @@ namespace SIA.Controllers
 
 
             var hallazgosAnteriores = await _context.MG_HALLAZGOS
-                .Where(d => d.NUMERO_AUDITORIA_INTEGRAL == cod)
-                .Where(d => d.ANIO_AI == anio)
-                .Include(h => h.comentarioAuditado)
-                .ThenInclude(ca => ca.Mg_docs_auditado)
+                .Where(d => d.NUMERO_AUDITORIA_INTEGRAL != cod)
+                .Where(d => d.ANIO_AI != anio)
+                .GroupJoin(
+                    _context.MG_COMENT_AUDITADO,
+                    hallazgo => hallazgo.CODIGO_HALLAZGO,
+                    comentario => comentario.CODIGO_HALLAZGO,
+                    (hallazgo, comentarios) => new { Hallazgo = hallazgo, Comentarios = comentarios })
+                .SelectMany(
+                    hc => hc.Comentarios.DefaultIfEmpty(),
+                    (hc, comentario) => new { hc.Hallazgo, Comentario = comentario })
+                .Where(hc => hc.Comentario == null)
+                .Select(hc => hc.Hallazgo)
                 .ToListAsync();
 
             var hallazgosAllData = await _context.MG_HALLAZGOS

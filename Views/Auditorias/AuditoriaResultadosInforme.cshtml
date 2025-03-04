@@ -193,38 +193,41 @@
             <a style="font-weight: bold;">
                 4. Seguimientos a Informes Anteriores
             </a>
-
-            <table class="table" style="margin:20px 30px; width:95%">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Hallazgos</th>
-                        <th>Prioridad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        if (ViewBag.HALLAZGOS_ANTERIORES == null || ViewBag.HALLAZGOS_ANTERIORES.Count == 0)
-                        {
+            @{
+                if (ViewBag.HALLAZGOS_ANTERIORES == null || ViewBag.HALLAZGOS_ANTERIORES.Count == 0)
+                {
+                    <div style="white-space: pre-line; margin:0 24px; width:95%">
+                        A la fecha de nuestra revisión, no se tienen hallazgos pendientes de subsanar correspondientes a los informes anteriores emitidos.
+                    </div>
+                }
+                else
+                {
+                    <table class="table" style="margin:20px 30px; width:95%">
+                        <thead>
                             <tr>
-                                <td colspan="3">A la fecha de nuestra revisión, no se tienen hallazgos pendientes de subsanar correspondientes a los informes anteriores emitidos.</td>
+                                <th>ID</th>
+                                <th>Hallazgos</th>
+                                <th>Prioridad</th>
                             </tr>
-                        }
-                        else
-                        {
-                            foreach (var HALLAZGO_ANTERIOR in ViewBag.HALLAZGOS_ANTERIORES)
-                            {
-                                var riesgo = HALLAZGO_ANTERIOR.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO_ANTERIOR.NIVEL_RIESGO == 2 ? "MEDIO" : "ALTO";
-                                <tr>
-                                    <td>@HALLAZGO_ANTERIOR.CODIGO_HALLAZGO</td>
-                                    <td style="text-align:left">@HALLAZGO_ANTERIOR.HALLAZGO</td>
-                                    <td class="highlight-@riesgo.ToLower()">@riesgo</td>
-                                </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var HALLAZGO_ANTERIOR in ViewBag.HALLAZGOS_ANTERIORES)
+                                {
+                                    var riesgo = HALLAZGO_ANTERIOR.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO_ANTERIOR.NIVEL_RIESGO == 2 ? "MEDIO" : "ALTO";
+                                    <tr>
+                                        <td>@HALLAZGO_ANTERIOR.CODIGO_HALLAZGO</td>
+                                        <td style="text-align:left">@HALLAZGO_ANTERIOR.HALLAZGO</td>
+                                        <td class="highlight-@riesgo.ToLower()">@riesgo</td>
+                                    </tr>
+                                }
                             }
-                        }
-                    }
-                </tbody>
-            </table>
+                        </tbody>
+                    </table>
+                }
+            }
+            
+            
 
            @*  <div class="button-container">
                 <a style="font-weight: bold;">
