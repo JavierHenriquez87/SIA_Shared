@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "u2rUDUA3IXQ=",
+  "dgSpecHash": "UKBADTb6ORo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Shared\\SIA.csproj",
+  "projectFilePath": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA_Expresate\\SIA_Shared\\SIA.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\bouncycastle.cryptography\\2.4.0\\bouncycastle.cryptography.2.4.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\htmlagilitypack\\1.11.72\\htmlagilitypack.1.11.72.nupkg.sha512",

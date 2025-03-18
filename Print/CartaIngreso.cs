@@ -2,11 +2,15 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Asn1.X509;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using SIA.Context;
 using SIA.Models;
+using System.Globalization;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace SIA.Print
@@ -68,7 +72,6 @@ namespace SIA.Print
 
             if (carta == null)
             {
-
                 int maxNumeroRegistro = await _context.MG_CARTAS
                     .MaxAsync(a => (int?)a.CODIGO_CARTA) ?? 0;
 
@@ -88,7 +91,7 @@ namespace SIA.Print
                 await _context.SaveChangesAsync();
 
                 carta = await _context.MG_CARTAS
-                                    .FirstOrDefaultAsync(u => u.TIPO_CARTA == 1 && u.NUMERO_AUDITORIA_INTEGRAL == dataAI.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == dataAI.ANIO_AI);
+                    .FirstOrDefaultAsync(u => u.TIPO_CARTA == 1 && u.NUMERO_AUDITORIA_INTEGRAL == dataAI.NUMERO_AUDITORIA_INTEGRAL && u.ANIO_AI == dataAI.ANIO_AI);
             }
 
             string fechaInicioVisita = dataAI.FECHA_INICIO_VISITA?.ToString("dd MMMM yyyy");
@@ -96,6 +99,33 @@ namespace SIA.Print
 
             string fechaInicioRevision = dataAI.PERIODO_INICIO_REVISION?.ToString("dd MMMM yyyy");
             string fechaFinRevision = dataAI.PERIODO_FIN_REVISION?.ToString("dd MMMM 'del año' yyyy");
+
+
+            string ownerNameAuditado = null;
+            string jobPositionAuditado = null;
+            string formattedDateAuditado = null;
+
+            var firmaAuditado = await _context.MG_FIRMAS_CARTAS
+                .FirstOrDefaultAsync(u => u.CODIGO_CARTA == dataAI.CODIGO_AUDITORIA && u.TIPO_CARTA == 1);
+
+            if (firmaAuditado != null)
+            {
+                dynamic firmaData = JsonConvert.DeserializeObject<dynamic>(firmaAuditado.FIRMA);
+
+                ownerNameAuditado = firmaData.ownerName;
+                jobPositionAuditado = firmaData.jobPositionName;
+                string generationDateStr = firmaData.generationDate;
+
+                // Convertir la fecha correctamente manejando la zona horaria
+                DateTimeOffset generationDateOffset = DateTimeOffset.Parse(generationDateStr, CultureInfo.InvariantCulture);
+
+                // Convertir a DateTime en la hora local del sistema
+                DateTime generationDate = generationDateOffset.DateTime;
+
+                // Formatear la fecha al estilo requerido
+                formattedDateAuditado = generationDate.ToString("dd / MM / yyyy  HH:mm:ss");
+            }
+
 
             container.PaddingLeft(40).PaddingRight(40).PaddingTop(20).Column(column =>
             {
@@ -212,43 +242,72 @@ namespace SIA.Print
                 var converter = new HtmlToPdfConverter();
                 converter.AddHtmlContent(column, carta.TEXTO_CARTA ?? "", _helpersQuestPDF);
 
-                column.Item().Row(row =>
+
+                column.Item().PaddingTop(40).Row(row =>
                 {
-                    // Primera firma
-                    row.RelativeItem().AlignCenter().Column(col =>
+                    //Firma Auditor
+                    row.RelativeItem().Column(col =>
                     {
-                        col.Item().Width(100).AlignCenter().PaddingLeft(30).Image("wwwroot/Archivos/Usuarios/Firmas_Usuarios/firmaSergio.png", ImageScaling.FitWidth);
+                        col.Item().Row(rowImg =>
+                        {
+                            rowImg.ConstantItem(60).Image("wwwroot/assets/images/logoNew.png", ImageScaling.FitWidth);
 
-                        col.Item().Text("Lic. Sergio Antonio Melgar")
-                            .FontSize(13)
-                            .FontFamily("Arial")
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                            .AlignCenter();
+                            rowImg.RelativeItem().Column(textCol =>
+                            {
+                                textCol.Item().Text("Firmado digitalmente por:")
+                                    .FontSize(10)
+                                    .FontFamily("Arial")
+                                    .FontColor(Colors.Grey.Darken1);
 
-                        col.Item().Text("Auditor Interno")
-                            .FontSize(13)
-                            .FontFamily("Arial Bold")
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                            .AlignCenter();
+                                textCol.Item().Text("Lic. Sergio Antonio Melgar")
+                                    .FontSize(13)
+                                    .FontFamily("Arial Bold")
+                                    .FontColor(Colors.Green.Darken2); // Ajusta el color según la imagen
+
+                                textCol.Item().Text("Auditor Interno")
+                                    .FontSize(12)
+                                    .FontFamily("Arial")
+                                    .FontColor(Colors.Grey.Darken1);
+                            });
+                        });
                     });
+
 
                     // Segunda firma
-                    row.RelativeItem().AlignCenter().Column(col =>
+                    if (firmaAuditado != null)
                     {
-                        col.Item().Width(100).AlignCenter().PaddingLeft(30).Image("wwwroot/Archivos/Usuarios/Firmas_Usuarios/firmaSergio.png", ImageScaling.FitWidth);
+                        row.RelativeItem().Column(col =>
+                        {
+                            col.Item().Row(rowImg =>
+                            {
+                                rowImg.ConstantItem(60).Image("wwwroot/assets/images/logoNew.png", ImageScaling.FitWidth);
 
-                        col.Item().Text("Jerson Ely Velasquez Perez")
-                            .FontSize(13)
-                            .FontFamily("Arial")
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                            .AlignCenter();
+                                rowImg.RelativeItem().Column(textCol =>
+                                {
+                                    textCol.Item().Text("Firmado digitalmente por:")
+                                        .FontSize(10)
+                                        .FontFamily("Arial")
+                                        .FontColor(Colors.Grey.Darken1);
 
-                        col.Item().Text("Jefe de Agencia")
-                            .FontSize(13)
-                            .FontFamily("Arial Bold")
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml())
-                            .AlignCenter();
-                    });
+                                    textCol.Item().Text(ownerNameAuditado)
+                                        .FontSize(13)
+                                        .FontFamily("Arial Bold")
+                                        .FontColor(Colors.Green.Darken2); // Ajusta el color según la imagen
+
+                                    textCol.Item().Text(jobPositionAuditado)
+                                        .FontSize(12)
+                                        .FontFamily("Arial")
+                                        .FontColor(Colors.Grey.Darken1);
+
+                                    textCol.Item().Text(formattedDateAuditado)
+                                        .FontSize(10)
+                                        .FontFamily("Arial")
+                                        .FontColor(Colors.Grey.Darken2);
+                                });
+                            });
+                        });
+                    }
+
                 });
             });
         }

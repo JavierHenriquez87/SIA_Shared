@@ -2887,7 +2887,7 @@ namespace SIA.Controllers
             var documentoBase64 = Convert.ToBase64String(pdfGenerateMemoryStream);
             TempData["Base64PDF"] = documentoBase64;
 
-            bool cartaFirmadaExiste = await _context.MG_FIRMAS_CARTAS.AnyAsync(u => u.CODIGO_CARTA == id && u.TIPO_CARTA == 2);
+            bool cartaFirmadaExiste = await _context.MG_FIRMAS_CARTAS.AnyAsync(u => u.CODIGO_CARTA == id && u.TIPO_CARTA == 1);
             TempData["FirmaExiste"] = cartaFirmadaExiste;
 
             return View();
@@ -3007,7 +3007,7 @@ namespace SIA.Controllers
             var documentoBase64 = Convert.ToBase64String(pdfGenerateMemoryStream);
             TempData["Base64PDF"] = documentoBase64;
 
-            bool cartaFirmadaExiste = await _context.MG_FIRMAS_CARTAS.AnyAsync(u => u.CODIGO_CARTA == id && u.TIPO_CARTA == 1);
+            bool cartaFirmadaExiste = await _context.MG_FIRMAS_CARTAS.AnyAsync(u => u.CODIGO_CARTA == id && u.TIPO_CARTA == 2);
             TempData["FirmaExiste"] = cartaFirmadaExiste;
 
             return View();
@@ -3035,22 +3035,32 @@ namespace SIA.Controllers
 
                 var response = await client.PostAsync(apiBaseUrl + "/users/signature", dataEncoding);
 
-                var result = await response.Content.ReadAsStringAsync();
+                var resultString = await response.Content.ReadAsStringAsync();
 
+                // Deserializar el JSON en un objeto dinámico
+                var result = JsonConvert.DeserializeObject<dynamic>(resultString);
+
+                // Verificar si el mensaje indica un error
+                if (result.message == "Usuario no autorizado")
+                {
+                    return Json(new { success = false, message = result.message });
+                }
+
+                // Obtener el máximo número de registro
                 int maxNumeroRegistro = await _context.MG_FIRMAS_CARTAS
-                .MaxAsync(a => (int?)a.CODIGO_FIRMA_CARTA) ?? 0;
+                    .MaxAsync(a => (int?)a.CODIGO_FIRMA_CARTA) ?? 0;
 
+                // Crear y guardar la nueva firma
                 Mg_firmas_cartas firmaCarta = new();
                 firmaCarta.CODIGO_FIRMA_CARTA = maxNumeroRegistro + 1;
                 firmaCarta.CODIGO_CARTA = id;
                 firmaCarta.TIPO_CARTA = tipo;
-                firmaCarta.FIRMA = result;
+                firmaCarta.FIRMA = resultString;
                 firmaCarta.FECHA_CREACION = DateTime.Now;
                 firmaCarta.CREADO_POR = HttpContext.Session.GetString("user");
 
-                _context.Add(firmaCarta);
 
-                // Guardar los cambios en la base de datos
+                _context.Add(firmaCarta);
                 await _context.SaveChangesAsync();
 
                 return Json(new { success = true });

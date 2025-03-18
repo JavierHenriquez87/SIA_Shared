@@ -6,6 +6,8 @@ using QuestPDF.Infrastructure;
 using SIA.Context;
 using SIA.Models;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
+using Newtonsoft.Json;
+using System.Globalization;
 
 namespace SIA.Print
 {
@@ -91,6 +93,31 @@ namespace SIA.Print
             string fechaInicioVisita = dataAI.FECHA_INICIO_VISITA?.ToString("dd MMMM yyyy");
             string fechaFinVisita = dataAI.FECHA_FIN_VISITA?.ToString("dd MMMM 'del año' yyyy");
 
+            string ownerNameAuditado = null;
+            string jobPositionAuditado = null;
+            string formattedDateAuditado = null;
+
+            var firmaAuditado = await _context.MG_FIRMAS_CARTAS
+                .FirstOrDefaultAsync(u => u.CODIGO_CARTA == dataAI.CODIGO_AUDITORIA && u.TIPO_CARTA == 2);
+
+            if (firmaAuditado != null)
+            {
+                dynamic firmaData = JsonConvert.DeserializeObject<dynamic>(firmaAuditado.FIRMA);
+
+                ownerNameAuditado = firmaData.ownerName;
+                jobPositionAuditado = firmaData.jobPositionName;
+                string generationDateStr = firmaData.generationDate;
+
+                // Convertir la fecha correctamente manejando la zona horaria
+                DateTimeOffset generationDateOffset = DateTimeOffset.Parse(generationDateStr, CultureInfo.InvariantCulture);
+
+                // Convertir a DateTime en la hora local del sistema
+                DateTime generationDate = generationDateOffset.DateTime;
+
+                // Formatear la fecha al estilo requerido
+                formattedDateAuditado = generationDate.ToString("dd / MM / yyyy  HH:mm:ss");
+            }
+
             container.PaddingLeft(40).PaddingRight(40).PaddingTop(20).Column(column =>
             {
                 // Agregar la imagen centrada con un ancho de 4.26 cm
@@ -171,20 +198,39 @@ namespace SIA.Print
                 column.Item().PaddingTop(20).Row(row =>
                 {
                     // Segunda firma
-                    row.RelativeItem().Column(col =>
+                    if (firmaAuditado != null)
                     {
-                        col.Item().Width(100).AlignCenter().PaddingLeft(30).Image("wwwroot/Archivos/Usuarios/Firmas_Usuarios/firmaSergio.png", ImageScaling.FitWidth);
+                        row.RelativeItem().Column(col =>
+                        {
+                            col.Item().Row(rowImg =>
+                            {
+                                rowImg.ConstantItem(60).Image("wwwroot/assets/images/logoNew.png", ImageScaling.FitWidth);
 
-                        col.Item().Text("Jerson Ely Velasquez Perez")
-                            .FontSize(13)
-                            .FontFamily("Arial")
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml());
+                                rowImg.RelativeItem().Column(textCol =>
+                                {
+                                    textCol.Item().Text("Firmado digitalmente por:")
+                                        .FontSize(10)
+                                        .FontFamily("Arial")
+                                        .FontColor(Colors.Grey.Darken1);
 
-                        col.Item().Text("Jefe de Agencia")
-                            .FontSize(13)
-                            .FontFamily("Arial Bold")
-                            .FontColor(_helpersQuestPDF.ColorGrisHtml());
-                    });
+                                    textCol.Item().Text(ownerNameAuditado)
+                                        .FontSize(13)
+                                        .FontFamily("Arial Bold")
+                                        .FontColor(Colors.Green.Darken2); // Ajusta el color según la imagen
+
+                                    textCol.Item().Text(jobPositionAuditado)
+                                        .FontSize(12)
+                                        .FontFamily("Arial")
+                                        .FontColor(Colors.Grey.Darken1);
+
+                                    textCol.Item().Text(formattedDateAuditado)
+                                        .FontSize(10)
+                                        .FontFamily("Arial")
+                                        .FontColor(Colors.Grey.Darken2);
+                                });
+                            });
+                        });
+                    }
                 });
             });
         }

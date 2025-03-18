@@ -247,7 +247,7 @@ function AgregarFirma(id, tipo) {
                     } else {
                         Swal.fire(
                             'Error',
-                            'Ocurrió un error al realizar la firma: ' + response.message,
+                            'Ocurrió un error al validar la firma',
                             'error'
                         );
                     }
