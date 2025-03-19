@@ -603,6 +603,13 @@ namespace SIA.Controllers
                                     .Where(e => e.ANIO_MDP == anio)
                                     .FirstOrDefaultAsync();
 
+            //Obtenemos el listado de comentarios
+            var listComentarios = await _context.AU_COMENTARIOS_MDP
+                    .Where(e => e.NUMERO_AUDITORIA_INTEGRAL == cod)
+                    .Where(e => e.ANIO_AI == anio)
+                    .OrderByDescending(e => e.FECHA_CREACION)
+                    .ToListAsync();
+
             ViewBag.CANTIDAD_AUDITORIAS = cantidad;
             ViewBag.TITULO_AUDITORIA = HttpContext.Session.GetString("titulo_auditoria");
             ViewBag.NUMERO_AUDITORIA_INTEGRAL = cod;
@@ -611,7 +618,7 @@ namespace SIA.Controllers
             ViewBag.MEMO_EXISTE = MemoExiste;
             ViewBag.ESTADO_MDP = MemoExiste?.CODIGO_ESTADO ?? 0;
             ViewBag.CODIGO_AUDITORIA = dataAuditoria.CODIGO_AUDITORIA;
-
+            ViewBag.COMENTARIOS = listComentarios;
 
             return View();
         }

@@ -234,3 +234,73 @@ function ConfirmarAuditoria(){
         }
     })
 }
+
+
+// Función para agregar comentario
+//==========================================================================================
+async function AgregarComentario() {
+    // Objeto que contiene los datos a enviar
+    var DataAI = {
+        NOTA: $('#comentarioMDP').val()
+    };
+
+    var val = false;
+
+    if (val == true) {
+        Swal.fire({
+            title: 'Error',
+            text: "Para agregar un comentario debe digitar una nota.",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#2A3042',
+            confirmButtonText: 'Ok'
+        })
+
+    } else {
+        Swal.showLoading();
+
+        $.ajax({
+            method: 'POST',
+            url: '/Auditorias/Guardar_ComentarioMDP',
+            data: JSON.stringify(DataAI),
+            contentType: 'application/json',
+            success: function (respuesta) {
+                if (respuesta == "error") {
+                    Swal.fire(
+                        'Error!',
+                        'Su registro no se pudo guardar.',
+                        'error'
+                    )
+                } else {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "success",
+                        title: "Se guardo el comentario con éxito."
+                    });
+
+
+                    $('#comentarios-list').html(respuesta);
+                    $('#comentarioMDP').val('');
+                }
+            },
+            error: function () {
+                // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
+                Swal.fire(
+                    'Error!',
+                    'Hubo un problema al procesar su solicitud.',
+                    'error'
+                );
+            }
+        });
+    }
+}

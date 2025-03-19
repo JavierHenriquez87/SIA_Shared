@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="form-group" style="padding-top: 10px" id="divButtons">
-                    <button type="button" id="regresarBtn1" style="display:inline-block;"  onclick="history.go(-1)" class="btn btn-primary">Regresar</button>
+                    <button type="button" id="regresarBtn1" style="display:inline-block;" onclick="window.location.href='/Auditorias'" class="btn btn-primary">Regresar</button>
                     <button type="button" id="regresarBtn2" style="display:none;" onclick="MostrarOpcionesDA()" class="btn btn-primary">Regresar</button>
                     <button type="button" onclick="ConfirmarAuditoria()" class="btn btn-primary" @disabledButtons>Confirmar Auditorías</button>
                     <button type="button" onclick="TrabajarAuditoria()" class="btn btn-primary" @disabledButtons>Trabajar Auditorías</button>
@@ -117,6 +117,26 @@
                             <div class="icon folder"></div>
                             <div class="title">SOLICITUD DE INFORMACIÓN</div>
                         </div>
+
+                        <div class="@disabledOptions" style="border: 1px solid #ccc; border-radius: 5px; padding: 10px;">
+                            <div class="form-group">
+                                <label for="comentarioMDP">Comentarios</label>
+                                <textarea id="comentarioMDP" name="comentarioMDP" class="form-control" placeholder="Escribir..." maxlength="1000"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="button" onclick="AgregarComentario()" style="width: 20%" class="btn btn-primary" id="buttonConfirm">Agregar Comentario</button>
+                            </div>
+
+
+                            <div id="comentarios-list">
+                                @{
+                                    var comentarios = ViewBag.COMENTARIOS as List<Au_comentarios_mdp>;
+                                }
+                                @Html.Partial("partialView/_ComentariosMDP", comentarios)
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
