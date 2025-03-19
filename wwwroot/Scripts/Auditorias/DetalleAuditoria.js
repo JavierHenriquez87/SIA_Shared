@@ -182,7 +182,7 @@ function ConfirmarAuditoria(){
 
     Swal.fire({
         title: 'Confirmar',
-        text: "¿Desea confirmar la auditoria.",
+        text: "¿Desea confirmar la auditoria?",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#f1b44c',
