@@ -203,27 +203,27 @@
                 else
                 {
                     <table class="table" style="margin:20px 30px; width:95%">
-                        <thead>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Hallazgos</th>
+                        <th>Prioridad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var HALLAZGO_ANTERIOR in ViewBag.HALLAZGOS_ANTERIORES)
+                        {
+                            var riesgo = HALLAZGO_ANTERIOR.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO_ANTERIOR.NIVEL_RIESGO == 2 ? "MEDIO" : "ALTO";
                             <tr>
-                                <th>ID</th>
-                                <th>Hallazgos</th>
-                                <th>Prioridad</th>
+                                <td>@HALLAZGO_ANTERIOR.CODIGO_HALLAZGO</td>
+                                <td style="text-align:left">@HALLAZGO_ANTERIOR.HALLAZGO</td>
+                                <td class="highlight-@riesgo.ToLower()">@riesgo</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                foreach (var HALLAZGO_ANTERIOR in ViewBag.HALLAZGOS_ANTERIORES)
-                                {
-                                    var riesgo = HALLAZGO_ANTERIOR.NIVEL_RIESGO == 1 ? "BAJO" : HALLAZGO_ANTERIOR.NIVEL_RIESGO == 2 ? "MEDIO" : "ALTO";
-                                    <tr>
-                                        <td>@HALLAZGO_ANTERIOR.CODIGO_HALLAZGO</td>
-                                        <td style="text-align:left">@HALLAZGO_ANTERIOR.HALLAZGO</td>
-                                        <td class="highlight-@riesgo.ToLower()">@riesgo</td>
-                                    </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
+                        }
+                    }
+                </tbody>
+            </table>
                 }
             }
             

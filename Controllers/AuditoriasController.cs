@@ -682,6 +682,36 @@ namespace SIA.Controllers
             return new JsonResult("success");
         }
 
+        /// <summary>
+        /// Anular una auditoria
+        /// </summary>
+        /// <param name="num_audit_integral"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> ConfirmarAuditoria(int num_audit_integral, int anio_audit_integral)
+        {
+            try
+            {
+                // Obtenemos informacion de la auditoria
+                var dataAuditoria = await _context.AU_AUDITORIAS_INTEGRALES
+                                    .Where(u => u.NUMERO_AUDITORIA_INTEGRAL == num_audit_integral)
+                                    .Where(u => u.ANIO_AI == anio_audit_integral)
+                                    .FirstOrDefaultAsync();
+
+                dataAuditoria.CODIGO_ESTADO = 6;
+                dataAuditoria.FECHA_MODIFICACION = DateTime.Now;
+                dataAuditoria.MODIFICADO_POR = HttpContext.Session.GetString("user");
+
+                // Guarda los cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult("error");
+            }
+
+            return new JsonResult("success");
+        }
 
 
         //********************************************************************************
@@ -1870,8 +1900,9 @@ namespace SIA.Controllers
 
             var dataAct = await _context.MG_ACTIVIDADES
                             .Where(e => e.CODIGO_ESTADO == "A")
-                            .OrderBy(e => e.NOMBRE_ACTIVIDAD)
-                            .ToListAsync();
+                             .ToListAsync();
+
+            var dataAuI = await _context.AU_AUDITORIAS_INTEGRALES.FirstOrDefaultAsync(e => e.NUMERO_AUDITORIA_INTEGRAL == cod && e.ANIO_AI == anio);
 
             ViewBag.NUMERO_PDT = data.NUMERO_PDT;
             ViewBag.NUMERO_AUDITORIA = data.NUMERO_AUDITORIA;
@@ -1881,6 +1912,7 @@ namespace SIA.Controllers
             ViewBag.ANIO_AUDITORIA_INTEGRAL = anio;
             ViewBag.DATA_ACTIVIDADES = dataAct;
             ViewBag.ROL_CODE = HttpContext.Session.GetString("rolCode");
+            ViewBag.CI_APROBADA = dataAuI != null && dataAuI.CI_APROBADA > 0 ? 1 : 0 ;
 
             return View();
         }

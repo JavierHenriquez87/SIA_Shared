@@ -173,3 +173,64 @@ function IrInformePreliminar() {
 function IrSolicitudInformacion(codigo_auditoria) {
     window.location.href = '/Auditorias/SolicitudInformacion?id=' + codigo_auditoria
 }
+
+// Función para confirmar auditoria
+//==========================================================================================
+function ConfirmarAuditoria(){
+    var NUMERO_AUDITORIA_INTEGRAL = $('#codAI_DA').val();
+    var anio_auditoria_integral = $('#anioAI_DA').val();
+
+    Swal.fire({
+        title: 'Confirmar',
+        text: "¿Desea confirmar la auditoria.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#f1b44c',
+        cancelButtonColor: '#d33',
+        cancelButtonText: `Cancelar`,
+        confirmButtonText: 'Confirmar',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.showLoading();
+
+            $.ajax({
+                method: 'POST',
+                url: '/Auditorias/ConfirmarAuditoria',
+                data: {
+                    num_audit_integral: NUMERO_AUDITORIA_INTEGRAL,
+                    anio_audit_integral: anio_auditoria_integral
+                },
+                dataType: 'json',
+                success: function (respuesta) {
+                    if (respuesta == "error") {
+                        Swal.fire({
+                            title: 'Error',
+                            text: "Ocurrió un error al intentar confirmar la auditoría.",
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#2A3042',
+                            confirmButtonText: 'Ok'
+                        })
+                    } else {
+                        Swal.fire({
+                            title: 'Guardado!',
+                            text: 'Se confirmo la auditoría con éxito!',
+                            icon: 'success',
+                            didClose: () => {
+                                window.location.href = '/Auditorias';
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
+                    Swal.fire(
+                        'Error!',
+                        'Hubo un problema al procesar su solicitud.',
+                        'error'
+                    );
+                }
+            });
+        }
+    })
+}

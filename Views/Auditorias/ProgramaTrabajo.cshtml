@@ -69,6 +69,9 @@
 @await Html.PartialAsync("partialView/_RegresarPlanTrabajo")
 
 @section scripts {
+    <script>
+        window.CI_APROBADA = @ViewBag.CI_APROBADA;
+    </script>
     <script src="~/Scripts/Helpers/Helpers.js"></script>
     <script src="~/Scripts/Auditorias/ProgramaTrabajo.js"></script>
 }
