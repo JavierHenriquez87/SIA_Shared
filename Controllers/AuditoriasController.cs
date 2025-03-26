@@ -585,6 +585,7 @@ namespace SIA.Controllers
         {
             int cod = (int)HttpContext.Session.GetInt32("num_auditoria_integral");
             int anio = (int)HttpContext.Session.GetInt32("anio_auditoria_integral");
+            string rol_code = HttpContext.Session.GetString("rolCode");
 
             //obtenemos el numero de auditorias especificas de la integral
             int cantidad = await _context.AU_AUDITORIAS
@@ -619,6 +620,8 @@ namespace SIA.Controllers
             ViewBag.ESTADO_MDP = MemoExiste?.CODIGO_ESTADO ?? 0;
             ViewBag.CODIGO_AUDITORIA = dataAuditoria.CODIGO_AUDITORIA;
             ViewBag.COMENTARIOS = listComentarios;
+            ViewBag.CI_APROBADA = dataAuditoria.CI_APROBADA;
+            ViewBag.ROL_CODE = rol_code;
 
             return View();
         }
@@ -662,7 +665,7 @@ namespace SIA.Controllers
         /// </summary>
         /// <param name="num_audit_integral"></param>
         /// <returns></returns>
-        public async Task<IActionResult> AnularAuditoria(int num_audit_integral, int anio_audit_integral)
+        public async Task<IActionResult> AnularAuditoria(int num_audit_integral, int anio_audit_integral, string motivo_anulacion)
         {
             try
             {
@@ -673,9 +676,10 @@ namespace SIA.Controllers
                                     .FirstOrDefaultAsync();
 
                 dataAuditoria.CODIGO_ESTADO = 14;
-                dataAuditoria.AUDITORIA_ANULADA = "S";
-                dataAuditoria.FECHA_ANULACION = DateTime.Now;
-                dataAuditoria.ANULADA_POR = HttpContext.Session.GetString("user");
+                dataAuditoria.AUDITORIA_ANULADA = "P";
+                dataAuditoria.MOTIVO_ANULACION = motivo_anulacion;
+                dataAuditoria.FECHA_SOLIC_ANULACION = DateTime.Now;
+                dataAuditoria.SOLICITA_ANULACION = HttpContext.Session.GetString("user");
 
                 // Guarda los cambios en la base de datos
                 await _context.SaveChangesAsync();

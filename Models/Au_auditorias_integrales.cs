@@ -56,6 +56,9 @@ namespace SIA.Models
         public string? SOLICITADA_POR { get; set; }
         public int ANIO_AI { get; set; }
         public int CI_APROBADA { get; set; }
+        public string? SOLICITA_ANULACION { get; set; }
+        public DateTime? FECHA_SOLIC_ANULACION { get; set; }
+        public string? MOTIVO_ANULACION { get; set; }
 
         [NotMapped]
         public string? NOMBRE_UNIVERSO_AUDITABLE { get; set; }

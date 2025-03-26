@@ -84,59 +84,73 @@ async function AnularAuditoria() {
     var NUMERO_AUDITORIA_INTEGRAL = $('#codAI_DA').val();
     var anio_auditoria_integral = $('#anioAI_DA').val();
 
-    Swal.fire({
+    // Muestra el modal de Swal
+    const { value: motivoAnulacion } = await Swal.fire({
         title: 'Anular',
-        text: "¿Desea anular la auditoría? \n\n Tome en cuenta que la anulación no se podra revertir.",
+        text: "¿Desea anular la auditoría? \n\n Tome en cuenta que la anulación no se podrá revertir.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#f1b44c',
         cancelButtonColor: '#d33',
         cancelButtonText: `Cancelar`,
         confirmButtonText: 'Anular',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.showLoading();
-
-            $.ajax({
-                method: 'POST',
-                url: '/Auditorias/AnularAuditoria',
-                data: {
-                    num_audit_integral: NUMERO_AUDITORIA_INTEGRAL,
-                    anio_audit_integral: anio_auditoria_integral
-                },
-                dataType: 'json',
-                success: function (respuesta) {
-                    if (respuesta == "error") {
-                        Swal.fire({
-                            title: 'Error',
-                            text: "Ocurrió un error al intentar anular la auditoría.",
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonColor: '#2A3042',
-                            confirmButtonText: 'Ok'
-                        })
-                    } else {
-                        Swal.fire({
-                            title: 'Guardado!',
-                            text: 'Se anuló la auditoría con éxito!',
-                            icon: 'success',
-                            didClose: () => {
-                                window.location.href = '/Auditorias';
-                            }
-                        });
-                    }
-                },
-                error: function () {
-                    // Mostrar un mensaje de error al usuario si ocurre un error en la solicitud AJAX
-                    Swal.fire(
-                        'Error!',
-                        'Hubo un problema al procesar su solicitud.',
-                        'error'
-                    );
-                }
-            });
+        input: 'textarea', // Agrega un textarea para ingresar el motivo
+        inputPlaceholder: 'Escriba el motivo de la anulación...',
+        inputAttributes: {
+            'aria-label': 'Motivo de la anulación'
+        },
+        preConfirm: (motivo) => {
+            if (!motivo) {
+                Swal.showValidationMessage('El motivo es obligatorio'); // Muestra un mensaje si el campo está vacío
+                return false;
+            }
+            return motivo;
         }
-    })
+    });
+
+    if (motivoAnulacion) {
+        // Si el motivo es proporcionado, continúa con la solicitud AJAX
+        Swal.showLoading();
+
+        $.ajax({
+            method: 'POST',
+            url: '/Auditorias/AnularAuditoria',
+            data: {
+                num_audit_integral: NUMERO_AUDITORIA_INTEGRAL,
+                anio_audit_integral: anio_auditoria_integral,
+                motivo_anulacion: motivoAnulacion // Enviar el motivo como parte de los datos
+            },
+            dataType: 'json',
+            success: function (respuesta) {
+                if (respuesta == "error") {
+                    Swal.fire({
+                        title: 'Error',
+                        text: "Ocurrió un error al intentar anular la auditoría.",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#2A3042',
+                        confirmButtonText: 'Ok'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Guardado!',
+                        text: 'Se anuló la auditoría con éxito!',
+                        icon: 'success',
+                        didClose: () => {
+                            window.location.href = '/Auditorias';
+                        }
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire(
+                    'Error!',
+                    'Hubo un problema al procesar su solicitud.',
+                    'error'
+                );
+            }
+        });
+    }
 }
 
 function MostrarOpcionesDA() {
@@ -176,7 +190,7 @@ function IrSolicitudInformacion(codigo_auditoria) {
 
 // Función para confirmar auditoria
 //==========================================================================================
-function ConfirmarAuditoria(){
+function ConfirmarAuditoria() {
     var NUMERO_AUDITORIA_INTEGRAL = $('#codAI_DA').val();
     var anio_auditoria_integral = $('#anioAI_DA').val();
 

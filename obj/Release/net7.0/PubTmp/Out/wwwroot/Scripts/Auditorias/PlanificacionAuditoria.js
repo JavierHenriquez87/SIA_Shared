@@ -20,6 +20,15 @@ async function solicitarAprobacionMP() {
             confirmButtonColor: '#2A3042',
             confirmButtonText: 'Ok'
         })
+    } else if (this.ValidaraAgregarMDP() == "Rec_Obj") {
+        Swal.fire({
+            title: 'Datos Incompletos',
+            text: "Los objetivos y los Recursos deben contar con un minimo de 200 caracteres",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#2A3042',
+            confirmButtonText: 'Ok'
+        })
     } else {
         //Convertimos los auditores a string separado por ,
         // Convertir el array a un string separado por comas
@@ -77,11 +86,11 @@ function ValidaraAgregarMDP() {
 
     var errorValidacion = false;
     var texttipoauditoria = $('#texttipoauditoria').val();
-    var objAuditoria = $('#objAuditoria').val();
     var equipoAuditores = $('#equipoAuditores').val();
-    var recursos = $('#recursos').val();
     var textequipoAuditores = $('#textequipoauditores').val();
     var texttiempoauditoria = $('#texttiempoauditoria').val();
+    var objAuditoria = $('#objAuditoria').val().trim();
+    var recursos = $('#recursos').val().trim();
 
 
     if (texttipoauditoria.length == 0) {
@@ -96,16 +105,16 @@ function ValidaraAgregarMDP() {
         errorValidacion = true;
     }
 
-    if (objAuditoria.length == 0) {
-        errorValidacion = true;
+    if (objAuditoria.length < 200) {
+        errorValidacion = "Rec_Obj";
     }
 
     if (equipoAuditores.length == 0) {
         errorValidacion = true;
     }
 
-    if (recursos.length == 0) {
-        errorValidacion = true;
+    if (recursos.length < 200) {
+        errorValidacion = "Rec_Obj";
     }
 
 

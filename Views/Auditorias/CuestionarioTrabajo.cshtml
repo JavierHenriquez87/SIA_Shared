@@ -12,7 +12,7 @@
     var color = "white";
     var check = "";
 
-    if (ViewBag.ESTADO_CUESTIONARIO == 1 || ViewBag.ESTADO_CUESTIONARIO == 2 || ViewBag.CI_APROBADA == 0)
+    if (ViewBag.CI_APROBADA == 0)
     {
         estado_cuestionario = "disabled";
         color = "blue";
@@ -45,11 +45,11 @@
                         </div>
                         <div class="col-md-4 d-flex align-items-center">
                             <label class="mb-0 me-2">Fecha: </label>
-                            <input type="date" class="form-control mx-2" id="fecha_cuestionario" value="@ViewBag.FECHA_CUESTIONARIO"/>
+                            <input type="date" class="form-control mx-2" id="fecha_cuestionario" value="@ViewBag.FECHA_CUESTIONARIO" @estado_cuestionario/>
                         </div>
                         <div class="col-md-4 d-flex align-items-center">
                             <label for="EquipoAuditoresAsignados" class="mb-0 me-2">Auditor: </label>
-                            <select class="form-select form-control" id="EquipoAuditoresAsignados">
+                            <select class="form-select form-control" id="EquipoAuditoresAsignados" @estado_cuestionario>
                                 <option value="">- Seleccionar -</option>
                                 @foreach(var item in auditoresAsig)
                                 {
@@ -71,11 +71,11 @@
                     <div class="row">
                         <div class="col-md-6 d-flex align-items-center">
                             <label class="mb-0 me-2">Responsables: </label>
-                            <input type="text" class="form-control mx-2" id="responsable_cuestionario" value="@ViewBag.RESPONSABLE"/>
+                            <input type="text" class="form-control mx-2" id="responsable_cuestionario" value="@ViewBag.RESPONSABLE" @estado_cuestionario/>
                         </div>
                         <div class="col-md-6 d-flex align-items-center">
                             <label for="" class="mb-0 me-2">Revisado por: </label>
-                            <select class="form-select form-control" id="cuest_revisado_por">
+                            <select class="form-select form-control" id="cuest_revisado_por" @estado_cuestionario>
                                 <option value="">- Seleccionar -</option>
                             </select>
                         </div>
@@ -84,7 +84,7 @@
                 <br />
 
 
-                <div id="contenedor-cuestionarios">
+                <div id="contenedor-cuestionarios" >
                     @if (datacuestionarios != null && datacuestionarios.Any())
                     {
                         @foreach (var respuestas in datacuestionarios)
@@ -184,17 +184,17 @@
                                                 <b for="question">@pregunta.DESCRIPCION</b>
                                             </div>
                                             <div class="radio-group">
-                                                <input type="radio" id="cumple-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="cumple" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk1>
+                                                <input type="radio" id="cumple-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="cumple" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk1 @estado_cuestionario>
                                                 <label for="cumple-@pregunta.CODIGO_PREGUNTA">Cumple</label>
-                                                <input type="radio" id="parcialmente-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="parcialmente" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk3>
+                                                <input type="radio" id="parcialmente-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="parcialmente" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk3 @estado_cuestionario>
                                                 <label for="parcialmente-@pregunta.CODIGO_PREGUNTA">Cumple Parcialmente</label>
-                                                <input type="radio" id="no-cumple-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="no-cumple" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk2>
+                                                <input type="radio" id="no-cumple-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="no-cumple" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk2 @estado_cuestionario>
                                                 <label for="no-cumple-@pregunta.CODIGO_PREGUNTA">No Cumple</label>
-                                                <input type="radio" id="na-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="na" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk4>
+                                                <input type="radio" id="na-@pregunta.CODIGO_PREGUNTA" name="evaluacion-@pregunta.CODIGO_PREGUNTA" value="na" data-codigo="@pregunta.CODIGO_PREGUNTA" class="radio-button" @chk4 @estado_cuestionario>
                                                 <label for="na-@pregunta.CODIGO_PREGUNTA">N/A</label>
                                             </div>
                                             <div class="textarea-container">
-                                                <textarea id="textarea-@pregunta.CODIGO_PREGUNTA" name="textarea-@pregunta.CODIGO_PREGUNTA" data-codigo="@pregunta.CODIGO_PREGUNTA" class="observaciones-textarea">@pregunta.RESPUESTA_PREGUNTA?.OBSERVACIONES</textarea>
+                                                <textarea id="textarea-@pregunta.CODIGO_PREGUNTA" name="textarea-@pregunta.CODIGO_PREGUNTA" data-codigo="@pregunta.CODIGO_PREGUNTA" class="observaciones-textarea" @estado_cuestionario>@pregunta.RESPUESTA_PREGUNTA?.OBSERVACIONES</textarea>
                                             </div>
                                             <div id="divPorcentaje-@pregunta.CODIGO_PREGUNTA" class="@classradio">
                                                 <b>Puntaje: </b><label id="porcentaje-@pregunta.CODIGO_PREGUNTA">@percent</label>

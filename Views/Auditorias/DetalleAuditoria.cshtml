@@ -10,6 +10,8 @@
     string TextStatusMDP = "";
     string styleTextStatusMDP = "";
     string styleDA = "width:20%;";
+    string TextStatusCI = "";
+    string styleTextStatusCI = "";
 
     if (ViewBag.CANTIDAD_AUDITORIAS >= 3)
     {
@@ -27,6 +29,7 @@
         disabledOptions = "disabled-div";
     }
 
+    //Estados del memorandum de planificacion
     if (ViewBag.ESTADO_MDP == 1)
     {
         TextStatusMDP = "Creado";
@@ -52,6 +55,18 @@
         TextStatusMDP = "No Creado";
         styleTextStatusMDP = "statusAD pendingcreate";
     }
+
+    //Estados de la carta de Ingreso
+    if (ViewBag.CI_APROBADA == 1)
+    {
+        TextStatusCI = "Aprobada";
+        styleTextStatusCI = "statusAD success";
+    }
+    else
+    {
+        TextStatusCI = "Creada";
+        styleTextStatusCI = "statusAD create";
+    }
 }
 
 <link href="~/css/estilo.css" rel="stylesheet" type="text/css" />
@@ -71,29 +86,43 @@
                 <div class="form-group" style="padding-top: 10px" id="divButtons">
                     <button type="button" id="regresarBtn1" style="display:inline-block;" onclick="window.location.href='/Auditorias'" class="btn btn-primary">Regresar</button>
                     <button type="button" id="regresarBtn2" style="display:none;" onclick="MostrarOpcionesDA()" class="btn btn-primary">Regresar</button>
-                    <button type="button" onclick="ConfirmarAuditoria()" class="btn btn-primary" @disabledButtons>Confirmar Auditorías</button>
-                    <button type="button" onclick="TrabajarAuditoria()" class="btn btn-primary" @disabledButtons>Trabajar Auditorías</button>
-                    <button type="button" onclick="AnularAuditoria()" class="btn btn-danger" @disabledButtons>Anular Auditoría</button>
+                    @if (ViewBag.ROL_CODE == "1")
+                    {
+                        <button type="button" onclick="ConfirmarAuditoria()" class="btn btn-primary" @disabledButtons>Confirmar Auditorías</button>
+                        <button type="button" onclick="TrabajarAuditoria()" class="btn btn-primary" @disabledButtons>Trabajar Auditorías</button>
+                        <button type="button" onclick="AnularAuditoria()" class="btn btn-danger" @disabledButtons>Solicitar Anulación Auditoría</button>
+                    }
+                    else
+                    {
+                        <button type="button" onclick="AnularAuditoria()" class="btn btn-danger" @disabledButtons>Anular Auditoría</button>
+                    }
+
                 </div>
 
 
                 <div id="documents-lists">
-                    <div class="document-item" style="cursor: pointer;" onclick="IrInformePreliminar()">
-                        <div class="icon doc"></div>
-                        <div class="title">INFORME PRELIMINAR DE LOS RESULTADOS DE LA AUDITORÍA</div>
-                        <div class="@styleTextStatusMDP">@TextStatusMDP</div>
-                    </div>
+                    @if (ViewBag.CI_APROBADA == 1)
+                    {
+                        <div class="document-item" style="cursor: pointer;" onclick="IrInformePreliminar()">
+                            <div class="icon doc"></div>
+                            <div class="title">INFORME PRELIMINAR DE LOS RESULTADOS DE LA AUDITORÍA</div>
+                            <div class="@styleTextStatusMDP">@TextStatusMDP</div>
+                        </div>
+                    }
                     <div id="opcion1DA" style="display:block; cursor: pointer;">
-                        <div class="document-item" style="cursor: pointer;" onclick="IrCartaSalida('@ViewBag.CODIGO_AUDITORIA')">
-                            <div class="icon doc"></div>
-                            <div class="title">CARTA DE SALIDA</div>
-                            <div class="@styleTextStatusMDP">@TextStatusMDP</div>
-                        </div>
-                        <div class="document-item" style="cursor: pointer;" onclick="IrCartaIngreso('@ViewBag.CODIGO_AUDITORIA')">
-                            <div class="icon doc"></div>
-                            <div class="title">CARTA DE INGRESO</div>
-                            <div class="@styleTextStatusMDP">@TextStatusMDP</div>
-                        </div>
+                        @if (ViewBag.CI_APROBADA == 1)
+                        {
+                            <div class="document-item" style="cursor: pointer;" onclick="IrCartaSalida('@ViewBag.CODIGO_AUDITORIA')">
+                                <div class="icon doc"></div>
+                                <div class="title">CARTA DE SALIDA</div>
+                                <div class="@styleTextStatusMDP">@TextStatusMDP</div>
+                            </div>
+                            <div class="document-item" style="cursor: pointer;" onclick="IrCartaIngreso('@ViewBag.CODIGO_AUDITORIA')">
+                                <div class="icon doc"></div>
+                                <div class="title">CARTA DE INGRESO</div>
+                                <div class="@styleTextStatusCI">@TextStatusCI</div>
+                            </div>
+                        }
                         <div class="document-item" onclick="MostrarOpcionesDA()">
                             <div class="icon folder"></div>
                             <div class="title">PLANIFICACIÓN</div>
@@ -136,7 +165,7 @@
                                 @Html.Partial("partialView/_ComentariosMDP", comentarios)
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>

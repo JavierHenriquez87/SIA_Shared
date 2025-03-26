@@ -13,6 +13,14 @@
       "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU1_Días_festivos_ANDA_2018-2020.pdf"
     },
     {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU1_cnbs.pdf",
+      "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU1_cnbs.pdf"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU2_973794-VERIFICACION-DOMICILIO-14022025-123613.pdf",
+      "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU2_973794-VERIFICACION-DOMICILIO-14022025-123613.pdf"
+    },
+    {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU2_Condiciones_Especiales_(4).pdf",
       "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU2_Condiciones_Especiales_(4).pdf"
     },
@@ -41,12 +49,28 @@
       "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU3_Estadisticas_de_Usuarios_-_PanelHDHMovilCEL.pdf"
     },
     {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU3_pdfViewer-2-14.pdf",
+      "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU3_pdfViewer-2-14.pdf"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU4_00-FORMATO_IMPRIMIR_QR_(1).docx",
+      "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU4_00-FORMATO_IMPRIMIR_QR_(1).docx"
+    },
+    {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU4_Días_festivos_ANDA_2018-2020.pdf",
       "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU4_Días_festivos_ANDA_2018-2020.pdf"
     },
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU5_Condiciones_Especiales_(6).pdf",
       "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU5_Condiciones_Especiales_(6).pdf"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU5_sampleImage_(1).png",
+      "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU5_sampleImage_(1).png"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU6_98719_Estadisticas_de_Usuarios_-_PanelHDHMovilCEL_(1).xlsx",
+      "PackagePath": "staticwebassets\\Archivos\\AuditoriasInforme\\Documentos\\AU6_98719_Estadisticas_de_Usuarios_-_PanelHDHMovilCEL_(1).xlsx"
     },
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Archivos\\AuditoriasInforme\\Documentos\\AU6_RESULTADOS_DE_PAES_2019_POR_DEP.pdf",
@@ -211,6 +235,10 @@
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Scripts\\Auditorias\\ProgramarAuditoria.js",
       "PackagePath": "staticwebassets\\Scripts\\Auditorias\\ProgramarAuditoria.js"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Scripts\\Auditorias\\SolicitudInformacion.js",
+      "PackagePath": "staticwebassets\\Scripts\\Auditorias\\SolicitudInformacion.js"
     },
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\Scripts\\Configuracion\\Agencias.js",
@@ -769,6 +797,10 @@
       "PackagePath": "staticwebassets\\assets\\images\\logoHDH.svg"
     },
     {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\assets\\images\\logoNew.png",
+      "PackagePath": "staticwebassets\\assets\\images\\logoNew.png"
+    },
+    {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\assets\\images\\maintenance.png",
       "PackagePath": "staticwebassets\\assets\\images\\maintenance.png"
     },
@@ -791,6 +823,10 @@
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\assets\\images\\pdf-ico.png",
       "PackagePath": "staticwebassets\\assets\\images\\pdf-ico.png"
+    },
+    {
+      "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\assets\\images\\pdfNew-headers.png",
+      "PackagePath": "staticwebassets\\assets\\images\\pdfNew-headers.png"
     },
     {
       "Id": "C:\\Users\\Lenovo\\Documents\\Proyectos\\Hermandad\\SIA\\wwwroot\\assets\\images\\pic-ico.png",

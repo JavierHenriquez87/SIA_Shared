@@ -40,6 +40,7 @@ namespace SIA.Controllers
         }
 
         /// <summary>
+        /// PRIMER PASO AL INICIAR SESION
         /// Metodo inicial cuando el usuario quiere ingresar al sistema
         /// </summary>
         /// <returns></returns>
