@@ -138,7 +138,7 @@ namespace SIA.Print
                 {
                     text.Span(DateTime.Now.ToString("dd 'de' MMMM 'del' yyyy"))
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 });
 
@@ -147,7 +147,7 @@ namespace SIA.Print
                 {
                     text.Span("AUDITORÍA INTERNA")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial")
                         .Bold();
                 });
@@ -157,7 +157,7 @@ namespace SIA.Print
                 {
                     text.Span("Fundación Microfinanciera Hermandad de Honduras, OPDF")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 });
 
@@ -166,7 +166,7 @@ namespace SIA.Print
                 {
                     text.Span("San Marcos, Ocotepeque")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 });
 
@@ -175,19 +175,19 @@ namespace SIA.Print
                 {
                     text.Span("Esta carta de manifestaciones se proporciona en relación con su auditoría interna detodas las transacciones de cartera de préstamos, cartera de ahorros, movimientosdiarios de caja de ventanilla, caja de reserva, activos fijos, y libros de su Agencia,correspondientes al periodo comprendido de ")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
 
 
                     text.Span(fechaInicioVisita + " a " + fechaFinVisita)
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial")
                         .Bold();
 
                     text.Span(".")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 });
 

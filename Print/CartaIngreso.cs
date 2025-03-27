@@ -147,7 +147,7 @@ namespace SIA.Print
                 {
                     text.Span(DateTime.Now.ToString("dd 'de' MMMM 'del' yyyy"))
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 });
 
@@ -156,7 +156,7 @@ namespace SIA.Print
                 {
                     text.Span("Señor:")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 });
 
@@ -165,7 +165,7 @@ namespace SIA.Print
                 {
                     text.Span("JERSON ELY VELASQUEZ PEREZ")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial")
                         .Bold();
                 });
@@ -175,7 +175,7 @@ namespace SIA.Print
                 {
                     text.Span("Jefe de Agencia")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 });
 
@@ -184,7 +184,7 @@ namespace SIA.Print
                 {
                     text.Span("Fundación Microfinanciera Hermandad de Honduras, OPDF")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 });
 
@@ -193,7 +193,7 @@ namespace SIA.Print
                 {
                     text.Span("Estimado Jefe de Agencia")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 });
 
@@ -202,19 +202,19 @@ namespace SIA.Print
                 {
                     text.Span("Hemos sido asignados a la revisión periódica de todas sus transacciones realizadas en su Agencia, en el periodo comprendido de ")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
 
 
                     text.Span(fechaInicioVisita + " a " + fechaFinVisita)
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial")
                         .Bold();
 
                     text.Span(".")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 });
 
@@ -223,18 +223,18 @@ namespace SIA.Print
                 {
                     text.Span("Con mandato de la Junta de Vigilancia nos solicitan que auditemos todas las transacciones que comprenden la cartera de préstamos, cartera de ahorros, movimientos diarios de caja de ventanilla, caja de reserva, inventario de activos fijos y libros de su Agencia correspondientes al periodo comprendido de ")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
 
                     text.Span(fechaInicioRevision + " a " + fechaFinRevision)
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial")
                         .Bold();
 
                     text.Span(".")
                         .FontSize(13)
-                        .FontColor(_helpersQuestPDF.ColorGrisHtml())
+                        .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                         .FontFamily("Arial");
                 });
 
