@@ -3138,6 +3138,7 @@ namespace SIA.Controllers
 
 
             var hallazgosAnteriores = await _context.MG_HALLAZGOS
+                .Where(d => d.NUMERO_AUDITORIA_INTEGRAL != cod)
                 .GroupJoin(
                     _context.MG_COMENT_AUDITADO,
                     hallazgo => hallazgo.CODIGO_HALLAZGO,
@@ -3146,6 +3147,7 @@ namespace SIA.Controllers
                 .SelectMany(
                     hc => hc.Comentarios.DefaultIfEmpty(),
                     (hc, comentario) => new { hc.Hallazgo, Comentario = comentario })
+                .Where(hc => hc.Comentario == null)
                 .Select(hc => hc.Hallazgo)
                 .ToListAsync();
 

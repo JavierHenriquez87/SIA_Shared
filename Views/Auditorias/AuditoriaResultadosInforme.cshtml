@@ -207,7 +207,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Hallazgos</th>
-                        <th>Prioridad</th>
+                        <th>Condición</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -218,7 +218,7 @@
                             <tr>
                                 <td>@HALLAZGO_ANTERIOR.CODIGO_HALLAZGO</td>
                                 <td style="text-align:left">@HALLAZGO_ANTERIOR.HALLAZGO</td>
-                                <td class="highlight-@riesgo.ToLower()">@riesgo</td>
+                                <td style="text-align:left">@HALLAZGO_ANTERIOR.CONDICION</td>
                             </tr>
                         }
                     }

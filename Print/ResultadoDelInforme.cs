@@ -71,7 +71,6 @@ namespace SIA.Print
 
             var hallazgosAnteriores = await _context.MG_HALLAZGOS
                 .Where(d => d.NUMERO_AUDITORIA_INTEGRAL != cod)
-                .Where(d => d.ANIO_AI != anio)
                 .GroupJoin(
                     _context.MG_COMENT_AUDITADO,
                     hallazgo => hallazgo.CODIGO_HALLAZGO,
@@ -402,8 +401,8 @@ namespace SIA.Print
                         table.ColumnsDefinition(columns =>
                         {
                             columns.RelativeColumn(10);
-                            columns.RelativeColumn(70);
-                            columns.RelativeColumn(20);
+                            columns.RelativeColumn(50);
+                            columns.RelativeColumn(40);
                         });
 
                         // Fila de encabezados
@@ -419,7 +418,7 @@ namespace SIA.Print
                             .FontColor(_helpersQuestPDF.ColorBlancoHtml())
                             .FontFamily("Arial Bold");
 
-                        table.Cell().Row(1).Column(3).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Prioridad")
+                        table.Cell().Row(1).Column(3).Background(_helpersQuestPDF.ColorSeccionesPrincipales()).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text("Condición")
                             .FontSize(12)
                             .Bold()
                             .FontColor(_helpersQuestPDF.ColorBlancoHtml())
@@ -448,12 +447,11 @@ namespace SIA.Print
                                 .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
                                 .FontFamily("Arial");
 
-                            // Columna 3: Prioridad
-                            table.Cell().Background(colorEstado).Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).AlignCenter().AlignMiddle().Text(riesgo)
+                            // Columna 3: condicion
+                            table.Cell().Border(1).BorderColor(_helpersQuestPDF.ColorGrisBordeTablaHtml()).Padding(4).PaddingLeft(6).AlignMiddle().Text(HALLAZGO.CONDICION)
                                 .FontSize(12)
-                                .Bold()
-                                .FontColor(_helpersQuestPDF.ColorBlancoHtml())
-                                .FontFamily("Arial Bold");
+                                .FontColor(_helpersQuestPDF.ColorNegroPrincipal())
+                                .FontFamily("Arial");
                         }
                         
                     });
