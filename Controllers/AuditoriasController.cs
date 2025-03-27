@@ -335,6 +335,20 @@ namespace SIA.Controllers
                     .CountAsync();
             }
 
+            var usuarios = await _context.MG_USUARIOS
+                    .Where(X => X.CODIGO_CARGO != "0")
+                    .Select(i => new Mg_usuarios
+                    {
+                        CODIGO_USUARIO = i.CODIGO_USUARIO,
+                        NOMBRE_USUARIO = i.NOMBRE_USUARIO
+                    })
+                    .OrderBy(i => i.CODIGO_USUARIO).ToListAsync();
+
+            foreach (var auditoria in data)
+            {
+                auditoria.ENCARGADO_AUDITORIA = usuarios.FirstOrDefault(x => x.CODIGO_USUARIO == auditoria.ENCARGADO_AUDITORIA).NOMBRE_USUARIO??"";
+            }
+
             var jsonData = new { draw, recordsFiltered = recordsTotal, recordsTotal, data };
             return Ok(jsonData);
         }
